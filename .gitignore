@@ -9,3 +9,4 @@ eggs
 parts
 src/*.egg-info
 build
+.ropeproject
