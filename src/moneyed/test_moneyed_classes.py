@@ -1,7 +1,7 @@
 from decimal import Decimal
 import unittest
 
-from Money import Currency, Money, CURRENCIES, set_default_currency
+from moneyed.classes import Currency, Money, CURRENCIES, set_default_currency
 
 
 class TestCurrency(unittest.TestCase):
