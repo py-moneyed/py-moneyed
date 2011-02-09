@@ -1,65 +1,152 @@
+#file test_moneyed_classes.py
+
 from decimal import Decimal
-import unittest
+import pytest  # Works with less code, more consistency than unittest.
 
 from moneyed.classes import Currency, Money, CURRENCIES, set_default_currency
 
 
-class TestCurrency(unittest.TestCase):
+class TestCurrency:
 
-    def setUp(self):
+    def setup_method(self, method):
         self.default_curr_code = 'XYZ'
         self.default_curr = CURRENCIES[self.default_curr_code]
 
     def test_init(self):
         usd_countries = CURRENCIES['USD'].countries
         US_dollars = Currency(code='USD', numeric='840', name='US Dollar', countries=['AMERICAN SAMOA', 'BRITISH INDIAN OCEAN TERRITORY', 'ECUADOR', 'GUAM', 'MARSHALL ISLANDS', 'MICRONESIA', 'NORTHERN MARIANA ISLANDS', 'PALAU', 'PUERTO RICO', 'TIMOR-LESTE', 'TURKS AND CAICOS ISLANDS', 'UNITED STATES MINOR OUTLYING ISLANDS', 'VIRGIN ISLANDS (BRITISH)', 'VIRGIN ISLANDS (U.S.)'])
-        self.assertEqual(US_dollars.code, 'USD')
-        self.assertEqual(US_dollars.numeric, '840')
-        self.assertEqual(US_dollars.name, 'US Dollar')
-        self.assertEqual(US_dollars.countries, usd_countries)
+        assert US_dollars.code == 'USD'
+        assert US_dollars.countries == usd_countries
+        assert US_dollars.name == 'US Dollar'
+        assert US_dollars.numeric == '840'
 
     def test_repr(self):
-        self.assertEqual(str(self.default_curr), self.default_curr_code)
+        assert str(self.default_curr) == self.default_curr_code
 
     def test_set_exchange_rate(self):
         test_exch_rate = Decimal('1.23')
         self.default_curr.set_exchange_rate(test_exch_rate)
-        self.assertEqual(self.default_curr.exchange_rate, test_exch_rate)
+        assert self.default_curr.exchange_rate == test_exch_rate
 
 
-class TestMoney(unittest.TestCase):
+class TestMoney:
 
-    def setUp(self):
+    def setup_method(self, method):
         self.one_million_decimal = Decimal('1000000')
         self.USD = CURRENCIES['USD']
+        self.one_million_bucks = Money(amount=self.one_million_decimal,
+                                       currency=self.USD)
 
     def test_init(self):
-        one_million = self.one_million_decimal
-        one_million_dollars = Money(amount=one_million, currency=self.USD)
-        self.assertEqual(one_million_dollars.amount, one_million)
-        self.assertEqual(one_million_dollars.currency, self.USD)
+        one_million_dollars = Money(amount=self.one_million_decimal,
+                                    currency=self.USD)
+        assert one_million_dollars.amount == self.one_million_decimal
+        assert one_million_dollars.currency == self.USD
 
     def test_init_string_currency_code(self):
-        one_million = self.one_million_decimal
-        one_million_dollars = Money(amount=one_million, currency='usd')
-        self.assertEqual(one_million_dollars.amount, one_million)
-        self.assertEqual(one_million_dollars.currency, self.USD)
+        one_million_dollars = Money(amount=self.one_million_decimal,
+                                    currency='usd')
+        assert one_million_dollars.amount == self.one_million_decimal
+        assert one_million_dollars.currency == self.USD
 
     def test_init_default_currency(self):
         one_million = self.one_million_decimal
         set_default_currency(code='USD')  # Changes global default currency.
-        one_million_dollars = Money(amount=one_million)  # No currency given.
-        self.assertEqual(one_million_dollars.amount, one_million)
-        self.assertEqual(one_million_dollars.currency, self.USD)
+        one_million_dollars = Money(amount=one_million)  # No currency given!
+        assert one_million_dollars.amount == one_million
+        assert one_million_dollars.currency == self.USD
 
     def test_init_float(self):
         one_million_dollars = Money(amount=1000000.0)
-        self.assertEqual(one_million_dollars.amount, self.one_million_decimal)
+        assert one_million_dollars.amount == self.one_million_decimal
 
     def test_repr(self):
-        one_million_dollars = Money(amount=self.one_million_decimal, currency=self.USD)
-        self.assertEqual(str(one_million_dollars), 'USD 1000000.00')
+        assert str(self.one_million_bucks) == '$1,000,000.00 USD'
 
+    def test_unicode(self):
+        self.test_repr()
 
-if __name__ == '__main__':
-    unittest.main()
+    def test_add(self):
+        assert (self.one_million_bucks + self.one_million_bucks
+                == Money(amount='2000000', currency=self.USD))
+
+    def test_add_non_money(self):
+        with pytest.raises(TypeError):
+            Money(1000) + 123
+
+    def test_sub(self):
+        zeroed_test = self.one_million_bucks - self.one_million_bucks
+        assert zeroed_test == Money(amount=0, currency=self.USD)
+
+    def test_sub_non_money(self):
+        with pytest.raises(TypeError):
+            Money(1000) - 123
+
+    def test_mul(self):
+        x = Money(amount=111.33, currency=self.USD)
+        assert 3 * x == Money(333.99, currency=self.USD)
+        assert Money(333.99, currency=self.USD) == 3 * x
+
+    def test_mul_bad(self):
+        with pytest.raises(TypeError):
+            self.one_million_bucks * self.one_million_bucks
+
+    def test_div(self):
+        x = Money(amount=50, currency=self.USD)
+        y = Money(amount=2, currency=self.USD)
+        assert x / y == Decimal(25)
+
+    def test_div_mismatched_currencies(self):
+        x = Money(amount=50, currency=self.USD)
+        y = Money(amount=2, currency=CURRENCIES['CAD'])
+        with pytest.raises(TypeError):
+            assert x / y == Money(amount=25, currency=self.USD)
+
+    def test_div_by_non_Money(self):
+        x = Money(amount=50, currency=self.USD)
+        y = 2
+        assert x / y == Money(amount=25, currency=self.USD)
+
+    def test_rmod(self):
+        assert 1 % self.one_million_bucks == Money(amount=10000,
+                                                   currency=self.USD)
+
+    def test_rmod_bad(self):
+        with pytest.raises(TypeError):
+            assert (self.one_million_bucks % self.one_million_bucks
+                    == 1)
+
+    def test_convert_to_default(self):
+        # Currency conversions are not implemented as of 2/2011; when
+        # they are working, then convert_to_default and convert_to
+        # will need to be tested.
+        pass
+
+    # Note: no tests for __eq__ as it's quite thoroughly covered in
+    # the assert comparisons throughout these tests.
+
+    def test_ne(self):
+        x = Money(amount=1, currency=self.USD)
+        assert self.one_million_bucks != x
+
+    def test_ne_mistyped(self):
+        with pytest.raises(TypeError):
+            assert self.one_million_bucks != self.one_million_decimal
+
+    def test_lt(self):
+        x = Money(amount=1, currency=self.USD)
+        assert x < self.one_million_bucks
+
+    def test_lt_mistyped(self):
+        x = 1.0
+        with pytest.raises(TypeError):
+            assert x < self.one_million_bucks
+
+    def test_gt(self):
+        x = Money(amount=1, currency=self.USD)
+        assert self.one_million_bucks > x
+
+    def test_gt_mistyped(self):
+        x = 1.0
+        with pytest.raises(TypeError):
+            assert self.one_million_bucks > x

@@ -3,20 +3,26 @@
 from decimal import Decimal
 import locale
 
-# NOTE: this sets the default locale to something other than 'C' but
-# possibly it should be set/changed depending on the Currency country.
-# But I did not readily find a way to lookup a locale code from a
-# given currency code.  Revisit this later.  KW 1/2011.
-locale.setlocale(locale.LC_ALL, '')
+# NOTE: this sets the default locale to the local environment's (and
+# something other than the useless 'C' locale), but possibly it should
+# be set/changed depending on the Currency country.  However that will
+# require a lookup: given the currency code, return the locale code;
+# the pycountry package may provide a way to do that.  Revisit this
+# later.  KW 1/2011.
+DEFAULT_LOCALE = (
+    "%s.%s"
+    % (locale.getdefaultlocale()[0],
+       locale.getdefaultlocale()[1].lower()))
+locale.setlocale(locale.LC_ALL, DEFAULT_LOCALE)
 
 
-class Currency:
+class Currency(object):
     """
     A Currency represents a form of money issued by governments, and
     used in one or more states/countries.  A Currency instance
-    encapsulates the related data of its ISO currency code, a
-    canonical name, countries it's used in, and an exchange rate - the
-    last remains unimplemented however.
+    encapsulates the related data of: the ISO currency/numeric code, a
+    canonical name, countries the currency is used in, and an exchange
+    rate - the last remains unimplemented however.
     """
 
     code = 'XYZ'
@@ -28,9 +34,9 @@ class Currency:
 
     def __init__(self, code='', numeric='999', name='', countries=[]):
         self.code = code
-        self.numeric = numeric
-        self.name = name
         self.countries = countries
+        self.name = name
+        self.numeric = numeric
 
     def __repr__(self):
         return self.code
@@ -63,7 +69,7 @@ class BadMoneyInput(Exception):
         return 'Incorrectly formatted monetary input!'
 
 
-class Money:
+class Money(object):
     """
     A Money instance is a combination of data - an amount and a
     currency - along with operators that handle the semantics of money
@@ -85,8 +91,12 @@ class Money:
                 currency = CURRENCIES[str(currency).upper()]
             self.currency = currency
 
-    def __repr__(self):
-        return '%s %5.2f' % (self.currency, self.amount)
+    def __unicode__(self):
+        return "%s %s" % (
+            locale.currency(self.amount, grouping=True),
+            self.currency)
+
+    __repr__ = __unicode__
 
     def __pos__(self):
         return Money(
@@ -99,38 +109,21 @@ class Money:
             currency=self.currency)
 
     def __add__(self, other):
-        if isinstance(other, Money):
-            if self.currency == other.currency:
-                return Money(
-                    amount=self.amount + other.amount,
-                    currency=self.currency)
-            else:
-                this = self.convert_to_default()
-                other = other.convert_to_default()
-                return Money(
-                    amount=(this.amount + other.amount),
-                    currency=DEFAULT_CURRENCY)
-        else:
+        if not isinstance(other, Money):
+            raise TypeError('Cannot add a Money and non-Money instance.')
+        if self.currency == other.currency:
             return Money(
-                amount=(self.amount + Decimal(str(other))),
+                amount=self.amount + other.amount,
                 currency=self.currency)
+        else:
+            this = self.convert_to_default()
+            other = other.convert_to_default()
+            return Money(
+                amount=(this.amount + other.amount),
+                currency=DEFAULT_CURRENCY)
 
     def __sub__(self, other):
-        if isinstance(other, Money):
-            if self.currency == other.currency:
-                return Money(
-                    amount=(self.amount - other.amount),
-                    currency=self.currency)
-            else:
-                s = self.convert_to_default()
-                other = other.convert_to_default()
-                return Money(
-                    amount=(s.amount - other.amount),
-                    currency=DEFAULT_CURRENCY)
-        else:
-            return Money(
-                amount=(self.amount - Decimal(str(other))),
-                currency=self.currency)
+        return self.__add__(-other)
 
     def __mul__(self, other):
         if isinstance(other, Money):
@@ -142,10 +135,13 @@ class Money:
 
     def __div__(self, other):
         if isinstance(other, Money):
-            assert self.currency == other.currency, 'currency mismatch'
+            if self.currency != other.currency:
+                raise TypeError('Currency mismatch in division.')
             return self.amount / other.amount
         else:
-            return self.amount / Decimal(str(other))
+            return Money(
+                amount=self.amount / Decimal(str(other)),
+                currency=self.currency)
 
     def __rmod__(self, other):
         """
@@ -153,12 +149,12 @@ class Money:
         operator must be a numeric value.
 
         Example:
-        >>> money = Money.Money(200, 'USD')
+        >>> money = Money(200, 'USD')
         >>> 5 % money
         USD 10.00
         """
         if isinstance(other, Money):
-            raise TypeError('invalid monetary operation')
+            raise TypeError('Invalid __rmod__ operation')
         else:
             return Money(
                 amount=(Decimal(str(other)) * self.amount / 100),
@@ -183,10 +179,12 @@ class Money:
     # _______________________________________
     # Override comparison operators
     def __eq__(self, other):
-        if isinstance(other, Money):
-            return (self.amount == other.amount) \
-                   and (self.currency == other.currency)
-        return (self.amount == Decimal(str(other)))
+        if not isinstance(other, Money):
+            raise TypeError(
+                "Can only compare two Money instances, other is %s."
+                % other.__class__.__name__)
+        return (self.amount == other.amount) \
+               and (self.currency == other.currency)
 
     def __ne__(self, other):
         result = self.__eq__(other)
@@ -195,22 +193,24 @@ class Money:
         return not result
 
     def __lt__(self, other):
-        if isinstance(other, Money):
-            if (self.currency == other.currency):
-                return (self.amount < other.amount)
-            else:
-                raise TypeError('Cannot compare different currencies (yet).')
+        if not isinstance(other, Money):
+            raise TypeError(
+                "Can only compare two Money instances, other is %s."
+                % other.__class__.__name__)
+        if (self.currency == other.currency):
+            return (self.amount < other.amount)
         else:
-            return (self.amount < Decimal(str(other)))
+            raise TypeError('Cannot compare different currencies (yet).')
 
     def __gt__(self, other):
-        if isinstance(other, Money):
-            if (self.currency == other.currency):
-                return (self.amount > other.amount)
-            else:
-                raise TypeError('Cannot compare different currencies (yet).')
+        if not isinstance(other, Money):
+            raise TypeError(
+                "Can only compare two Money instances, other is %s."
+                % other.__class__.__name__)
+        if (self.currency == other.currency):
+            return (self.amount > other.amount)
         else:
-            return (self.amount > Decimal(str(other)))
+            raise TypeError('Cannot compare different currencies (yet).')
 
     def __le__(self, other):
         return self < other or self == other
@@ -218,50 +218,8 @@ class Money:
     def __ge__(self, other):
         return self > other or self == other
 
-    # _______________________________________
-    # Miscellaneous helper methods
-    def allocate(self, ratios):
-        """
-        Allocates a sum of money to several accounts.
-        """
-        total = sum(ratios)
-        remainder = self.amount
-        results = []
-        for i in range(0, len(ratios)):
-            results.append(Money(amount=self.amount * ratios[i] / total,
-                                 currency=self.currency))
-            remainder -= results[i].amount
-        i = 0
-        while i < remainder:
-            results[i].amount += Decimal('0.01')
-            i += 1
-        return results
 
-    def spell_out(self):
-        """
-        Spells out a monetary amount.
-
-        Example: Two-hundred and twenty-six dollars and seventeen cents.
-        """
-        pass  # TODO
-
-    def from_string(self, s):
-        """
-        Parses a properly formatted string and extracts the
-        monetary value and currency.
-        """
-        try:
-            self.amount = Decimal(str(s).strip())
-            self.currency = DEFAULT_CURRENCY
-        except:
-            try:
-                s = s.strip()
-                self.currency = CURRENCIES[s[:3].upper()]
-                self.amount = Decimal(s[3:].strip())
-            except:
-                raise BadMoneyInput
-
-
+# ____________________________________________________________________
 # Definitions of ISO 4217 Currencies
 # Source: http://www.iso.org/iso/support/faqs/faqs_widely_used_standards/widely_used_standards_other/currency_codes/currency_codes_list-1.htm
 
