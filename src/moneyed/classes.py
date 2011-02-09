@@ -61,12 +61,18 @@ def set_default_currency(code='XYZ'):
     DEFAULT_CURRENCY = CURRENCIES[code]
 
 
-class BadMoneyInput(Exception):
-    def __init__(self):
-        return
+class MoneyComparisonError(TypeError):
+    # This exception was needed often enough to merit its own
+    # Exception class.
+
+    def __init__(self, other):
+        assert not isinstance(other, Money)
+        self.other = other
 
     def __str__(self):
-        return 'Incorrectly formatted monetary input!'
+        # Note: at least w/ Python 2.x, use __str__, not __unicode__.
+        return "Cannot compare instances of Money and %s" \
+               % self.other.__class__.__name__
 
 
 class Money(object):
@@ -136,7 +142,7 @@ class Money(object):
     def __div__(self, other):
         if isinstance(other, Money):
             if self.currency != other.currency:
-                raise TypeError('Currency mismatch in division.')
+                raise TypeError('Cannot divide two different currencies.')
             return self.amount / other.amount
         else:
             return Money(
@@ -180,9 +186,7 @@ class Money(object):
     # Override comparison operators
     def __eq__(self, other):
         if not isinstance(other, Money):
-            raise TypeError(
-                "Can only compare two Money instances, other is %s."
-                % other.__class__.__name__)
+            raise MoneyComparisonError(other)
         return (self.amount == other.amount) \
                and (self.currency == other.currency)
 
@@ -194,9 +198,7 @@ class Money(object):
 
     def __lt__(self, other):
         if not isinstance(other, Money):
-            raise TypeError(
-                "Can only compare two Money instances, other is %s."
-                % other.__class__.__name__)
+            raise MoneyComparisonError(other)
         if (self.currency == other.currency):
             return (self.amount < other.amount)
         else:
@@ -204,9 +206,7 @@ class Money(object):
 
     def __gt__(self, other):
         if not isinstance(other, Money):
-            raise TypeError(
-                "Can only compare two Money instances, other is %s."
-                % other.__class__.__name__)
+            raise MoneyComparisonError(other)
         if (self.currency == other.currency):
             return (self.amount > other.amount)
         else:

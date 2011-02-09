@@ -7,7 +7,7 @@ setup(
     license='BSD',
     author='Kai',
     author_email='k@limist.com',
-    description='The moneyed package provides re-usable Currency and Money classes for working with money and currencies in your Python code.',
+    description='The moneyed Python package provides re-usable Currency and Money classes for working with money and currencies in your Python code.',
     keywords="money currency class abstraction",
     packages=find_packages('src'),
     package_dir={'': 'src'},

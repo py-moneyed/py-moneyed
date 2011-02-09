@@ -3,7 +3,7 @@
 from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
-from moneyed.classes import Currency, Money, CURRENCIES, set_default_currency
+from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, set_default_currency
 
 
 class TestCurrency:
@@ -130,7 +130,7 @@ class TestMoney:
         assert self.one_million_bucks != x
 
     def test_ne_mistyped(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(MoneyComparisonError):
             assert self.one_million_bucks != self.one_million_decimal
 
     def test_lt(self):
@@ -139,7 +139,7 @@ class TestMoney:
 
     def test_lt_mistyped(self):
         x = 1.0
-        with pytest.raises(TypeError):
+        with pytest.raises(MoneyComparisonError):
             assert x < self.one_million_bucks
 
     def test_gt(self):
@@ -148,5 +148,5 @@ class TestMoney:
 
     def test_gt_mistyped(self):
         x = 1.0
-        with pytest.raises(TypeError):
+        with pytest.raises(MoneyComparisonError):
             assert self.one_million_bucks > x
