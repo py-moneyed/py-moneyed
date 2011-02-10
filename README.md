@@ -6,7 +6,8 @@ development, particularly any financial/economics software.  The
 py-moneyed package provides the classes of Money and Currency to help
 with that need, at a level more useful than just Python's Decimal
 class, or ($DEITY forbid) float primitive.  The package is meant to be
-stand-alone and easy to use directly, or subclass further.
+stand-alone and easy to use directly, or subclass further.  py-moneyed
+is BSD-licensed.
 
 Some of the py-moneyed code was first derived from python-money
 available via this URL: http://code.google.com/p/python-money/ Because
@@ -53,5 +54,5 @@ version has been tested with Python 2.6.
 Future
 ------
 
-Future versions of py-money may provide currency conversions, or other
-capabilities, dependent on feedback and usage.
+Future versions of py-moneyed may provide currency conversions, or
+other capabilities, dependent on feedback and usage.
