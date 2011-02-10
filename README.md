@@ -29,7 +29,8 @@ On to the code: the Money class is instantiated with:
 
 For example,
 
-    x = Money(amount='99.99', currency='USD')
+    from moneyed.classes import Money
+    sale_price_today = Money(amount='99.99', currency='USD')
 
 The Money class also provides operators with type checks, matching
 currency checks, and sensible dimensional behavior, e.g. you cannot
