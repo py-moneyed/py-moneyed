@@ -1,4 +1,4 @@
-py-moneyed: provides data abstractions for money and currency
+Overview
 ============================================================
 
 The need to represent instances of money frequently arises in software
@@ -28,6 +28,8 @@ On to the code: the Money class is instantiated with:
   ISO currency code,e.g. USD.
 
 For example,
+
+::
 
     from moneyed.classes import Money
     sale_price_today = Money(amount='99.99', currency='USD')
