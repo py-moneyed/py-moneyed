@@ -1,15 +1,28 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='moneyed',
-    version='0.2',
-    url='http://github.com/limist/moneyed',
-    license='BSD',
-    author='Kai',
-    author_email='k@limist.com',
-    description='The moneyed Python package provides re-usable Currency and Money classes for working with money and currencies in your Python code.',
-    keywords="money currency class abstraction",
+    name='py-moneyed',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=['setuptools'],
+    version='0.3',
+    description='Provides Currency and Money classes for use in your Python code.',
+    author='Kai',
+    author_email='k@limist.com',
+    url='http://github.com/limist/py-moneyed',
+    download_url='',
+    keywords="money currency class abstraction",
+    license='BSD',
+    install_requires=[
+        'setuptools',
+        'pytest >= 2'],
+    classifiers=[
+        'Programming Language :: Python',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Development Status :: 3 - Alpha',
+        'Environment :: Other Environment',
+        'Intended Audience :: Developers',
+        'Topic :: Office/Business :: Financial',
+        'Topic :: Software Development :: Libraries :: Python Modules'],
+    long_description=open('README.md')
     )
