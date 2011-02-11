@@ -24,5 +24,5 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Office/Business :: Financial',
         'Topic :: Software Development :: Libraries :: Python Modules'],
-    long_description=open('README.txt', 'r').read()
+    long_description=open('README', 'r').read()
     )
