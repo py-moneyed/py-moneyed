@@ -50,10 +50,33 @@ the currency.  Thanks to the python-money developers for their
 Testing
 --------
 
-Unit-tests have been provided, and can be run with py.test.  This
-version has been tested with Python 2.6.  Should you use py-money with
-other Python versions, please let me know if you are successful or
-not.
+Unit-tests have been provided, and can be run with tox_ (recommended)
+or just py.test.  
+
+If you don't have tox installed on your system, it's a new tool to
+automate running tests and deployment; install it to your global
+Python environment with:
+
+::
+
+    sudo pip install tox
+    
+Then you can activate a virtualenv (any will do - by design tox will
+not run from your globally-installed python), cd to the py-moneyed
+source directory then run the tests at the shell:
+
+::
+
+    cd where/py-moneyed-source/is
+    tox
+
+The py-moneyed package has been tested with Python 2.6; it should work
+with Python 2.x but I haven't tried other versions yet.  Should you
+use py-moneyed with other Python versions, please let me know if you
+are successful or not.
+
+
+.. _tox: http://codespeak.net/tox/
 
 
 Future
