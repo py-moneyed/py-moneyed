@@ -24,7 +24,7 @@ Usage
 On to the code: the Money class is instantiated with:
 
 - An amount which can be of type string, float, or Decimal.
-- A currency, which usually is specified by the  three-capital-letters
+- A currency, which usually is specified by the three-capital-letters
   ISO currency code,e.g. USD.
 
 For example,
