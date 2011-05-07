@@ -1,21 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
-import locale
 
-# NOTE: this sets the default locale to the local environment's (and
-# something other than the useless 'C' locale), but possibly it should
-# be set/changed depending on the Currency country.  However that will
-# require a lookup: given the currency code, return the locale code;
-# the pycountry package may provide a way to do that.  Revisit this
-# later.  KW 1/2011.
-DEFAULT_LOCALE = (
-    "%s.%s"
-    % (locale.getdefaultlocale()[0],
-       locale.getdefaultlocale()[1].lower()))
-locale.setlocale(locale.LC_ALL, DEFAULT_LOCALE)
-
-# Fake currencu
+# Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'XYZ'
 
 class Currency(object):
@@ -26,30 +13,22 @@ class Currency(object):
     canonical name, countries the currency is used in, and an exchange
     rate - the last remains unimplemented however.
     """
-
-    code = 'XYZ'
-    country = ''
-    countries = []
-    name = ''
-    numeric = '999'
     exchange_rate = Decimal('1.0')
 
-    def __init__(self, code='', numeric='999', name='', countries=[]):
+    def __init__(self, code='', numeric='999', name='', countries=[],
+                 prefix=None, suffix=None):
         self.code = code
         self.countries = countries
         self.name = name
         self.numeric = numeric
+        
+        if suffix is None and prefix is None:
+            suffix = code
+        self.prefix = prefix or u''
+        self.suffix = suffix
 
     def __repr__(self):
         return self.code
-
-    def set_exchange_rate(self, rate):
-        # This method could later use a web-lookup of the current
-        # exchange rate; currently it's just a manual field
-        # setting. 7/2010
-        if not isinstance(rate, Decimal):
-            rate = Decimal(str(rate))
-        self.exchange_rate = rate
 
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
@@ -63,6 +42,11 @@ class MoneyComparisonError(TypeError):
         # Note: at least w/ Python 2.x, use __str__, not __unicode__.
         return "Cannot compare instances of Money and %s" \
                % self.other.__class__.__name__
+               
+class CurrencyDoesNotExist(Exception):
+    
+    def __init__(self, code):
+        super(CurrencyDoesNotExist, self).__init__(u"No currency with code %s is defined." % code)
 
 class Money(object):
     """
@@ -78,13 +62,11 @@ class Money(object):
         self.amount = amount
         
         if not isinstance(currency, Currency):
-            currency = CURRENCIES[str(currency).upper()]
+            currency = get_currency(str(currency).upper())
         self.currency = currency
 
     def __unicode__(self):
-        return "%s %s" % (
-            locale.currency(self.amount, grouping=True),
-            self.currency)
+        return "%s %s" % (self.amount, self.currency)
 
     __repr__ = __unicode__
 
@@ -150,17 +132,6 @@ class Money(object):
                 amount=(Decimal(str(other)) * self.amount / 100),
                 currency=self.currency)
 
-    def convert_to_default(self):
-        return Money(
-            amount=(self.amount * self.currency.exchange_rate),
-            currency=DEFAULT_CURRENCY_CODE)
-
-    def convert_to(self, currency):
-        """
-        Convert from one currency to another.
-        """
-        return None  # TODO
-
     __radd__ = __add__
     __rsub__ = __sub__
     __rmul__ = __mul__
@@ -206,13 +177,24 @@ class Money(object):
 # ____________________________________________________________________
 # Definitions of ISO 4217 Currencies
 # Source: http://www.iso.org/iso/support/faqs/faqs_widely_used_standards/widely_used_standards_other/currency_codes/currency_codes_list-1.htm
+
 CURRENCIES = {}
-def add_currency(code, numeric, name, countries):
+def add_currency(code, numeric, name, countries, prefix=None, suffix=None):
     global CURRENCIES
-    CURRENCIES[code] = Currency(code=code, numeric=numeric, name=name, countries=countries)
+    CURRENCIES[code] = Currency(
+        code=code, 
+        numeric=numeric, 
+        name=name, 
+        countries=countries,
+        prefix=prefix,
+        suffix=suffix)
+    return CURRENCIES[code]
     
 def get_currency(code):
-    return CURRENCIES[code]
+    try:
+        return CURRENCIES[code]
+    except KeyError:
+        raise CurrencyDoesNotExist(code)
 
 add_currency('BZD', '084', 'Belize Dollar', ['BELIZE'])
 add_currency('YER', '886', 'Yemeni Rial', ['YEMEN'])
@@ -375,4 +357,4 @@ add_currency('XPF', '953', 'CFP Franc', ['FRENCH POLYNESIA', 'NEW CALEDONIA', 'W
 
 add_currency('XYZ', '999', 'Default currency.', [])
 
-DEFAULT_CURRENCY = CURRENCIES[DEFAULT_CURRENCY_CODE]
+DEFAULT_CURRENCY = get_currency(DEFAULT_CURRENCY_CODE)

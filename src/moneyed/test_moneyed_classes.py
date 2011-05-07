@@ -23,11 +23,6 @@ class TestCurrency:
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
 
-    def test_set_exchange_rate(self):
-        test_exch_rate = Decimal('1.23')
-        self.default_curr.set_exchange_rate(test_exch_rate)
-        assert self.default_curr.exchange_rate == test_exch_rate
-
 
 class TestMoney:
 
@@ -60,7 +55,7 @@ class TestMoney:
         assert one_million_dollars.amount == self.one_million_decimal
 
     def test_repr(self):
-        assert str(self.one_million_bucks) == '$1,000,000.00 USD'
+        assert str(self.one_million_bucks) == '1000000 USD'
 
     def test_unicode(self):
         self.test_repr()
