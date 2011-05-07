@@ -3,7 +3,7 @@
 from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
-from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, set_default_currency
+from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY
 
 
 class TestCurrency:
@@ -51,10 +51,9 @@ class TestMoney:
 
     def test_init_default_currency(self):
         one_million = self.one_million_decimal
-        set_default_currency(code='USD')  # Changes global default currency.
         one_million_dollars = Money(amount=one_million)  # No currency given!
         assert one_million_dollars.amount == one_million
-        assert one_million_dollars.currency == self.USD
+        assert one_million_dollars.currency == DEFAULT_CURRENCY
 
     def test_init_float(self):
         one_million_dollars = Money(amount=1000000.0)

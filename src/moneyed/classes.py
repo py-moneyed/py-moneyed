@@ -15,6 +15,8 @@ DEFAULT_LOCALE = (
        locale.getdefaultlocale()[1].lower()))
 locale.setlocale(locale.LC_ALL, DEFAULT_LOCALE)
 
+# ISO-standard default currency
+DEFAULT_CURRENCY_CODE = 'XYZ'
 
 class Currency(object):
     """
@@ -49,18 +51,6 @@ class Currency(object):
             rate = Decimal(str(rate))
         self.exchange_rate = rate
 
-
-# With Currency class defined, setup some needed module globals:
-CURRENCIES = {}
-CURRENCIES['XYZ'] = Currency(code='XYZ', numeric='999')
-DEFAULT_CURRENCY = CURRENCIES['XYZ']
-
-
-def set_default_currency(code='XYZ'):
-    global DEFAULT_CURRENCY
-    DEFAULT_CURRENCY = CURRENCIES[code]
-
-
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
     # Exception class.
@@ -83,19 +73,14 @@ class Money(object):
     ($DEITY forbid) floats.
     """
 
-    amount = Decimal('0.0')
-    currency = DEFAULT_CURRENCY
-
-    def __init__(self, amount=Decimal('0.0'), currency=None):
+    def __init__(self, amount=Decimal('0.0'), currency=DEFAULT_CURRENCY_CODE):
         if not isinstance(amount, Decimal):
             amount = Decimal(str(amount))
         self.amount = amount
-        if not currency:
-            self.currency = DEFAULT_CURRENCY
-        else:
-            if not isinstance(currency, Currency):
-                currency = CURRENCIES[str(currency).upper()]
-            self.currency = currency
+        
+        if not isinstance(currency, Currency):
+            currency = CURRENCIES[str(currency).upper()]
+        self.currency = currency
 
     def __unicode__(self):
         return "%s %s" % (
@@ -126,7 +111,7 @@ class Money(object):
             other = other.convert_to_default()
             return Money(
                 amount=(this.amount + other.amount),
-                currency=DEFAULT_CURRENCY)
+                currency=DEFAULT_CURRENCY_CODE)
 
     def __sub__(self, other):
         return self.__add__(-other)
@@ -169,7 +154,7 @@ class Money(object):
     def convert_to_default(self):
         return Money(
             amount=(self.amount * self.currency.exchange_rate),
-            currency=DEFAULT_CURRENCY)
+            currency=DEFAULT_CURRENCY_CODE)
 
     def convert_to(self, currency):
         """
@@ -222,7 +207,7 @@ class Money(object):
 # ____________________________________________________________________
 # Definitions of ISO 4217 Currencies
 # Source: http://www.iso.org/iso/support/faqs/faqs_widely_used_standards/widely_used_standards_other/currency_codes/currency_codes_list-1.htm
-
+CURRENCIES = {}
 CURRENCIES['BZD'] = Currency(code='BZD', numeric='084', name='Belize Dollar', countries=['BELIZE'])
 CURRENCIES['YER'] = Currency(code='YER', numeric='886', name='Yemeni Rial', countries=['YEMEN'])
 CURRENCIES['XBA'] = Currency(code='XBA', numeric='955', name='Bond Markets Units European Composite Unit (EURCO)', countries=[])
@@ -381,3 +366,5 @@ CURRENCIES['BAM'] = Currency(code='BAM', numeric='977', name='Convertible Marks'
 CURRENCIES['LTL'] = Currency(code='LTL', numeric='440', name='Lithuanian Litas', countries=['LITHUANIA'])
 CURRENCIES['ETB'] = Currency(code='ETB', numeric='230', name='Ethiopian Birr', countries=['ETHIOPIA'])
 CURRENCIES['XPF'] = Currency(code='XPF', numeric='953', name='CFP Franc', countries=['FRENCH POLYNESIA', 'NEW CALEDONIA', 'WALLIS AND FUTUNA'])
+
+DEFAULT_CURRENCY = CURRENCIES[DEFAULT_CURRENCY_CODE]
