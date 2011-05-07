@@ -81,17 +81,13 @@ class Money(object):
 
     def __add__(self, other):
         if not isinstance(other, Money):
-            raise TypeError('Cannot add a Money and non-Money instance.')
+            raise TypeError('Cannot add or subtract a Money and non-Money instance.')
         if self.currency == other.currency:
             return Money(
                 amount=self.amount + other.amount,
                 currency=self.currency)
-        else:
-            this = self.convert_to_default()
-            other = other.convert_to_default()
-            return Money(
-                amount=(this.amount + other.amount),
-                currency=DEFAULT_CURRENCY_CODE)
+        
+        raise TypeError('Cannot add or subtract two Money instances with different currencies.')
 
     def __sub__(self, other):
         return self.__add__(-other)
@@ -156,7 +152,7 @@ class Money(object):
         if (self.currency == other.currency):
             return (self.amount < other.amount)
         else:
-            raise TypeError('Cannot compare different currencies (yet).')
+            raise TypeError('Cannot compare Money with different currencies.')
 
     def __gt__(self, other):
         if not isinstance(other, Money):
@@ -164,7 +160,7 @@ class Money(object):
         if (self.currency == other.currency):
             return (self.amount > other.amount)
         else:
-            raise TypeError('Cannot compare different currencies (yet).')
+            raise TypeError('Cannot compare Money with different currencies.')
 
     def __le__(self, other):
         return self < other or self == other
