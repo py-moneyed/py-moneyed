@@ -64,7 +64,6 @@ class MoneyComparisonError(TypeError):
         return "Cannot compare instances of Money and %s" \
                % self.other.__class__.__name__
 
-
 class Money(object):
     """
     A Money instance is a combination of data - an amount and a
@@ -211,6 +210,9 @@ CURRENCIES = {}
 def add_currency(code, numeric, name, countries):
     global CURRENCIES
     CURRENCIES[code] = Currency(code=code, numeric=numeric, name=name, countries=countries)
+    
+def get_currency(code):
+    return CURRENCIES[code]
 
 add_currency('BZD', '084', 'Belize Dollar', ['BELIZE'])
 add_currency('YER', '886', 'Yemeni Rial', ['YEMEN'])
