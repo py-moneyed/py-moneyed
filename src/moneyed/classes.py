@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
+from moneyed.format import format_money
 
 # Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'XYZ'
@@ -22,9 +23,9 @@ class Currency(object):
         self.numeric = numeric
         
         if suffix is None and prefix is None:
-            suffix = code
+            suffix = u" %s" % code
         self.prefix = prefix or u''
-        self.suffix = suffix
+        self.suffix = suffix or u''
 
     def __repr__(self):
         return self.code
@@ -64,10 +65,14 @@ class Money(object):
             currency = get_currency(str(currency).upper())
         self.currency = currency
 
-    def __unicode__(self):
-        return "%s %s" % (self.amount, self.currency)
+    def __repr__(self):
+        return u"%s %s" % (self.amount, self.currency)
 
-    __repr__ = __unicode__
+    def __unicode__(self):
+        return format_money(self)
+
+    def __str__(self):
+        return format_money(self)
 
     def __pos__(self):
         return Money(
@@ -174,6 +179,7 @@ class Money(object):
 # Source: http://www.iso.org/iso/support/faqs/faqs_widely_used_standards/widely_used_standards_other/currency_codes/currency_codes_list-1.htm
 
 CURRENCIES = {}
+
 def add_currency(code, numeric, name, countries, prefix=None, suffix=None):
     global CURRENCIES
     CURRENCIES[code] = Currency(
@@ -326,7 +332,7 @@ TWD = add_currency('TWD', '901', 'New Taiwan Dollar', ['TAIWAN'])
 TZS = add_currency('TZS', '834', 'Tanzanian Shilling', ['TANZANIA'])
 UAH = add_currency('UAH', '980', 'Hryvnia', ['UKRAINE'])
 UGX = add_currency('UGX', '800', 'Uganda Shilling', ['UGANDA'])
-USD = add_currency('USD', '840', 'US Dollar', ['AMERICAN SAMOA', 'BRITISH INDIAN OCEAN TERRITORY', 'ECUADOR', 'GUAM', 'MARSHALL ISLANDS', 'MICRONESIA', 'NORTHERN MARIANA ISLANDS', 'PALAU', 'PUERTO RICO', 'TIMOR-LESTE', 'TURKS AND CAICOS ISLANDS', 'UNITED STATES MINOR OUTLYING ISLANDS', 'VIRGIN ISLANDS (BRITISH)', 'VIRGIN ISLANDS (U.S.)'])
+USD = add_currency('USD', '840', 'US Dollar', ['AMERICAN SAMOA', 'BRITISH INDIAN OCEAN TERRITORY', 'ECUADOR', 'GUAM', 'MARSHALL ISLANDS', 'MICRONESIA', 'NORTHERN MARIANA ISLANDS', 'PALAU', 'PUERTO RICO', 'TIMOR-LESTE', 'TURKS AND CAICOS ISLANDS', 'UNITED STATES MINOR OUTLYING ISLANDS', 'VIRGIN ISLANDS (BRITISH)', 'VIRGIN ISLANDS (U.S.)'], prefix=u'$')
 UZS = add_currency('UZS', '860', 'Uzbekistan Sum', ['UZBEKISTAN'])
 VEF = add_currency('VEF', '937', 'Bolivar Fuerte', ['VENEZUELA'])
 VND = add_currency('VND', '704', 'Dong', ['VIET NAM'])

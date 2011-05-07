@@ -1,1 +1,1 @@
-from classes import Currency, Money, get_currency, add_currency
+from classes import *

@@ -55,10 +55,10 @@ class TestMoney:
         assert one_million_dollars.amount == self.one_million_decimal
 
     def test_repr(self):
-        assert str(self.one_million_bucks) == '1000000 USD'
+        assert repr(self.one_million_bucks) == '1000000 USD'
 
-    def test_unicode(self):
-        self.test_repr()
+    def test_str(self):
+        assert str(self.one_million_bucks) == '$1,000,000.00'
 
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks
