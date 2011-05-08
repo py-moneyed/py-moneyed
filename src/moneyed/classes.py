@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
-from moneyed.format import format_money
 
 # Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'XYZ'
@@ -63,9 +62,11 @@ class Money(object):
         return u"%s %s" % (self.amount, self.currency)
 
     def __unicode__(self):
+        from moneyed.localization import format_money
         return format_money(self)
 
     def __str__(self):
+        from moneyed.localization import format_money
         return format_money(self)
 
     def __pos__(self):
