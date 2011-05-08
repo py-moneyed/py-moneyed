@@ -58,7 +58,7 @@ class TestMoney:
         assert repr(self.one_million_bucks) == '1000000 USD'
 
     def test_str(self):
-        assert str(self.one_million_bucks) == '$1,000,000.00'
+        assert str(self.one_million_bucks) == 'US$1,000,000.00'
 
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks
