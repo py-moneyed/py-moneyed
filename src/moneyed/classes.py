@@ -135,15 +135,12 @@ class Money(object):
     # _______________________________________
     # Override comparison operators
     def __eq__(self, other):
-        if not isinstance(other, Money):
-            raise MoneyComparisonError(other)
-        return (self.amount == other.amount) \
+        return isinstance(other, Money)\
+               and (self.amount == other.amount) \
                and (self.currency == other.currency)
 
     def __ne__(self, other):
         result = self.__eq__(other)
-        if result is NotImplemented:
-            return result
         return not result
 
     def __lt__(self, other):
