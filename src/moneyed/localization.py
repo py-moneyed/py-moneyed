@@ -5,77 +5,94 @@ import moneyed
 
 DEFAULT = "default"
 
+
 class CurrencyFormatter(object):
-    
+
     sign_definitions = {}
     formatting_definitions = {}
-    
+
     def add_sign_definition(self, locale, currency, prefix=u'', suffix=u''):
         locale = locale.upper()
         currency_code = currency.code.upper()
-        if not self.sign_definitions.has_key(locale):
+        if not locale in self.sign_definitions:
             self.sign_definitions[locale] = {}
         self.sign_definitions[locale][currency_code] = (prefix, suffix)
-    
-    def add_formatting_definition(self, locale, group_size, group_separator, 
-                                  decimal_point, positive_sign, trailing_positive_sign,
-                                  negative_sign, trailing_negative_sign, rounding_method):
+
+    def add_formatting_definition(self, locale, group_size,
+                                  group_separator, decimal_point,
+                                  positive_sign, trailing_positive_sign,
+                                  negative_sign, trailing_negative_sign,
+                                  rounding_method):
         locale = locale.upper()
-        self.formatting_definitions[locale] = { 
-            'group_size' : group_size,
-            'group_separator' : group_separator,
-            'decimal_point' : decimal_point,
-            'positive_sign' : positive_sign,
-            'trailing_positive_sign' : trailing_positive_sign,
-            'negative_sign' : negative_sign,
-            'trailing_negative_sign' : trailing_negative_sign,
-            'rounding_method' : rounding_method }
-    
+        self.formatting_definitions[locale] = {
+            'group_size': group_size,
+            'group_separator': group_separator,
+            'decimal_point': decimal_point,
+            'positive_sign': positive_sign,
+            'trailing_positive_sign': trailing_positive_sign,
+            'negative_sign': negative_sign,
+            'trailing_negative_sign': trailing_negative_sign,
+            'rounding_method': rounding_method}
+
     def get_sign_definition(self, currency_code, locale):
         locale = locale.upper()
         currency_code = currency_code.upper()
-        local_set = self.sign_definitions.get(locale) if self.sign_definitions.has_key(locale) else self.sign_definitions.get(DEFAULT)
-        return local_set.get(currency_code) if local_set.has_key(currency_code) else ('', " %s" % currency_code)
-    
+        if locale in self.sign_definitions:
+            local_set = self.sign_definitions.get(locale)
+        else:
+            self.sign_definitions.get(DEFAULT)
+
+        if currency_code in local_set:
+            return local_set.get(currency_code)
+        else:
+            return ('', " %s" % currency_code)
+
     def get_formatting_definition(self, locale):
         locale = locale.upper()
-        return self.formatting_definitions.get(locale) if self.formatting_definitions.has_key(locale) else self.formatting_definitions.get(DEFAULT)
-    
-    def format(self, money, include_symbol=True, locale=DEFAULT, decimal_places=None, rounding_method=None):
-        
-        locale = locale.upper()
+        if locale in self.formatting_definitions:
+            return self.formatting_definitions.get(locale)
+        else:
+            return self.formatting_definitions.get(DEFAULT)
 
-        prefix, suffix = self.get_sign_definition(money.currency.code.upper(), locale)
+    def format(self, money, include_symbol=True, locale=DEFAULT,
+               decimal_places=None, rounding_method=None):
+        locale = locale.upper()
+        code = money.currency.code.upper()
+        prefix, suffix = self.get_sign_definition(code, locale)
         formatting = self.get_formatting_definition(locale)
-        
+
         if rounding_method is None:
             rounding_method = formatting['rounding_method']
-            
+
         if decimal_places is None:
-            # TODO: Add decimal places to each currency definition, use as default here.
+            # TODO: Use individual defaults for each currency
             decimal_places = 2
-        
-        q = Decimal(10) ** -decimal_places # 2 places --> '0.01'
-        sign, digits, exp = money.amount.quantize(q, rounding_method).as_tuple()
-        
+
+        q = Decimal(10) ** -decimal_places  # 2 places --> '0.01'
+        quantized = money.amount.quantize(q, rounding_method)
+        negative, digits, e = quantized.as_tuple()
+
         result = []
         digits = map(str, digits)
         build, next = result.append, digits.pop
-        
+
         # Trailing sign
-        build(formatting['trailing_negative_sign'] if sign else formatting['trailing_positive_sign'])
-        
+        if negative:
+            build(formatting['trailing_negative_sign'])
+        else:
+            build(formatting['trailing_positive_sign'])
+
         # Suffix
         if include_symbol:
             build(suffix)
-        
+
         # Decimals
         for i in range(decimal_places):
             build(next() if digits else '0')
-            
+
         # Decimal points
         build(formatting['decimal_point'])
-        
+
         # Grouped number
         if not digits:
             build('0')
@@ -87,42 +104,50 @@ class CurrencyFormatter(object):
                 if i == formatting['group_size'] and digits:
                     i = 0
                     build(formatting['group_separator'])
-        
+
         # Prefix
         if include_symbol:
             build(prefix)
-        
+
         # Sign
-        build(formatting['negative_sign'] if sign else formatting['positive_sign'])
-        
+        if negative:
+            build(formatting['negative_sign'])
+        else:
+            build(formatting['positive_sign'])
+
         return u''.join(reversed(result))
-    
+
 _FORMATTER = CurrencyFormatter()
 
 format_money = _FORMATTER.format
 
-_sign   = _FORMATTER.add_sign_definition
+_sign = _FORMATTER.add_sign_definition
 _format = _FORMATTER.add_formatting_definition
 
 ## FORMATTING RULES
 
-_format(DEFAULT, group_size=3, group_separator=",", decimal_point=".", 
+_format(DEFAULT, group_size=3, group_separator=",", decimal_point=".",
                  positive_sign="",  trailing_positive_sign="",
-                 negative_sign="-", trailing_negative_sign="", rounding_method=ROUND_HALF_EVEN)
+                 negative_sign="-", trailing_negative_sign="",
+                 rounding_method=ROUND_HALF_EVEN)
 
-_format("en_US", group_size=3, group_separator=",", decimal_point=".", 
+_format("en_US", group_size=3, group_separator=",", decimal_point=".",
                  positive_sign="",  trailing_positive_sign="",
-                 negative_sign="-", trailing_negative_sign="", rounding_method=ROUND_HALF_EVEN)
+                 negative_sign="-", trailing_negative_sign="",
+                 rounding_method=ROUND_HALF_EVEN)
 
-_format("sv_SE", group_size=3, group_separator=" ", decimal_point=",", 
+_format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
                  positive_sign="",  trailing_positive_sign="",
-                 negative_sign="-", trailing_negative_sign="", rounding_method=ROUND_HALF_EVEN)
+                 negative_sign="-", trailing_negative_sign="",
+                 rounding_method=ROUND_HALF_EVEN)
 
 ## CURRENCY SIGNS
-# Default currency signs. These can be overridden for locales where 
-# foreign or local currency signs for one reason or another differ from the norm.
+# Default currency signs. These can be overridden for locales where
+# foreign or local currency signs for one reason or another differ
+# from the norm.
 
-# There may be errors here, they have been entered manually. Please fork and fix if you find errors.
+# There may be errors here, they have been entered manually. Please
+# fork and fix if you find errors.
 # Code lives here (2011-05-08): https://github.com/limist/py-moneyed
 
 _sign(DEFAULT, moneyed.AED, prefix=u'د.إ')
@@ -244,7 +269,7 @@ _sign(DEFAULT, moneyed.SCR, prefix=u'SRe')
 _sign(DEFAULT, moneyed.SDG, prefix=u'S£')
 _sign(DEFAULT, moneyed.SEK, suffix=u' Skr')
 _sign(DEFAULT, moneyed.SGD, prefix=u'S$')
-_sign(DEFAULT, moneyed.SHP, prefix=u'SH£') 
+_sign(DEFAULT, moneyed.SHP, prefix=u'SH£')
 _sign(DEFAULT, moneyed.SLL, prefix=u'Le')
 _sign(DEFAULT, moneyed.SOS, prefix=u'Sh.So.')
 _sign(DEFAULT, moneyed.SRD, prefix=u'SRD$')

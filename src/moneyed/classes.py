@@ -5,6 +5,7 @@ from decimal import Decimal
 # Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'XYZ'
 
+
 class Currency(object):
     """
     A Currency represents a form of money issued by governments, and
@@ -23,6 +24,7 @@ class Currency(object):
     def __repr__(self):
         return self.code
 
+
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
     # Exception class.
@@ -35,11 +37,14 @@ class MoneyComparisonError(TypeError):
         # Note: at least w/ Python 2.x, use __str__, not __unicode__.
         return "Cannot compare instances of Money and %s" \
                % self.other.__class__.__name__
-               
+
+
 class CurrencyDoesNotExist(Exception):
-    
+
     def __init__(self, code):
-        super(CurrencyDoesNotExist, self).__init__(u"No currency with code %s is defined." % code)
+        super(CurrencyDoesNotExist, self).__init__(
+            u"No currency with code %s is defined." % code)
+
 
 class Money(object):
     """
@@ -53,7 +58,7 @@ class Money(object):
         if not isinstance(amount, Decimal):
             amount = Decimal(str(amount))
         self.amount = amount
-        
+
         if not isinstance(currency, Currency):
             currency = get_currency(str(currency).upper())
         self.currency = currency
@@ -81,13 +86,15 @@ class Money(object):
 
     def __add__(self, other):
         if not isinstance(other, Money):
-            raise TypeError('Cannot add or subtract a Money and non-Money instance.')
+            raise TypeError('Cannot add or subtract a ' +
+                            'Money and non-Money instance.')
         if self.currency == other.currency:
             return Money(
                 amount=self.amount + other.amount,
                 currency=self.currency)
-        
-        raise TypeError('Cannot add or subtract two Money instances with different currencies.')
+
+        raise TypeError('Cannot add or subtract two Money ' +
+                        'instances with different currencies.')
 
     def __sub__(self, other):
         return self.__add__(-other)
@@ -172,15 +179,17 @@ class Money(object):
 
 CURRENCIES = {}
 
+
 def add_currency(code, numeric, name, countries):
     global CURRENCIES
     CURRENCIES[code] = Currency(
-        code=code, 
-        numeric=numeric, 
-        name=name, 
+        code=code,
+        numeric=numeric,
+        name=name,
         countries=countries)
     return CURRENCIES[code]
-    
+
+
 def get_currency(code):
     try:
         return CURRENCIES[code]
@@ -221,7 +230,7 @@ CLP = add_currency('CLP', '152', 'Chilean peso', ['CHILE'])
 CNY = add_currency('CNY', '156', 'Yuan Renminbi', ['CHINA'])
 COP = add_currency('COP', '170', 'Colombian peso', ['COLOMBIA'])
 CRC = add_currency('CRC', '188', 'Costa Rican Colon', ['COSTA RICA'])
-CUC = add_currency('CUC', '931', 'Cuban convertible peso' ,['CUBA'])
+CUC = add_currency('CUC', '931', 'Cuban convertible peso', ['CUBA'])
 CUP = add_currency('CUP', '192', 'Cuban Peso', ['CUBA'])
 CVE = add_currency('CVE', '132', 'Cape Verde Escudo', ['CAPE VERDE'])
 CZK = add_currency('CZK', '203', 'Czech Koruna', ['CZECH REPUBLIC'])
@@ -341,7 +350,7 @@ VEF = add_currency('VEF', '937', 'Bolivar Fuerte', ['VENEZUELA'])
 VND = add_currency('VND', '704', 'Dong', ['VIET NAM'])
 VUV = add_currency('VUV', '548', 'Vatu', ['VANUATU'])
 WST = add_currency('WST', '882', 'Tala', ['SAMOA'])
-XAF = add_currency('XAF', '950', 'CFA franc BEAC', ['CAMEROON','CENTRAL AFRICAN REPUBLIC','REPUBLIC OF THE CONGO','CHAD','EQUATORIAL GUINEA','GABON'])
+XAF = add_currency('XAF', '950', 'CFA franc BEAC', ['CAMEROON', 'CENTRAL AFRICAN REPUBLIC', 'REPUBLIC OF THE CONGO', 'CHAD', 'EQUATORIAL GUINEA', 'GABON'])
 XAG = add_currency('XAG', '961', 'Silver', [])
 XAU = add_currency('XAU', '959', 'Gold', [])
 XBA = add_currency('XBA', '955', 'Bond Markets Units European Composite Unit (EURCO)', [])
@@ -352,7 +361,7 @@ XCD = add_currency('XCD', '951', 'East Caribbean Dollar', ['ANGUILLA', 'ANTIGUA 
 XDR = add_currency('XDR', '960', 'SDR', ['INTERNATIONAL MONETARY FUND (I.M.F)'])
 XFO = add_currency('XFO', 'Nil', 'Gold-Franc', [])
 XFU = add_currency('XFU', 'Nil', 'UIC-Franc', [])
-XOF = add_currency('XOF', '952', 'CFA Franc BCEAO', ['BENIN','BURKINA FASO','COTE D\'IVOIRE','GUINEA-BISSAU','MALI','NIGER','SENEGAL','TOGO'])
+XOF = add_currency('XOF', '952', 'CFA Franc BCEAO', ['BENIN', 'BURKINA FASO', 'COTE D\'IVOIRE', 'GUINEA-BISSAU', 'MALI', 'NIGER', 'SENEGAL', 'TOGO'])
 XPD = add_currency('XPD', '964', 'Palladium', [])
 XPF = add_currency('XPF', '953', 'CFP Franc', ['FRENCH POLYNESIA', 'NEW CALEDONIA', 'WALLIS AND FUTUNA'])
 XPT = add_currency('XPT', '962', 'Platinum', [])
