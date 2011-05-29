@@ -3,7 +3,7 @@
 from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
-from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, set_default_currency
+from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY
 
 
 class TestCurrency:
@@ -22,11 +22,6 @@ class TestCurrency:
 
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
-
-    def test_set_exchange_rate(self):
-        test_exch_rate = Decimal('1.23')
-        self.default_curr.set_exchange_rate(test_exch_rate)
-        assert self.default_curr.exchange_rate == test_exch_rate
 
 
 class TestMoney:
@@ -51,20 +46,19 @@ class TestMoney:
 
     def test_init_default_currency(self):
         one_million = self.one_million_decimal
-        set_default_currency(code='USD')  # Changes global default currency.
         one_million_dollars = Money(amount=one_million)  # No currency given!
         assert one_million_dollars.amount == one_million
-        assert one_million_dollars.currency == self.USD
+        assert one_million_dollars.currency == DEFAULT_CURRENCY
 
     def test_init_float(self):
         one_million_dollars = Money(amount=1000000.0)
         assert one_million_dollars.amount == self.one_million_decimal
 
     def test_repr(self):
-        assert str(self.one_million_bucks) == '$1,000,000.00 USD'
+        assert repr(self.one_million_bucks) == '1000000 USD'
 
-    def test_unicode(self):
-        self.test_repr()
+    def test_str(self):
+        assert str(self.one_million_bucks) == 'US$1,000,000.00'
 
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks
@@ -128,10 +122,14 @@ class TestMoney:
     def test_ne(self):
         x = Money(amount=1, currency=self.USD)
         assert self.one_million_bucks != x
+        
+    def test_equality_to_other_types(self):
+        x = Money(amount=1, currency=self.USD)
+        assert self.one_million_bucks != None
+        assert self.one_million_bucks != {}
 
-    def test_ne_mistyped(self):
-        with pytest.raises(MoneyComparisonError):
-            assert self.one_million_bucks != self.one_million_decimal
+    def test_not_equal_to_decimal_types(self):
+        assert self.one_million_bucks != self.one_million_decimal
 
     def test_lt(self):
         x = Money(amount=1, currency=self.USD)
