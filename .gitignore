@@ -11,3 +11,7 @@ src/*.egg-info
 build
 .ropeproject
 .tox
+
+.project
+.pydevproject
+.settings
