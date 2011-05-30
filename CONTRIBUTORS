@@ -1,0 +1,5 @@
+py-moneyed was started by Kai Wu in July 2010 and publicly released in
+February 2011.
+
+Jacob Hansson (jacob@voltvoodoo.com) contributed a better currency
+formatting implementation, and various patches, in May 2011.
