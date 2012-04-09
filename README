@@ -2,30 +2,31 @@ Overview
 ============================================================
 
 The need to represent instances of money frequently arises in software
-development, particularly any financial/economics software.  The
-py-moneyed package provides the classes of Money and Currency to help
-with that need, at a level more useful than just Python's Decimal
-class, or ($DEITY forbid) the float primitive.  The package is meant
-to be stand-alone and easy to either use directly, or subclass
+development, particularly any financial/economics software.  To
+address that need, the py-moneyed package provides the classes of
+Money and Currency, at a level more useful than just using Python's
+Decimal class, or ($DEITY forbid) the float primitive.  The package is
+meant to be stand-alone and easy to either use directly, or subclass
 further.  py-moneyed is BSD-licensed.
 
 Some of the py-moneyed code was first derived from python-money
 available via this URL: http://code.google.com/p/python-money/ Because
-the Google Code version has been inactive since May 2008, I forked it
+that Google Code version has been inactive since May 2008, I forked it
 and modified it for my needs in 2010. Compared to python-money, major
-changes in py-moneyed include separating it from Django usage,
+changes here in py-moneyed include separating it from Django usage,
 tightening types handling in operators, a complete suite of unit
-tests, PEP8 adherence, and providing a setup.py.
+tests, PEP8 adherence, providing a setup.py, and local currency
+formatting/display.
 
 
 Usage
 -----
 
-On to the code: the Money class is instantiated with:
+On to the code! The Money class is instantiated with:
 
-- An amount which can be of type string, float, or Decimal.
+- An amount which can be of type string, float, or Decimal.  
 - A currency, which usually is specified by the three-capital-letters
-  ISO currency code,e.g. USD.
+  ISO currency code, e.g. USD, EUR, CNY, and so on.
 
 For example,
 
@@ -53,9 +54,9 @@ Testing
 Unit-tests have been provided, and can be run with tox_ (recommended)
 or just py.test.  
 
-If you don't have tox installed on your system, it's a new tool to
-automate running tests and deployment; install it to your global
-Python environment with:
+If you don't have tox installed on your system, it's a modern Python
+tool to automate running tests and deployment; install it to your
+global Python environment with:
 
 ::
 
@@ -76,11 +77,11 @@ use py-moneyed with other Python versions, please let me know if you
 are successful or not.
 
 
-.. _tox: http://codespeak.net/tox/
+.. _tox: http://tox.testrun.org/latest/
 
 
 Future
 ------
 
-Future versions of py-moneyed may provide currency conversions, or
+Future versions of py-moneyed may provide currency conversions or
 other capabilities, dependent on feedback and usage.
