@@ -88,7 +88,7 @@ class Money(object):
         if not isinstance(other, Money):
             raise TypeError('Cannot add or subtract a ' +
                             'Money and non-Money instance.')
-        if self.currency == other.currency:
+        if self.currency.code == other.currency.code:
             return Money(
                 amount=self.amount + other.amount,
                 currency=self.currency)

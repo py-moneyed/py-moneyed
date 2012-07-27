@@ -141,6 +141,11 @@ _format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
 
+_format("fi_FI", group_size=3, group_separator=" ", decimal_point=",",
+                 positive_sign="",  trailing_positive_sign="",
+                 negative_sign="-", trailing_negative_sign="",
+                 rounding_method=ROUND_HALF_EVEN)
+
 ## CURRENCY SIGNS
 # Default currency signs. These can be overridden for locales where
 # foreign or local currency signs for one reason or another differ
@@ -302,3 +307,4 @@ _sign(DEFAULT, moneyed.ZWL, prefix=u'Z$')
 _sign('en_US', moneyed.USD, prefix=u'$')
 _sign('en_UK', moneyed.GBP, prefix=u'£')
 _sign('sv_SE', moneyed.SEK, prefix=u' kr')
+_sign('fi_FI', moneyed.EUR, suffix=u' €')
