@@ -1,4 +1,7 @@
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from distutils.core import setup
 
 setup(
     name='py-moneyed',
@@ -24,5 +27,5 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Office/Business :: Financial',
         'Topic :: Software Development :: Libraries :: Python Modules'],
-    long_description=open('README', 'r').read()
+    long_description=open('README.rst', 'r').read()
     )
