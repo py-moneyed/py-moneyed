@@ -1,5 +1,5 @@
 Overview
-============================================================
+========
 
 The need to represent instances of money frequently arises in software
 development, particularly any financial/economics software.  To
@@ -18,7 +18,6 @@ tightening types handling in operators, a complete suite of unit
 tests, PEP8 adherence, providing a setup.py, and local currency
 formatting/display.
 
-
 Usage
 -----
 
@@ -30,7 +29,7 @@ On to the code! The Money class is instantiated with:
 
 For example,
 
-::
+.. sourcecode:: python
 
     from moneyed.classes import Money
     sale_price_today = Money(amount='99.99', currency='USD')
@@ -47,7 +46,6 @@ with ISO numeric code, canonical name in English, and countries using
 the currency.  Thanks to the python-money developers for their
 (possibly tedious) data-entry of the ISO codes!
 
-
 Testing
 --------
 
@@ -56,17 +54,13 @@ or just py.test.
 
 If you don't have tox installed on your system, it's a modern Python
 tool to automate running tests and deployment; install it to your
-global Python environment with:
-
-::
+global Python environment with: ::
 
     sudo pip install tox
     
 Then you can activate a virtualenv (any will do - by design tox will
 not run from your globally-installed python), cd to the py-moneyed
-source directory then run the tests at the shell:
-
-::
+source directory then run the tests at the shell: ::
 
     cd where/py-moneyed-source/is
     tox
@@ -76,12 +70,11 @@ with Python 2.x but I haven't tried other versions yet.  Should you
 use py-moneyed with other Python versions, please let me know if you
 are successful or not.
 
-
 .. _tox: http://tox.testrun.org/latest/
-
 
 Future
 ------
 
 Future versions of py-moneyed may provide currency conversions or
 other capabilities, dependent on feedback and usage.
+
