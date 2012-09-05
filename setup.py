@@ -1,4 +1,5 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from setuptools import setup
 
 setup(
     name='py-moneyed',
@@ -13,8 +14,7 @@ setup(
     keywords="money currency class abstraction",
     license='BSD',
     install_requires=[
-        'setuptools',
-        'pytest >= 2'],
+        'setuptools'],
     classifiers=[
         'Programming Language :: Python',
         'License :: OSI Approved :: BSD License',
@@ -24,5 +24,4 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Office/Business :: Financial',
         'Topic :: Software Development :: Libraries :: Python Modules'],
-    long_description=open('README', 'r').read()
-    )
+    long_description=open('README', 'r').read())
