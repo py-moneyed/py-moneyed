@@ -14,6 +14,7 @@ setup(
     keywords="money currency class abstraction",
     license='BSD',
     install_requires=[
+        # 'pytest>2',  # For those who wants to use pytest for testing.
         'setuptools'],
     classifiers=[
         'Programming Language :: Python',
