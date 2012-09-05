@@ -11,6 +11,11 @@ class TestCurrency(unittest.TestCase):
         from moneyed.classes import Currency
         self.assertTrue(issubclass(Currency, object))
 
+    def test_instance(self):
+        from moneyed.classes import Currency
+        instance = self.create_instance()
+        self.assertIsInstance(instance, Currency)
+
     def test_code_default(self):
         instance = self.create_instance()
         self.assertEqual(instance.code, '')
