@@ -17,7 +17,9 @@ class Currency(object):
     rate - the last remains unimplemented however.
     """
 
-    def __init__(self, code='', numeric='999', name='', countries=[]):
+    def __init__(self, code='', numeric='999', name='', countries=None):
+        if countries is None:
+            countries = []
         self.code = code
         self.countries = countries
         self.name = name
