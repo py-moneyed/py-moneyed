@@ -4,7 +4,7 @@ setup(
     name='py-moneyed',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    version='0.4',
+    version='0.4.1', 
     description='Provides Currency and Money classes for use in your Python code.',
     author='Kai',
     author_email='k@limist.com',
@@ -24,5 +24,5 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Office/Business :: Financial',
         'Topic :: Software Development :: Libraries :: Python Modules'],
-    long_description=open('README', 'r').read()
+    long_description=open('README.rst', 'r').read()
     )
