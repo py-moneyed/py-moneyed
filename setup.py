@@ -12,9 +12,7 @@ setup(
     download_url='',
     keywords="money currency class abstraction",
     license='BSD',
-    install_requires=[
-        'setuptools',
-        'pytest >= 2'],
+    install_requires=[],
     classifiers=[
         'Programming Language :: Python',
         'License :: OSI Approved :: BSD License',
