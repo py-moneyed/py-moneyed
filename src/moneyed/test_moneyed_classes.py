@@ -2,6 +2,8 @@
 #file test_moneyed_classes.py
 from __future__ import division
 from __future__ import unicode_literals
+
+from copy import deepcopy
 from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
@@ -43,6 +45,16 @@ class TestCurrency:
 
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
+
+    def test_compare(self):
+        other = deepcopy(self.default_curr)
+        # equality
+        assert self.default_curr == CURRENCIES['XYZ']
+        assert self.default_curr == other
+        # non-equality
+        other.code = 'USD'
+        assert self.default_curr != other
+        assert self.default_curr != CURRENCIES['USD']
 
 
 class TestMoney:
