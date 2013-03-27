@@ -22,7 +22,7 @@ class Currency(object):
         self.numeric = numeric
 
     def __eq__(self, other):
-        return type(self) is type(other) and self.code==other.code
+        return type(self) is type(other) and self.code == other.code
 
     def __ne__(self, other):
         return not self.__eq__(other)
