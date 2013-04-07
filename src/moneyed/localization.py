@@ -91,7 +91,8 @@ class CurrencyFormatter(object):
             build(next() if digits else '0')
 
         # Decimal points
-        build(formatting['decimal_point'])
+        if decimal_places:
+            build(formatting['decimal_point'])
 
         # Grouped number
         if not digits:
