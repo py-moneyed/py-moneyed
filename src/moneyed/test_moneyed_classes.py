@@ -57,6 +57,7 @@ class TestMoney:
 
     def test_repr(self):
         assert repr(self.one_million_bucks) == '1000000 USD'
+        assert repr(Money(Decimal('2.000'), 'PLN')) == '2 PLN'
 
     def test_str(self):
         assert str(self.one_million_bucks) == 'US$1,000,000.00'
@@ -129,7 +130,7 @@ class TestMoney:
     def test_ne(self):
         x = Money(amount=1, currency=self.USD)
         assert self.one_million_bucks != x
-        
+
     def test_equality_to_other_types(self):
         x = Money(amount=1, currency=self.USD)
         assert self.one_million_bucks != None
