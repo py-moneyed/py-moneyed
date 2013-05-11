@@ -64,7 +64,7 @@ class Money(object):
         self.currency = currency
 
     def __repr__(self):
-        return u"%s %s" % (self.amount, self.currency)
+        return u"%s %s" % (self.amount.normalize(), self.currency)
 
     def __unicode__(self):
         from moneyed.localization import format_money
