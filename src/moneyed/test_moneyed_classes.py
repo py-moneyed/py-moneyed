@@ -4,6 +4,7 @@ from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
 from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY
+from moneyed.localization import format_money
 
 
 class TestCurrency:
@@ -56,9 +57,16 @@ class TestMoney:
 
     def test_repr(self):
         assert repr(self.one_million_bucks) == '1000000 USD'
+        assert repr(Money(Decimal('2.000'), 'PLN')) == '2 PLN'
 
     def test_str(self):
         assert str(self.one_million_bucks) == 'US$1,000,000.00'
+
+    def test_format_money(self):
+        # Two decimal places by default
+        assert format_money(self.one_million_bucks) == 'US$1,000,000.00'
+        # No decimal point without fractional part
+        assert format_money(self.one_million_bucks, decimal_places=0) == 'US$1,000,000'
 
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks
@@ -122,7 +130,7 @@ class TestMoney:
     def test_ne(self):
         x = Money(amount=1, currency=self.USD)
         assert self.one_million_bucks != x
-        
+
     def test_equality_to_other_types(self):
         x = Money(amount=1, currency=self.USD)
         assert self.one_million_bucks != None

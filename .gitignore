@@ -1,14 +1,13 @@
-*.pyc
-*.pyo
+*.py[co]
 .installed.cfg
-bin
+bin/
 develop-eggs
-dist
+dist/
 downloads
 eggs
 parts
 src/*.egg-info
-build
+build/
 .ropeproject
 .tox
 

@@ -91,7 +91,8 @@ class CurrencyFormatter(object):
             build(next() if digits else '0')
 
         # Decimal points
-        build(formatting['decimal_point'])
+        if decimal_places:
+            build(formatting['decimal_point'])
 
         # Grouped number
         if not digits:
@@ -262,7 +263,7 @@ _sign(DEFAULT, moneyed.PEN, prefix=u'S/.')
 _sign(DEFAULT, moneyed.PGK, prefix=u'K')
 _sign(DEFAULT, moneyed.PHP, prefix=u'₱')
 _sign(DEFAULT, moneyed.PKR, prefix=u'₨')
-_sign(DEFAULT, moneyed.PLN, prefix=u'zł')
+_sign(DEFAULT, moneyed.PLN, suffix=u' zł')
 _sign(DEFAULT, moneyed.PYG, prefix=u'₲')
 _sign(DEFAULT, moneyed.QAR, prefix=u'ر.ق')
 _sign(DEFAULT, moneyed.RSD, prefix=u'дин')
