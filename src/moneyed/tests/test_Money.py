@@ -16,4 +16,3 @@ class TestMoney(unittest.TestCase):
         from moneyed.classes import Money
         instance = self.create_instance()
         self.assertIsInstance(instance, Money)
-

@@ -24,6 +24,10 @@ class Currency(object):
     def __repr__(self):
         return self.code
 
+    def __eq__(self, other):
+        """We user numeric as currency indentifier"""
+        return self.numeric == other.numeric
+
 
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
