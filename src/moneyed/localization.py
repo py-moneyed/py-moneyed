@@ -40,7 +40,7 @@ class CurrencyFormatter(object):
         if locale in self.sign_definitions:
             local_set = self.sign_definitions.get(locale)
         else:
-            self.sign_definitions.get(DEFAULT)
+            local_set = self.sign_definitions.get(DEFAULT)
 
         if currency_code in local_set:
             return local_set.get(currency_code)
@@ -308,3 +308,4 @@ _sign(DEFAULT, moneyed.ZWL, prefix=u'Z$')
 _sign('en_US', moneyed.USD, prefix=u'$')
 _sign('en_UK', moneyed.GBP, prefix=u'£')
 _sign('sv_SE', moneyed.SEK, prefix=u' kr')
+_sign('pl_PL', moneyed.PLN, suffix=u' zł')

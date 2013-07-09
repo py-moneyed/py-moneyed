@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 #file test_moneyed_classes.py
 
 from decimal import Decimal
@@ -66,6 +67,14 @@ class TestMoney:
         assert format_money(self.one_million_bucks) == 'US$1,000,000.00'
         # No decimal point without fractional part
         assert format_money(self.one_million_bucks, decimal_places=0) == 'US$1,000,000'
+        # locale == pl_PL
+        one_million_pln = Money('1000000', 'PLN')
+        # Two decimal places by default
+        assert format_money(one_million_pln, locale='pl_PL') == u'1 000 000,00 zł'
+        assert format_money(self.one_million_bucks, locale='pl_PL') == '1 000 000,00 USD'
+        # No decimal point without fractional part
+        assert format_money(one_million_pln, locale='pl_PL',
+                            decimal_places=0) == u'1 000 000 zł'
 
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks
@@ -129,7 +138,7 @@ class TestMoney:
     def test_ne(self):
         x = Money(amount=1, currency=self.USD)
         assert self.one_million_bucks != x
-        
+
     def test_equality_to_other_types(self):
         x = Money(amount=1, currency=self.USD)
         assert self.one_million_bucks != None
