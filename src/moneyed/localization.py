@@ -128,17 +128,22 @@ _format = _FORMATTER.add_formatting_definition
 ## FORMATTING RULES
 
 _format(DEFAULT, group_size=3, group_separator=",", decimal_point=".",
-                 positive_sign="",  trailing_positive_sign="",
+                 positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
 
 _format("en_US", group_size=3, group_separator=",", decimal_point=".",
-                 positive_sign="",  trailing_positive_sign="",
+                 positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
 
 _format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
-                 positive_sign="",  trailing_positive_sign="",
+                 positive_sign="", trailing_positive_sign="",
+                 negative_sign="-", trailing_negative_sign="",
+                 rounding_method=ROUND_HALF_EVEN)
+
+_format("pl_PL", group_size=3, group_separator=" ", decimal_point=",",
+                 positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
 
