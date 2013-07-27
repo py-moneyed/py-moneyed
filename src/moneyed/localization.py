@@ -142,6 +142,11 @@ _format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
 
+_format('es_BO', group_size=3, group_separator=".", decimal_point=",",
+                 positive_sign="",  trailing_positive_sign="",
+                 negative_sign="-", trailing_negative_sign="",
+                 rounding_method=ROUND_HALF_EVEN)
+
 ## CURRENCY SIGNS
 # Default currency signs. These can be overridden for locales where
 # foreign or local currency signs for one reason or another differ
@@ -166,6 +171,7 @@ _sign(DEFAULT, moneyed.BDT, prefix=u'৳')
 _sign(DEFAULT, moneyed.BGN, prefix=u'лв')
 _sign(DEFAULT, moneyed.BHD, prefix=u'.د.ب')
 _sign(DEFAULT, moneyed.BIF, prefix=u'FBu')
+_sign(DEFAULT, moneyed.BOB, suffix=u'Bs ')
 _sign(DEFAULT, moneyed.BMD, prefix=u'BD$')
 _sign(DEFAULT, moneyed.BND, prefix=u'B$')
 _sign(DEFAULT, moneyed.BRL, prefix=u'R$')
