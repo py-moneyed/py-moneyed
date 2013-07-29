@@ -219,6 +219,7 @@ BMD = add_currency('BMD', '060', 'Bermudian Dollar (customarily known as Bermuda
 BND = add_currency('BND', '096', 'Brunei Dollar', ['BRUNEI DARUSSALAM'])
 BRL = add_currency('BRL', '986', 'Brazilian Real', ['BRAZIL'])
 BSD = add_currency('BSD', '044', 'Bahamian Dollar', ['BAHAMAS'])
+BTC = add_currency('BTC', 'Nil', 'Bitcoin', [])
 BTN = add_currency('BTN', '064', 'Bhutanese ngultrum', ['BHUTAN'])
 BWP = add_currency('BWP', '072', 'Pula', ['BOTSWANA'])
 BYR = add_currency('BYR', '974', 'Belarussian Ruble', ['BELARUS'])
