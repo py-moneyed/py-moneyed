@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
+import json
 
 # Default, non-existent, currency
-DEFAULT_CURRENCY_CODE = 'XYZ'
+DEFAULT_CURRENCY_CODE = 'BTC'
 
 
 class Currency(object):
@@ -171,7 +172,6 @@ class Money(object):
 
     def __ge__(self, other):
         return self > other or self == other
-
 
 # ____________________________________________________________________
 # Definitions of ISO 4217 Currencies
