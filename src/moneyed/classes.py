@@ -3,9 +3,7 @@
 from decimal import Decimal
 import json
 
-# Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'BTC'
-
 
 class Currency(object):
     """
@@ -16,15 +14,24 @@ class Currency(object):
     rate - the last remains unimplemented however.
     """
 
-    def __init__(self, code='', numeric='999', name='', countries=[]):
+    def __init__(self, code='', numeric='999', name='', countries=[], significantDigits=8):
         self.code = code
         self.countries = countries
         self.name = name
         self.numeric = numeric
+        self.significantDigits = significantDigits
+        self.quantizer = Decimal(10) ** (Decimal(-1) * significantDigits)
 
     def __repr__(self):
         return self.code
 
+    def __eq__(self, other):
+        return isinstance(other, Currency)\
+               and (self.code == other.code)
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        return not result
 
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
@@ -105,17 +112,19 @@ class Money(object):
             raise TypeError('Cannot multiply two Money instances.')
         else:
             return Money(
-                amount=(self.amount * Decimal(str(other))),
+                amount=Decimal(self.amount * Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
 
     def __div__(self, other):
         if isinstance(other, Money):
             if self.currency != other.currency:
                 raise TypeError('Cannot divide two different currencies.')
-            return self.amount / other.amount
+            return Money(
+                amount=Decimal(self.amount / other.amount).quantize(self.currency.quantizer).normalize(),
+                currency=self.currency)
         else:
             return Money(
-                amount=self.amount / Decimal(str(other)),
+                amount=Decimal(self.amount / Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
 
     def __rmod__(self, other):
@@ -180,13 +189,14 @@ class Money(object):
 CURRENCIES = {}
 
 
-def add_currency(code, numeric, name, countries):
+def add_currency(code, numeric, name, countries, significantDigits=5):
     global CURRENCIES
     CURRENCIES[code] = Currency(
         code=code,
         numeric=numeric,
         name=name,
-        countries=countries)
+        countries=countries,
+        significantDigits=significantDigits)
     return CURRENCIES[code]
 
 
@@ -219,7 +229,7 @@ BMD = add_currency('BMD', '060', 'Bermudian Dollar (customarily known as Bermuda
 BND = add_currency('BND', '096', 'Brunei Dollar', ['BRUNEI DARUSSALAM'])
 BRL = add_currency('BRL', '986', 'Brazilian Real', ['BRAZIL'])
 BSD = add_currency('BSD', '044', 'Bahamian Dollar', ['BAHAMAS'])
-BTC = add_currency('BTC', 'Nil', 'Bitcoin', [])
+BTC = add_currency('BTC', 'Nil', 'Bitcoin', [], 8)
 BTN = add_currency('BTN', '064', 'Bhutanese ngultrum', ['BHUTAN'])
 BWP = add_currency('BWP', '072', 'Pula', ['BOTSWANA'])
 BYR = add_currency('BYR', '974', 'Belarussian Ruble', ['BELARUS'])
