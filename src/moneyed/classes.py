@@ -93,39 +93,52 @@ class Money(object):
             currency=self.currency)
 
     def __add__(self, other):
-        if not isinstance(other, Money):
-            raise TypeError('Cannot add or subtract a ' +
-                            'Money and non-Money instance.')
-        if self.currency == other.currency:
-            return Money(
-                amount=self.amount + other.amount,
-                currency=self.currency)
-
-        raise TypeError('Cannot add or subtract two Money ' +
-                        'instances with different currencies.')
+        if isinstance(other, Money):
+            if self.currency == other.currency:
+                return Money(
+                    amount=self.amount + other.amount,
+                    currency=self.currency)
+        elif isinstance(other, Decimal):
+            return Money(amount=self.amount + other, currency=self.currency)
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return Money(amount=self.amount + Decimal(str(other)), currency=self.currency)
+        raise TypeError('Cannot add or subtract a ' +
+                        'Money and non-number instance.')
 
     def __sub__(self, other):
         return self.__add__(-other)
 
     def __mul__(self, other):
         if isinstance(other, Money):
-            raise TypeError('Cannot multiply two Money instances.')
-        else:
+            if self.currency == other.currency:
+                return Money(
+                    amount=(self.amount * other.amount).quantize(self.currency.quantizer).normalize(),
+                    currency=self.currency)
+        elif isinstance(other, Decimal):
             return Money(
-                amount=Decimal(self.amount * Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
+                amount=(self.amount * other).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return Money(
+                amount=(self.amount * Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
+                currency=self.currency)
+        raise TypeError('Cannot multiply two non-number instances.')
 
     def __div__(self, other):
         if isinstance(other, Money):
-            if self.currency != other.currency:
-                raise TypeError('Cannot divide two different currencies.')
+            if self.currency == other.currency:
+                return Money(
+                    amount=(self.amount / other.amount).quantize(self.currency.quantizer).normalize(),
+                    currency=self.currency)
+        elif isinstance(other, Decimal):
             return Money(
-                amount=Decimal(self.amount / other.amount).quantize(self.currency.quantizer).normalize(),
+                amount=(self.amount / other).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
-        else:
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
             return Money(
-                amount=Decimal(self.amount / Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
+                amount=(self.amount / Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
+        raise TypeError('Cannot multiply two non-number instances.')
 
     def __rmod__(self, other):
         """
@@ -152,29 +165,45 @@ class Money(object):
     # _______________________________________
     # Override comparison operators
     def __eq__(self, other):
-        return isinstance(other, Money)\
-               and (self.amount == other.amount) \
-               and (self.currency == other.currency)
+        if isinstance(other, Money):
+            return self.amount == other.amount \
+                   and (self.currency == other.currency)
+        elif isinstance(other, Decimal):
+            return self.amount == other
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return self.amount == Decimal(str(other))
+        else:
+            return False
 
     def __ne__(self, other):
         result = self.__eq__(other)
         return not result
 
     def __lt__(self, other):
-        if not isinstance(other, Money):
-            raise MoneyComparisonError(other)
-        if (self.currency == other.currency):
-            return (self.amount < other.amount)
+        if isinstance(other, Money):
+            if self.currency == other.currency:
+                return self.amount < other.amount
+            else:
+                raise TypeError('Cannot compare Money with different currencies.')
+        elif isinstance(other, Decimal):
+            return self.amount < other
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return self.amount < Decimal(str(other))
         else:
-            raise TypeError('Cannot compare Money with different currencies.')
+            raise MoneyComparisonError(other)
 
     def __gt__(self, other):
-        if not isinstance(other, Money):
-            raise MoneyComparisonError(other)
-        if (self.currency == other.currency):
-            return (self.amount > other.amount)
+        if isinstance(other, Money):
+            if self.currency == other.currency:
+                return self.amount > other.amount
+            else:
+                raise TypeError('Cannot compare Money with different currencies.')
+        elif isinstance(other, Decimal):
+            return self.amount > other
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return self.amount > Decimal(str(other))
         else:
-            raise TypeError('Cannot compare Money with different currencies.')
+            raise MoneyComparisonError(other)
 
     def __le__(self, other):
         return self < other or self == other
