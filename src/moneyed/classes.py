@@ -239,7 +239,10 @@ class MultiMoney(dict):
         #return hasattr(self, currency)
         return currency in self
 
-    def getMoneys(self):
+    def getMoneys(self, currency=None):
+	if currency is not None:
+	    if self.hasCurrency(currency):
+		return self[currency]
         moneys = []
         dictSelf = dict(self)
         for key, val in dictSelf.iteritems():
