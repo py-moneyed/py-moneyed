@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 #file test_moneyed_classes.py
-
+from __future__ import division
+from __future__ import unicode_literals
 from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
@@ -70,11 +71,11 @@ class TestMoney:
         # locale == pl_PL
         one_million_pln = Money('1000000', 'PLN')
         # Two decimal places by default
-        assert format_money(one_million_pln, locale='pl_PL') == u'1 000 000,00 zł'
+        assert format_money(one_million_pln, locale='pl_PL') == '1 000 000,00 zł'
         assert format_money(self.one_million_bucks, locale='pl_PL') == '1 000 000,00 USD'
         # No decimal point without fractional part
         assert format_money(one_million_pln, locale='pl_PL',
-                            decimal_places=0) == u'1 000 000 zł'
+                            decimal_places=0) == '1 000 000 zł'
 
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
+from __future__ import unicode_literals
 
 from decimal import Decimal
 
@@ -43,7 +45,7 @@ class CurrencyDoesNotExist(Exception):
 
     def __init__(self, code):
         super(CurrencyDoesNotExist, self).__init__(
-            u"No currency with code %s is defined." % code)
+            "No currency with code %s is defined." % code)
 
 
 class Money(object):
@@ -64,7 +66,7 @@ class Money(object):
         self.currency = currency
 
     def __repr__(self):
-        return u"%s %s" % (self.amount, self.currency)
+        return "%s %s" % (self.amount, self.currency)
 
     def __unicode__(self):
         from moneyed.localization import format_money
@@ -81,7 +83,7 @@ class Money(object):
 
     def __neg__(self):
         return Money(
-            amount=-self.amount,
+            amount= -self.amount,
             currency=self.currency)
 
     def __add__(self, other):
@@ -107,7 +109,7 @@ class Money(object):
                 amount=(self.amount * Decimal(str(other))),
                 currency=self.currency)
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         if isinstance(other, Money):
             if self.currency != other.currency:
                 raise TypeError('Cannot divide two different currencies.')
@@ -116,6 +118,7 @@ class Money(object):
             return Money(
                 amount=self.amount / Decimal(str(other)),
                 currency=self.currency)
+
 
     def __rmod__(self, other):
         """
@@ -137,7 +140,7 @@ class Money(object):
     __radd__ = __add__
     __rsub__ = __sub__
     __rmul__ = __mul__
-    __rdiv__ = __div__
+    __rtruediv__ = __truediv__
 
     # _______________________________________
     # Override comparison operators
