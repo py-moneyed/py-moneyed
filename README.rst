@@ -67,14 +67,14 @@ source directory then run the tests at the shell: ::
 
 If you do not have all of version of Python that is needed to test, 
 then I suggest you use a tool pyenv_. After installing pyenv, install 
-an additional plugin "pyenv-implict"_.
+an additional plugin pyenvimplict_.
 
 The py-moneyed package has been tested with Python 2.6, 2.7, 3.2, 3.3 
 and PyPy 2.1.
 
 .. _tox: http://tox.testrun.org/latest/
 .. _pyenv: https://github.com/yyuu/pyenv
-.. _"pyenv-implict" https://github.com/concordusapps/pyenv-implict
+.. _pyenvimplict https://github.com/concordusapps/pyenv-implict
 
 Future
 ------
