@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
+import json
+import copy
 
-# Default, non-existent, currency
-DEFAULT_CURRENCY_CODE = 'XYZ'
-
+DEFAULT_CURRENCY_CODE = 'BTC'
 
 class Currency(object):
     """
@@ -15,15 +15,24 @@ class Currency(object):
     rate - the last remains unimplemented however.
     """
 
-    def __init__(self, code='', numeric='999', name='', countries=[]):
+    def __init__(self, code='', numeric='999', name='', countries=[], significantDigits=8):
         self.code = code
         self.countries = countries
         self.name = name
         self.numeric = numeric
+        self.significantDigits = significantDigits
+        self.quantizer = Decimal(10) ** (Decimal(-1) * significantDigits)
 
     def __repr__(self):
         return self.code
 
+    def __eq__(self, other):
+        return isinstance(other, Currency)\
+               and (self.code == other.code)
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        return not result
 
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
@@ -85,37 +94,56 @@ class Money(object):
             currency=self.currency)
 
     def __add__(self, other):
-        if not isinstance(other, Money):
-            raise TypeError('Cannot add or subtract a ' +
-                            'Money and non-Money instance.')
-        if self.currency == other.currency:
-            return Money(
-                amount=self.amount + other.amount,
-                currency=self.currency)
-
-        raise TypeError('Cannot add or subtract two Money ' +
-                        'instances with different currencies.')
+        if isinstance(other, Money):
+            if self.currency == other.currency:
+                return Money(
+                    amount=self.amount + other.amount,
+                    currency=self.currency)
+        elif isinstance(other, Decimal):
+            return Money(amount=self.amount + other, currency=self.currency)
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return Money(amount=self.amount + Decimal(str(other)), currency=self.currency)
+        raise TypeError('Cannot add or subtract a ' +
+                        'Money and non-number instance.')
 
     def __sub__(self, other):
         return self.__add__(-other)
 
     def __mul__(self, other):
         if isinstance(other, Money):
-            raise TypeError('Cannot multiply two Money instances.')
-        else:
+            if self.currency == other.currency:
+                return Money(
+                    amount=(self.amount * other.amount).quantize(self.currency.quantizer).normalize(),
+                    currency=self.currency)
+            else:
+                raise MoneyComparisonError(other)
+        elif isinstance(other, Decimal):
             return Money(
-                amount=(self.amount * Decimal(str(other))),
+                amount=(self.amount * other).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return Money(
+                amount=(self.amount * Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
+                currency=self.currency)
+        raise TypeError('Cannot multiply two non-number instances.')
 
     def __div__(self, other):
         if isinstance(other, Money):
-            if self.currency != other.currency:
-                raise TypeError('Cannot divide two different currencies.')
-            return self.amount / other.amount
-        else:
+            if self.currency == other.currency:
+                return Money(
+                    amount=(self.amount / other.amount).quantize(self.currency.quantizer).normalize(),
+                    currency=self.currency)
+            else:
+                raise MoneyComparisonError(other)
+        elif isinstance(other, Decimal):
             return Money(
-                amount=self.amount / Decimal(str(other)),
+                amount=(self.amount / other).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return Money(
+                amount=(self.amount / Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
+                currency=self.currency)
+        raise TypeError('Cannot multiply two non-number instances.')
 
     def __rmod__(self, other):
         """
@@ -142,29 +170,45 @@ class Money(object):
     # _______________________________________
     # Override comparison operators
     def __eq__(self, other):
-        return isinstance(other, Money)\
-               and (self.amount == other.amount) \
-               and (self.currency == other.currency)
+        if isinstance(other, Money):
+            return self.amount == other.amount \
+                   and (self.currency == other.currency)
+        elif isinstance(other, Decimal):
+            return self.amount == other
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return self.amount == Decimal(str(other))
+        else:
+            return False
 
     def __ne__(self, other):
         result = self.__eq__(other)
         return not result
 
     def __lt__(self, other):
-        if not isinstance(other, Money):
-            raise MoneyComparisonError(other)
-        if (self.currency == other.currency):
-            return (self.amount < other.amount)
+        if isinstance(other, Money):
+            if self.currency == other.currency:
+                return self.amount < other.amount
+            else:
+                raise MoneyComparisonError(other)
+        elif isinstance(other, Decimal):
+            return self.amount < other
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return self.amount < Decimal(str(other))
         else:
-            raise TypeError('Cannot compare Money with different currencies.')
+            raise MoneyComparisonError(other)
 
     def __gt__(self, other):
-        if not isinstance(other, Money):
-            raise MoneyComparisonError(other)
-        if (self.currency == other.currency):
-            return (self.amount > other.amount)
+        if isinstance(other, Money):
+            if self.currency == other.currency:
+                return self.amount > other.amount
+            else:
+                raise MoneyComparisonError(other)
+        elif isinstance(other, Decimal):
+            return self.amount > other
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            return self.amount > Decimal(str(other))
         else:
-            raise TypeError('Cannot compare Money with different currencies.')
+            raise MoneyComparisonError(other)
 
     def __le__(self, other):
         return self < other or self == other
@@ -172,6 +216,231 @@ class Money(object):
     def __ge__(self, other):
         return self > other or self == other
 
+class MultiMoney(dict):
+    """
+    A MultiMoney is a dict that may contain multiple Money objects of different currencies.
+    This is mainly used for performing address accounting, but can also be applied to conversions
+    with a little tweaking.
+    """
+    def __init__(self, *args):
+        for mon in args:
+            if isinstance(mon, Money):
+                self.addMoney(mon)
+
+    def isEmpty(self):
+        for mon in self.getMoneys():
+            if mon > 0:
+                return False
+        return True
+
+    def addMoney(self, mon):
+        if self.hasCurrency(mon.currency.code):
+            self[mon.currency.code] += mon
+        else:
+            self[mon.currency.code] = mon
+
+    def hasCurrency(self, currency):
+        #return hasattr(self, currency)
+        return currency in self
+
+    def getMoneys(self, currency=None):
+	if currency is not None:
+	    if self.hasCurrency(currency):
+		return self[currency]
+        moneys = []
+        dictSelf = dict(self)
+        for key, val in dictSelf.iteritems():
+            if isinstance(val, Money):
+                moneys.append(val)
+        return moneys
+
+    def __repr__(self):
+        rep = u""
+        for mon in self.getMoneys():
+            str = u", %s %s" % (mon.amount.normalize(), mon.currency.code)
+            rep = rep + str
+        return rep
+
+    def __unicode__(self):
+        from moneyed.localization import format_money
+        us = u""
+        for mon in self.getMoneys():
+            us = us + u", " + format_money(mon)
+        return us
+
+    def __str__(self):
+        from moneyed.localization import format_money
+        us = u""
+        for mon in self.getMoneys():
+            us = us + u", " + format_money(mon)
+        return us
+
+    def __pos__(self):
+        moneys = []
+        for mon in self.getMoneys():
+            moneys.append(Money(amount=mon.amount,
+                                currency=mon.currency))
+        return MultiMoney(*moneys)
+
+    def __neg__(self):
+        moneys = []
+        for mon in self.getMoneys():
+            moneys.append(Money(amount=-mon.amount,
+                                currency=mon.currency))
+        return MultiMoney(*moneys)
+
+    def __add__(self, other):
+        copySelf = self.__pos__()
+        if isinstance(other, MultiMoney):
+            for mon in other.getMoneys():
+                copySelf.addMoney(mon)
+        elif isinstance(other, Money):
+            copySelf.addMoney(other)
+        else:
+            raise TypeError('Cannot add or subtract a ' +
+                            'MultiMoney and non-Money, non-MultiMoney instance.')
+        return copySelf
+
+    def __sub__(self, other):
+        return self.__add__(-other)
+
+    def __mul__(self, other):
+        copySelf = self.__pos__()
+        if isinstance(other, MultiMoney):
+            for mon in other.getMoneys():
+                if copySelf.hasCurrency(mon.currency.code):
+                    copySelf[mon.currency.code] *= mon
+                else:
+                    copySelf[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
+            for mon in copySelf:
+                if not other.hasCurrency(mon.currency.code):
+                    copySelf[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
+            return copySelf
+        elif isinstance(other, Money):
+            if copySelf.hasCurrency(other.currency.code):
+                copySelf[other.currency.code] *= other
+            else:
+                copySelf[other.currency.code] = Money(amount=0, currency=other.currency.code)
+            return copySelf
+        elif isinstance(other, Decimal):
+            for mon in self.getMoneys():
+                 copySelf[mon.currency.code] = Money(
+                    amount=(self.amount * other).quantize(self.currency.quantizer).normalize(),
+                    currency=self.currency)
+            return copySelf
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            for mon in self.getMoneys():
+                copySelf[mon.currency.code] = Money(
+                    amount=(self.amount * Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
+                    currency=self.currency)
+            return copySelf
+        raise TypeError('Cannot multiply two non-number instances.')
+
+    def __div__(self, other):
+        copySelf = self.__pos__()
+        if isinstance(other, MultiMoney):
+            for mon in other.getMoneys():
+                if copySelf.hasCurrency(mon.currency.code):
+                    copySelf[mon.currency.code] /= mon
+                else:
+                    copySelf[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
+            for mon in copySelf:
+                if not other.hasCurrency(mon.currency.code):
+                    copySelf[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
+            return copySelf
+        elif isinstance(other, Money):
+            if copySelf.hasCurrency(other.currency.code):
+                copySelf[other.currency.code] /= other
+            else:
+                copySelf[other.currency.code] = Money(amount=0, currency=other.currency.code)
+            return copySelf
+        elif isinstance(other, Decimal):
+            for mon in self.getMoneys():
+                copySelf[mon.currency.code] = Money(
+                    amount=(self.amount / other).quantize(self.currency.quantizer).normalize(),
+                    currency=self.currency)
+            return copySelf
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+            for mon in self.getMoneys():
+                copySelf[mon.currency.code] = Money(
+                    amount=(self.amount / Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
+                    currency=self.currency)
+            return copySelf
+        raise TypeError('Cannot multiply two non-number instances.')
+
+    __radd__ = __add__
+    __rsub__ = __sub__
+    __rmul__ = __mul__
+    __rdiv__ = __div__
+
+    # _______________________________________
+    # Override comparison operators
+    def __eq__(self, other):
+        if not isinstance(other, MultiMoney):
+            raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
+        else:
+            for mon in other.getMoneys():
+                if not self.hasCurrency(mon.currency.code):
+                    if mon == 0:
+                        continue
+                    else:
+                        return False
+                else:
+                    if not mon == self[mon.currency.code]:
+                        return False
+            for mon in self.getMoneys():
+                if not other.hasCurrency(mon.currency.code):
+                    if mon == 0:
+                        continue
+                    else:
+                        return False
+        return True
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        return not result
+
+    def __lt__(self, other):
+        if isinstance(other, MultiMoney):
+            for mon in other.getMoneys():
+                if self.hasCurrency(mon.currency.code):
+                    if self[mon.currency.code] >= mon:
+                        return False
+            for mon in self.getMoneys():
+                if not other.hasCurrency(mon.currency.code):
+                    if mon > 0:
+                        return False
+            return True
+        elif isinstance(other, Money):
+            if self.hasCurrency(other.currency.code):
+                return self[other.currency.code] < other
+        else:
+            raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
+
+    def __gt__(self, other):
+        if isinstance(other, MultiMoney):
+            for mon in other.getMoneys():
+                if self.hasCurrency(mon.currency.code):
+                    if self[mon.currency.code] <= mon:
+                        return False
+                else:
+                    if mon < 0:
+                        return False
+            return True
+        elif isinstance(other, Money):
+            if self.hasCurrency(other.currency.code):
+                return self[other.currency.code] > other
+            else:
+                if other > 0:
+                    return False
+        else:
+            raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
+
+    def __le__(self, other):
+        return self < other or self == other
+
+    def __ge__(self, other):
+        return self > other or self == other
 
 # ____________________________________________________________________
 # Definitions of ISO 4217 Currencies
@@ -180,13 +449,14 @@ class Money(object):
 CURRENCIES = {}
 
 
-def add_currency(code, numeric, name, countries):
+def add_currency(code, numeric, name, countries, significantDigits=5):
     global CURRENCIES
     CURRENCIES[code] = Currency(
         code=code,
         numeric=numeric,
         name=name,
-        countries=countries)
+        countries=countries,
+        significantDigits=significantDigits)
     return CURRENCIES[code]
 
 
@@ -219,6 +489,7 @@ BMD = add_currency('BMD', '060', 'Bermudian Dollar (customarily known as Bermuda
 BND = add_currency('BND', '096', 'Brunei Dollar', ['BRUNEI DARUSSALAM'])
 BRL = add_currency('BRL', '986', 'Brazilian Real', ['BRAZIL'])
 BSD = add_currency('BSD', '044', 'Bahamian Dollar', ['BAHAMAS'])
+BTC = add_currency('BTC', 'Nil', 'Bitcoin', [], 8)
 BTN = add_currency('BTN', '064', 'Bhutanese ngultrum', ['BHUTAN'])
 BWP = add_currency('BWP', '072', 'Pula', ['BOTSWANA'])
 BYR = add_currency('BYR', '974', 'Belarussian Ruble', ['BELARUS'])
