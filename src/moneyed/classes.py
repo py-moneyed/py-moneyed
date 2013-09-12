@@ -115,6 +115,8 @@ class Money(object):
                 return Money(
                     amount=(self.amount * other.amount).quantize(self.currency.quantizer).normalize(),
                     currency=self.currency)
+            else:
+                raise MoneyComparisonError(other)
         elif isinstance(other, Decimal):
             return Money(
                 amount=(self.amount * other).quantize(self.currency.quantizer).normalize(),
@@ -131,6 +133,8 @@ class Money(object):
                 return Money(
                     amount=(self.amount / other.amount).quantize(self.currency.quantizer).normalize(),
                     currency=self.currency)
+            else:
+                raise MoneyComparisonError(other)
         elif isinstance(other, Decimal):
             return Money(
                 amount=(self.amount / other).quantize(self.currency.quantizer).normalize(),
@@ -185,7 +189,7 @@ class Money(object):
             if self.currency == other.currency:
                 return self.amount < other.amount
             else:
-                raise TypeError('Cannot compare Money with different currencies.')
+                raise MoneyComparisonError(other)
         elif isinstance(other, Decimal):
             return self.amount < other
         elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
@@ -198,7 +202,7 @@ class Money(object):
             if self.currency == other.currency:
                 return self.amount > other.amount
             else:
-                raise TypeError('Cannot compare Money with different currencies.')
+                raise MoneyComparisonError(other)
         elif isinstance(other, Decimal):
             return self.amount > other
         elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
