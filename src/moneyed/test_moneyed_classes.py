@@ -17,7 +17,25 @@ class TestCurrency:
 
     def test_init(self):
         usd_countries = CURRENCIES['USD'].countries
-        US_dollars = Currency(code='USD', numeric='840', name='US Dollar', countries=['AMERICAN SAMOA', 'BRITISH INDIAN OCEAN TERRITORY', 'ECUADOR', 'GUAM', 'MARSHALL ISLANDS', 'MICRONESIA', 'NORTHERN MARIANA ISLANDS', 'PALAU', 'PUERTO RICO', 'TIMOR-LESTE', 'TURKS AND CAICOS ISLANDS', 'UNITED STATES MINOR OUTLYING ISLANDS', 'VIRGIN ISLANDS (BRITISH)', 'VIRGIN ISLANDS (U.S.)'])
+        US_dollars = Currency(
+            code='USD',
+            numeric='840',
+            name='US Dollar',
+            countries=['AMERICAN SAMOA',
+                       'BRITISH INDIAN OCEAN TERRITORY',
+                       'ECUADOR',
+                       'GUAM',
+                       'MARSHALL ISLANDS',
+                       'MICRONESIA',
+                       'NORTHERN MARIANA ISLANDS',
+                       'PALAU',
+                       'PUERTO RICO',
+                       'TIMOR-LESTE',
+                       'TURKS AND CAICOS ISLANDS',
+                       'UNITED STATES',
+                       'UNITED STATES MINOR OUTLYING ISLANDS',
+                       'VIRGIN ISLANDS (BRITISH)',
+                       'VIRGIN ISLANDS (U.S.)'])
         assert US_dollars.code == 'USD'
         assert US_dollars.countries == usd_countries
         assert US_dollars.name == 'US Dollar'
@@ -59,6 +77,7 @@ class TestMoney:
 
     def test_repr(self):
         assert repr(self.one_million_bucks) == '1000000 USD'
+        assert repr(Money(Decimal('2.000'), 'PLN')) == '2 PLN'
 
     def test_str(self):
         assert str(self.one_million_bucks) == 'US$1,000,000.00'
