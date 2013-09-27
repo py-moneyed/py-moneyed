@@ -2,7 +2,7 @@
 from __future__ import division
 from __future__ import unicode_literals
 
-from decimal import Decimal
+from decimal import Decimal, ROUND_DOWN
 
 # Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'XYZ'
@@ -66,7 +66,8 @@ class Money(object):
         self.currency = currency
 
     def __repr__(self):
-        return "%s %s" % (self.amount.normalize(), self.currency)
+        return "%s %s" % (self.amount.to_integral_value(ROUND_DOWN),
+                          self.currency)
 
     def __unicode__(self):
         from moneyed.localization import format_money
