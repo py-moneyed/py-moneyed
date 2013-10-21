@@ -156,3 +156,10 @@ class TestMoney:
         x = 1.0
         with pytest.raises(MoneyComparisonError):
             assert self.one_million_bucks > x
+
+    def test_abs(self):
+        abs_money = Money(amount=1, currency=self.USD)
+        x = Money(amount=-1, currency=self.USD)
+        assert abs(x) == abs_money
+        y = Money(amount=1, currency=self.USD)
+        assert abs(x) == abs_money
