@@ -121,6 +121,12 @@ class Money(object):
                 amount=self.amount / Decimal(str(other)),
                 currency=self.currency)
 
+    def __abs__(self):
+        return Money(
+            amount=abs(self.amount),
+            currency=self.currency
+        )
+
     def __rmod__(self, other):
         """
         Calculate percentage of an amount.  The left-hand side of the
@@ -347,7 +353,7 @@ TWD = add_currency('TWD', '901', 'New Taiwan Dollar', ['TAIWAN'])
 TZS = add_currency('TZS', '834', 'Tanzanian Shilling', ['TANZANIA'])
 UAH = add_currency('UAH', '980', 'Hryvnia', ['UKRAINE'])
 UGX = add_currency('UGX', '800', 'Uganda Shilling', ['UGANDA'])
-USD = add_currency('USD', '840', 'US Dollar', ['AMERICAN SAMOA', 'BRITISH INDIAN OCEAN TERRITORY', 'ECUADOR', 'GUAM', 'MARSHALL ISLANDS', 'MICRONESIA', 'NORTHERN MARIANA ISLANDS', 'PALAU', 'PUERTO RICO', 'TIMOR-LESTE', 'TURKS AND CAICOS ISLANDS', 'UNITED STATES MINOR OUTLYING ISLANDS', 'VIRGIN ISLANDS (BRITISH)', 'VIRGIN ISLANDS (U.S.)'])
+USD = add_currency('USD', '840', 'US Dollar', ['AMERICAN SAMOA', 'BRITISH INDIAN OCEAN TERRITORY', 'ECUADOR', 'GUAM', 'MARSHALL ISLANDS', 'MICRONESIA', 'NORTHERN MARIANA ISLANDS', 'PALAU', 'PUERTO RICO', 'TIMOR-LESTE', 'TURKS AND CAICOS ISLANDS', 'UNITED STATES', 'UNITED STATES MINOR OUTLYING ISLANDS', 'VIRGIN ISLANDS (BRITISH)', 'VIRGIN ISLANDS (U.S.)'])
 UYU = add_currency('UYU', '858', 'Uruguayan peso', ['URUGUAY'])
 UZS = add_currency('UZS', '860', 'Uzbekistan Sum', ['UZBEKISTAN'])
 VEF = add_currency('VEF', '937', 'Bolivar Fuerte', ['VENEZUELA'])
