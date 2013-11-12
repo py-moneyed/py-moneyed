@@ -27,8 +27,12 @@ class Currency(object):
         return self.code
 
     def __eq__(self, other):
-        return isinstance(other, Currency)\
-               and (self.code == other.code)
+        if isinstance(other, Currency):
+            return self.code == other.code
+        elif isinstance(other, str):
+            return self.code == other
+        else:
+            return False
 
     def __ne__(self, other):
         result = self.__eq__(other)
@@ -244,9 +248,9 @@ class MultiMoney(dict):
         return currency in self
 
     def getMoneys(self, currency=None):
-	if currency is not None:
-	    if self.hasCurrency(currency):
-		return self[currency]
+        if currency is not None:
+            if self.hasCurrency(currency):
+                return self[currency]
         moneys = []
         dictSelf = dict(self)
         for key, val in dictSelf.iteritems():
