@@ -120,6 +120,10 @@ class Money(object):
                 amount=self.amount / Decimal(str(other)),
                 currency=self.currency)
 
+    def __abs__(self):
+        return Money(
+            amount=abs(self.amount),
+            currency=self.currency)
 
     def __rmod__(self, other):
         """
