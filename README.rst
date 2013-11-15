@@ -50,7 +50,7 @@ Testing
 -------
 
 Unit-tests have been provided, and can be run with tox_ (recommended)
-or just py.test.  
+or just py.test.
 
 If you don't have tox installed on your system, it's a modern Python
 tool to automate running tests and deployment; install it to your
@@ -65,9 +65,9 @@ source directory then run the tests at the shell: ::
     cd where/py-moneyed-source/is
     tox
 
-If you do not have all of version of Python that is needed to test, 
-then I suggest you use a tool pyenv_. After installing pyenv, install 
-an additional plugin pyenv-implict_.
+If you do not have all versions of Python that are used in testing,
+you can use pyenv_. After installing pyenv, install the additional
+plugin pyenv-implict_.
 
 The py-moneyed package has been tested with Python 2.6, 2.7, 3.2, 3.3 
 and PyPy 2.1.

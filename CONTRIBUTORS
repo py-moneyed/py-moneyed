@@ -4,4 +4,5 @@ February 2011.
 Jacob Hansson (jacob@voltvoodoo.com) contributed a better currency
 formatting implementation, and various patches, in May 2011.
 
-Wojciech Banas adding compatibility with the version of Python 3.x.
+Wojciech Banas added compatibility with multiple versions of Python,
+including Python 3.x, in August 2013.
