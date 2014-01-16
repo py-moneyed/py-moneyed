@@ -2,6 +2,7 @@
 #file test_moneyed_classes.py
 from __future__ import division
 from __future__ import unicode_literals
+import sys
 from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
@@ -82,22 +83,29 @@ class TestMoney:
         m_2 = Money(Decimal('2.000000'), 'PLN')
         assert repr(m_1) == repr(m_2)
 
-    def test_str(self):
-        assert str(self.one_million_bucks) == 'US$1,000,000.00'
+    def test_text(self):
+        # Cannot call str() on curencies with a unicode symbol.
+        if sys.version_info[0] >= 3:
+            text = str
+        else:
+            text = unicode
+
+        assert text(Money('250', 'PKR')) == '₨250.00'
+        assert text(self.one_million_bucks) == 'US$1\u2009000\u2009000.00'
 
     def test_format_money(self):
         # Two decimal places by default
-        assert format_money(self.one_million_bucks) == 'US$1,000,000.00'
+        assert format_money(self.one_million_bucks) == 'US$1\u2009000\u2009000.00'
         # No decimal point without fractional part
-        assert format_money(self.one_million_bucks, decimal_places=0) == 'US$1,000,000'
+        assert format_money(self.one_million_bucks, decimal_places=0) == 'US$1\u2009000\u2009000'
         # locale == pl_PL
         one_million_pln = Money('1000000', 'PLN')
         # Two decimal places by default
-        assert format_money(one_million_pln, locale='pl_PL') == '1 000 000,00 zł'
-        assert format_money(self.one_million_bucks, locale='pl_PL') == '1 000 000,00 USD'
+        assert format_money(one_million_pln, locale='pl_PL') == '1\u2009000\u2009000,00\u00a0zł'
+        assert format_money(self.one_million_bucks, locale='pl_PL') == '1\u2009000\u2009000,00\u00a0USD'
         # No decimal point without fractional part
         assert format_money(one_million_pln, locale='pl_PL',
-                            decimal_places=0) == '1 000 000 zł'
+                            decimal_places=0) == '1\u2009000\u2009000\u00a0zł'
 
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks
