@@ -130,7 +130,7 @@ _format = _FORMATTER.add_formatting_definition
 
 ## FORMATTING RULES
 
-_format(DEFAULT, group_size=3, group_separator=",", decimal_point=".",
+_format(DEFAULT, group_size=3, group_separator="\u2009", decimal_point=".",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
@@ -140,27 +140,27 @@ _format("en_US", group_size=3, group_separator=",", decimal_point=".",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
                  
-_format("de_DE", group_size=3, group_separator=" ", decimal_point=",",
+_format("de_DE", group_size=3, group_separator="\u2009", decimal_point=",",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
                  
-_format("de_AT", group_size=3, group_separator=" ", decimal_point=",",
+_format("de_AT", group_size=3, group_separator="\u2009", decimal_point=",",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
                  
-_format("de_CH", group_size=3, group_separator=" ", decimal_point=".",
+_format("de_CH", group_size=3, group_separator="\u2009", decimal_point=".",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
 
-_format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
+_format("sv_SE", group_size=3, group_separator="\u2009", decimal_point=",",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
 
-_format("pl_PL", group_size=3, group_separator=" ", decimal_point=",",
+_format("pl_PL", group_size=3, group_separator="\u2009", decimal_point=",",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
