@@ -175,9 +175,9 @@ class TestMoney:
         assert self.one_million_bucks != x
 
     def test_equality_to_other_types(self):
-        x = Money(amount=1, currency=self.USD)
-        assert self.one_million_bucks != None
-        assert self.one_million_bucks != {}
+        x = Money(amount=0, currency=self.USD)
+        assert x != None
+        assert x != {}
 
     def test_not_equal_to_decimal_types(self):
         assert self.one_million_bucks != self.one_million_decimal
