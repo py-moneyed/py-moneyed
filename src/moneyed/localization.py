@@ -36,12 +36,12 @@ class CurrencyFormatter(object):
             'rounding_method': rounding_method}
 
     def get_sign_definition(self, currency_code, locale):
-        locale = locale.upper()
         currency_code = currency_code.upper()
-        if locale in self.sign_definitions:
-            local_set = self.sign_definitions.get(locale)
-        else:
-            local_set = self.sign_definitions.get(DEFAULT)
+
+        if locale.upper() not in self.sign_definitions:
+            locale = DEFAULT
+
+        local_set = self.sign_definitions.get(locale.upper())
 
         if currency_code in local_set:
             return local_set.get(currency_code)
