@@ -2,7 +2,6 @@
 
 from decimal import Decimal
 import copy
-from pymongo.son_manipulator import SONManipulator
 
 from json import dumps
 
@@ -80,6 +79,12 @@ class Money(object):
 
     def __dict__(self):
         return {'a': self.amount, 'c': self.currency}
+
+    def __getstate__(self):
+        return {'a': self.amount, 'c': str(self.currency)}
+
+    def __setstate__(self, data):
+        self.__init__(data["a"], data["c"])
 
     def __repr__(self):
         return u"%s %s" % (self.amount.normalize(), self.currency)
@@ -247,7 +252,7 @@ class MultiMoney(object):
     This is mainly used for performing address accounting, but can also be applied to conversions
     with a little tweaking.
     """
-    moneys = None
+    moneys = {}
 
     def __init__(self, *args):
         self.moneys = {}
@@ -257,6 +262,18 @@ class MultiMoney(object):
 
     def __dict__(self):
         return copy.copy(self).moneys
+
+    def __getstate__(self):
+        psd = {}
+        for money in copy.copy(self).getMoneys():
+            psd[str(money.currency)] = Money.__getstate__(money)
+        return psd
+
+    def __setstate__(self, data):
+        l = []
+        for m, mon in data.iteritems():
+            l.append(Money(mon["a"], mon["c"]))
+        return self.__init__(*l)
 
     def __copy__(self):
         newSelf = MultiMoney()
@@ -281,8 +298,8 @@ class MultiMoney(object):
         return True
 
     def addMoney(self, mon):
-        if self.hasCurrency(mon.currency.code):
-            self.moneys[mon.currency.code] += mon
+        if self.hasCurrency(str(mon.currency)):
+            self.moneys[str(mon.currency)] += mon
         else:
             self.moneys[str(mon.currency)] = mon
 
@@ -349,7 +366,7 @@ class MultiMoney(object):
         return MultiMoney(*moneys)
 
     def __add__(self, other):
-        copySelf = self.__pos__()
+        copySelf = self.__copy__()
         if isinstance(other, MultiMoney):
             for mon in other.getMoneys():
                 copySelf.addMoney(mon)
@@ -439,13 +456,13 @@ class MultiMoney(object):
             raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
         else:
             for mon in other.getMoneys():
-                if not self.hasCurrency(mon.currency.code):
+                if not self.hasCurrency(str(mon.currency)):
                     if mon == 0:
                         continue
                     else:
                         return False
                 else:
-                    if not mon == self.moneys[mon.currency.code]:
+                    if not mon == self.moneys[str(mon.currency)]:
                         return False
             for mon in self.getMoneys():
                 if not other.hasCurrency(mon.currency.code):
