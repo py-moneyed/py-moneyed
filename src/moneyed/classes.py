@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
-import json
 import copy
+from pymongo.son_manipulator import SONManipulator
+
+from json import dumps
 
 DEFAULT_CURRENCY_CODE = 'BTC'
 
@@ -76,6 +78,9 @@ class Money(object):
             currency = get_currency(str(currency).upper())
         self.currency = currency
 
+    def __dict__(self):
+        return {'a': self.amount, 'c': self.currency}
+
     def __repr__(self):
         return u"%s %s" % (self.amount.normalize(), self.currency)
 
@@ -86,6 +91,15 @@ class Money(object):
     def __str__(self):
         from moneyed.localization import format_money
         return format_money(self)
+
+    def __copy__(self):
+        return Money(amount=str(self.amount), currency=str(self.currency))
+
+    def prep_json(self):
+        return {u'a':unicode(self.amount), u'c': unicode(self.currency)}
+
+    def to_json(self):
+        return dumps(self.prep_json())
 
     def __pos__(self):
         return Money(
@@ -227,16 +241,38 @@ class Money(object):
     def __ge__(self, other):
         return self > other or self == other
 
-class MultiMoney(dict):
+class MultiMoney(object):
     """
     A MultiMoney is a dict that may contain multiple Money objects of different currencies.
     This is mainly used for performing address accounting, but can also be applied to conversions
     with a little tweaking.
     """
+    moneys = None
+
     def __init__(self, *args):
+        self.moneys = {}
         for mon in args:
             if isinstance(mon, Money):
                 self.addMoney(mon)
+
+    def __dict__(self):
+        return copy.copy(self).moneys
+
+    def __copy__(self):
+        newSelf = MultiMoney()
+        for money in self.getMoneys():
+            newSelf += copy.copy(money)
+        return newSelf
+
+    def prep_json(self):
+        encMoney = {u'mm':True}
+        tself = copy.copy(self)
+        for mon in tself.getMoneys():
+            encMoney[unicode(mon.currency)] = mon.prep_json()
+        return encMoney
+
+    def to_json(self):
+        return dumps(self.prep_json())
 
     def isEmpty(self):
         for mon in self.getMoneys():
@@ -246,46 +282,56 @@ class MultiMoney(dict):
 
     def addMoney(self, mon):
         if self.hasCurrency(mon.currency.code):
-            self[mon.currency.code] += mon
+            self.moneys[mon.currency.code] += mon
         else:
-            self[mon.currency.code] = mon
+            self.moneys[str(mon.currency)] = mon
 
     def hasCurrency(self, currency):
-        #return hasattr(self, currency)
-        return currency in self
+        # return hasattr(self, currency)
+        return currency in self.moneys
 
     def getMoneys(self, currency=None):
         if currency is not None:
             currency = str(currency)
             if not self.hasCurrency(currency):
                 self.addMoney(Money(currency=currency))
-            return self[currency]
-        moneys = []
-        dictSelf = dict(self)
-        for key, val in dictSelf.iteritems():
-            if isinstance(val, Money):
-                moneys.append(val)
-        return moneys
+            return self.moneys[currency]
+        return self.moneys.itervalues()
 
     def __repr__(self):
         rep = u""
+        first = True
         for mon in self.getMoneys():
-            str = u", %s %s" % (mon.amount.normalize(), mon.currency.code)
+            if first:
+                str = u"%s %s" % (mon.amount.normalize(), mon.currency.code)
+                first = False
+            else:
+                str = u", %s %s" % (mon.amount.normalize(), mon.currency.code)
             rep = rep + str
         return rep
 
     def __unicode__(self):
         from moneyed.localization import format_money
+        first = True
         us = u""
         for mon in self.getMoneys():
-            us = us + u", " + format_money(mon)
+            if first:
+                us = u"" + format_money(mon)
+                first = False
+            else:
+                us += u", " + format_money(mon)
         return us
 
     def __str__(self):
         from moneyed.localization import format_money
+        first = True
         us = u""
         for mon in self.getMoneys():
-            us = us + u", " + format_money(mon)
+            if first:
+                us = u"" + format_money(mon)
+                first = False
+            else:
+                us = us + u", " + format_money(mon)
         return us
 
     def __pos__(self):
@@ -322,28 +368,28 @@ class MultiMoney(dict):
         if isinstance(other, MultiMoney):
             for mon in other.getMoneys():
                 if copySelf.hasCurrency(mon.currency.code):
-                    copySelf[mon.currency.code] *= mon
+                    copySelf.moneys[mon.currency.code] *= mon
                 else:
-                    copySelf[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
+                    copySelf.moneys[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
             for mon in copySelf:
                 if not other.hasCurrency(mon.currency.code):
-                    copySelf[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
+                    copySelf.moneys[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
             return copySelf
         elif isinstance(other, Money):
             if copySelf.hasCurrency(other.currency.code):
-                copySelf[other.currency.code] *= other
+                copySelf.moneys[other.currency.code] *= other
             else:
-                copySelf[other.currency.code] = Money(amount=0, currency=other.currency.code)
+                copySelf.moneys[other.currency.code] = Money(amount=0, currency=other.currency.code)
             return copySelf
         elif isinstance(other, Decimal):
             for mon in self.getMoneys():
-                 copySelf[mon.currency.code] = Money(
+                 copySelf.moneys[mon.currency.code] = Money(
                     amount=(self.amount * other).quantize(self.currency.quantizer).normalize(),
                     currency=self.currency)
             return copySelf
         elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
             for mon in self.getMoneys():
-                copySelf[mon.currency.code] = Money(
+                copySelf.moneys[mon.currency.code] = Money(
                     amount=(self.amount * Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
                     currency=self.currency)
             return copySelf
@@ -354,28 +400,28 @@ class MultiMoney(dict):
         if isinstance(other, MultiMoney):
             for mon in other.getMoneys():
                 if copySelf.hasCurrency(mon.currency.code):
-                    copySelf[mon.currency.code] /= mon
+                    copySelf.moneys[mon.currency.code] /= mon
                 else:
-                    copySelf[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
-            for mon in copySelf:
+                    copySelf.moneys[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
+            for mon in copySelf.moneys:
                 if not other.hasCurrency(mon.currency.code):
-                    copySelf[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
+                    copySelf.moneys[mon.currency.code] = Money(amount=0, currency=mon.currency.code)
             return copySelf
         elif isinstance(other, Money):
             if copySelf.hasCurrency(other.currency.code):
-                copySelf[other.currency.code] /= other
+                copySelf.moneys[other.currency.code] /= other
             else:
-                copySelf[other.currency.code] = Money(amount=0, currency=other.currency.code)
+                copySelf.moneys[other.currency.code] = Money(amount=0, currency=other.currency.code)
             return copySelf
         elif isinstance(other, Decimal):
             for mon in self.getMoneys():
-                copySelf[mon.currency.code] = Money(
+                copySelf.moneys[mon.currency.code] = Money(
                     amount=(self.amount / other).quantize(self.currency.quantizer).normalize(),
                     currency=self.currency)
             return copySelf
         elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
             for mon in self.getMoneys():
-                copySelf[mon.currency.code] = Money(
+                copySelf.moneys[mon.currency.code] = Money(
                     amount=(self.amount / Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
                     currency=self.currency)
             return copySelf
@@ -399,7 +445,7 @@ class MultiMoney(dict):
                     else:
                         return False
                 else:
-                    if not mon == self[mon.currency.code]:
+                    if not mon == self.moneys[mon.currency.code]:
                         return False
             for mon in self.getMoneys():
                 if not other.hasCurrency(mon.currency.code):
@@ -417,16 +463,14 @@ class MultiMoney(dict):
         if isinstance(other, MultiMoney):
             for mon in other.getMoneys():
                 if self.hasCurrency(mon.currency.code):
-                    if self[mon.currency.code] >= mon:
-                        return False
+                    return self.moneys[mon.currency.code] < mon
             for mon in self.getMoneys():
                 if not other.hasCurrency(mon.currency.code):
-                    if mon > 0:
-                        return False
+                    return mon <= 0
             return True
         elif isinstance(other, Money):
             if self.hasCurrency(other.currency.code):
-                return self[other.currency.code] < other
+                return self.moneys[other.currency.code] < other
         else:
             raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
 
@@ -434,18 +478,15 @@ class MultiMoney(dict):
         if isinstance(other, MultiMoney):
             for mon in other.getMoneys():
                 if self.hasCurrency(mon.currency.code):
-                    if self[mon.currency.code] <= mon:
-                        return False
+                    return self.moneys[mon.currency.code] > mon
                 else:
-                    if mon < 0:
-                        return False
+                    return mon > 0
             return True
         elif isinstance(other, Money):
             if self.hasCurrency(other.currency.code):
-                return self[other.currency.code] > other
+                return self.moneys[other.currency.code] > other
             else:
-                if other > 0:
-                    return False
+                return other <= 0
         else:
             raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
 
