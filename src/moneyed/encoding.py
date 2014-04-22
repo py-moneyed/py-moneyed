@@ -4,6 +4,15 @@ from pymongo.son_manipulator import SONManipulator
 
 from json import dumps, JSONEncoder, JSONDecoder
 
+
+def money_object_hook(doc):
+    if isEncodedMultiMoney(doc):
+        return decodeMultiMoney(doc)
+    elif isEncodedMoney(doc):
+        return decodeMoney(doc)
+    return doc
+
+
 class MSONEncoder(JSONEncoder):
     item_separator = ', '
     key_separator = ': '
@@ -19,6 +28,7 @@ class MSONEncoder(JSONEncoder):
             return obj.prep_json()
         return super(MSONEncoder, self).default(obj)
 
+
 class MSONDecoder(JSONDecoder):
     item_separator = ', '
     key_separator = ': '
@@ -29,19 +39,15 @@ class MSONDecoder(JSONDecoder):
             parse_int=parse_int, parse_constant=parse_constant, strict=strict,
             object_pairs_hook=object_pairs_hook)
 
-def money_object_hook(doc):
-    if isEncodedMultiMoney(doc):
-        return decodeMultiMoney(doc)
-    elif isEncodedMoney(doc):
-        return decodeMoney(doc)
-    return doc
 
 def isEncodedMoney(doc):
     return (isinstance(doc, dict) and 'a' in doc and 'c' in doc and
             (isinstance(doc['c'], str) or isinstance(doc['c'], unicode)) and len(doc['c']) == 3)
 
+
 def isEncodedMultiMoney(doc):
     return isinstance(doc, dict) and 'mm' in doc and doc['mm'] is True
+
 
 def decodeMultiMoney(doc):
     if isEncodedMultiMoney(doc):
@@ -53,10 +59,12 @@ def decodeMultiMoney(doc):
         return moneys
     return doc
 
+
 def decodeMoney(doc):
     if isEncodedMoney(doc):
         return Money(amount=doc['a'], currency=doc['c'])
     return doc
+
 
 # pymongo manipulator for encoding/decoding db actions
 class MoneyManipulator(SONManipulator):
