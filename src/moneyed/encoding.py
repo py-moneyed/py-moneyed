@@ -11,7 +11,7 @@ class MSONEncoder(JSONEncoder):
             check_circular=True, allow_nan=True, sort_keys=False,
             indent=None, separators=None, encoding='utf-8', default=None):
         super(MSONEncoder, self).__init__(skipkeys=skipkeys, ensure_ascii=ensure_ascii,
-            check_circular=check_circular, allow_nan=check_circular, sort_keys=sort_keys,
+            check_circular=check_circular, allow_nan=allow_nan, sort_keys=sort_keys,
             indent=indent, separators=(', ', ': '), encoding=encoding, default=default)
 
     def default(self, obj):
@@ -22,10 +22,10 @@ class MSONEncoder(JSONEncoder):
 class MSONDecoder(JSONDecoder):
     item_separator = ', '
     key_separator = ': '
-    def __init__(self, encoding=None, object_hook=None, parse_float=None,
+    def __init__(self, encoding=None, object_hook=money_object_hook, parse_float=None,
                  parse_int=None, parse_constant=None, strict=True,
                  object_pairs_hook=None):
-        super(MSONDecoder, self).__init__(encoding=encoding, object_hook=money_object_hook, parse_float=parse_float,
+        super(MSONDecoder, self).__init__(encoding=encoding, object_hook=object_hook, parse_float=parse_float,
             parse_int=parse_int, parse_constant=parse_constant, strict=strict,
             object_pairs_hook=object_pairs_hook)
 
