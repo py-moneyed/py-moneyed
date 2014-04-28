@@ -57,10 +57,14 @@ class Money(object):
     """
 
     def __init__(self, amount=Decimal('0.0'), currency=DEFAULT_CURRENCY_CODE):
+        if amount is None:
+            amount = Decimal('0.0')
         if not isinstance(amount, Decimal):
             amount = Decimal(str(amount))
         self.amount = amount
 
+        if currency is None:
+            currency = DEFAULT_CURRENCY_CODE
         if not isinstance(currency, Currency):
             currency = get_currency(str(currency).upper())
         self.currency = currency
@@ -203,6 +207,10 @@ def get_currency(code):
         return CURRENCIES[code]
     except KeyError:
         raise CurrencyDoesNotExist(code)
+
+def set_default_currency(code):
+    global DEFAULT_CURRENCY_CODE
+    DEFAULT_CURRENCY_CODE = code
 
 DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 'Default currency.', [])
 
