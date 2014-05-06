@@ -46,14 +46,19 @@ class CurrencyFormatter(object):
         if currency_code in local_set:
             return local_set.get(currency_code)
         else:
+            # allow us to display correctly the money sign even if our locale is different than the locale of the money
+            # ex money is in EUR, but locale is en_US (overridden in the present file).
+            for loc in self.sign_definitions:
+                if currency_code in self.sign_definitions.get(loc):
+                    return self.sign_definitions.get(loc).get(currency_code)
+
             return ('', " %s" % currency_code)
 
     def get_formatting_definition(self, locale):
-        locale = locale.upper()
-        if locale in self.formatting_definitions:
-            return self.formatting_definitions.get(locale)
-        else:
-            return self.formatting_definitions.get(DEFAULT)
+        if locale.upper() not in self.formatting_definitions:
+            locale = DEFAULT
+
+        return self.formatting_definitions.get(locale.upper())
 
     def format(self, money, include_symbol=True, locale=DEFAULT,
                decimal_places=None, rounding_method=None):
