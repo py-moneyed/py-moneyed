@@ -52,7 +52,7 @@ class CurrencyFormatter(object):
                 if currency_code in self.sign_definitions.get(loc):
                     return self.sign_definitions.get(loc).get(currency_code)
 
-            return ('', " %s" % currency_code)
+            return '', " %s" % currency_code  # default
 
     def get_formatting_definition(self, locale):
         if locale.upper() not in self.formatting_definitions:
