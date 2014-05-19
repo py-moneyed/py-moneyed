@@ -513,6 +513,12 @@ class MultiMoney(object):
                         return False
                 elif mon > 0:
                     return False
+            for mon in self.getMoneys():
+                if other.hasCurrency(mon.currency.code):
+                    if self.getMoneys(mon.currency.code) < mon:
+                        return False
+                elif mon < 0:
+                    return False
             return True
         elif isinstance(other, Money):
             if self.hasCurrency(other.currency.code):
