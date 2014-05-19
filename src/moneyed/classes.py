@@ -483,7 +483,7 @@ class MultiMoney(object):
                     return self.moneys[mon.currency.code] < mon
             for mon in self.getMoneys():
                 if not other.hasCurrency(mon.currency.code):
-                    return mon <= 0
+                    return mon < 0
             return True
         elif isinstance(other, Money):
             if self.hasCurrency(other.currency.code):
