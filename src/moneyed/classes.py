@@ -473,37 +473,63 @@ class MultiMoney(object):
         return True
 
     def __ne__(self, other):
-        result = self.__eq__(other)
-        return not result
+        return not self == other
 
     def __lt__(self, other):
+        # Assume any currency not present has a 0 amount.
         if isinstance(other, MultiMoney):
+            didcompare = False
             for mon in other.getMoneys():
                 if self.hasCurrency(mon.currency.code):
-                    return self.moneys[mon.currency.code] < mon
+                    didcompare = True
+                    if self.moneys[mon.currency.code] >= mon:
+                        return False
+                else:
+                    if mon <= 0:
+                        return False
             for mon in self.getMoneys():
-                if not other.hasCurrency(mon.currency.code):
-                    return mon <= 0
-            return True
+                if other.hasCurrency(mon.currency.code):
+                    didcompare = True
+                    if mon >= other.moneys[mon.currency.code]:
+                        return False
+                else:
+                    if mon >= 0:
+                        return False
+            return didcompare
         elif isinstance(other, Money):
+            mon = 0
             if self.hasCurrency(other.currency.code):
-                return self.moneys[other.currency.code] < other
+                mon = self.moneys[other.currency.code]
+            return mon < other
         else:
             raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
 
     def __gt__(self, other):
+        # Assume any currency not present has a 0 amount.
         if isinstance(other, MultiMoney):
+            didcompare = False
             for mon in other.getMoneys():
                 if self.hasCurrency(mon.currency.code):
-                    return self.moneys[mon.currency.code] > mon
+                    didcompare = True
+                    if self.moneys[mon.currency.code] <= mon:
+                        return False
                 else:
-                    return mon > 0
-            return True
+                    if mon >= 0:
+                        return False
+            for mon in self.getMoneys():
+                if other.hasCurrency(mon.currency.code):
+                    didcompare = True
+                    if mon <= other.moneys[mon.currency.code]:
+                        return False
+                else:
+                    if mon <= 0:
+                        return False
+            return didcompare
         elif isinstance(other, Money):
+            mon = 0
             if self.hasCurrency(other.currency.code):
-                return self.moneys[other.currency.code] > other
-            else:
-                return other <= 0
+                mon = self.moneys[other.currency.code]
+            return mon > other
         else:
             raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
 
