@@ -246,6 +246,7 @@ class Money(object):
     def __ge__(self, other):
         return self > other or self == other
 
+
 class MultiMoney(object):
     """
     A MultiMoney is a dict that may contain multiple Money objects of different currencies.
@@ -304,8 +305,15 @@ class MultiMoney(object):
             self.moneys[str(mon.currency)] = mon
 
     def hasCurrency(self, currency):
-        # return hasattr(self, currency)
         return currency in self.moneys
+
+    def getCurrencies(self):
+        currencies = []
+        for money in self.moneys:
+            currencies.append(str(self.moneys[money].currency))
+        if len(currencies) == 0:
+            return ['BTC']
+        return currencies
 
     def getMoneys(self, currency=None):
         if currency is not None:
@@ -398,17 +406,9 @@ class MultiMoney(object):
             else:
                 copySelf.moneys[other.currency.code] = Money(amount=0, currency=other.currency.code)
             return copySelf
-        elif isinstance(other, Decimal):
+        elif isinstance(other, Decimal) or isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
             for mon in self.getMoneys():
-                 copySelf.moneys[mon.currency.code] = Money(
-                    amount=(self.amount * other).quantize(self.currency.quantizer).normalize(),
-                    currency=self.currency)
-            return copySelf
-        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
-            for mon in self.getMoneys():
-                copySelf.moneys[mon.currency.code] = Money(
-                    amount=(self.amount * Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
-                    currency=self.currency)
+                copySelf.moneys[mon.currency.code] = mon * other
             return copySelf
         raise TypeError('Cannot multiply two non-number instances.')
 
@@ -430,17 +430,9 @@ class MultiMoney(object):
             else:
                 copySelf.moneys[other.currency.code] = Money(amount=0, currency=other.currency.code)
             return copySelf
-        elif isinstance(other, Decimal):
+        elif isinstance(other, Decimal) or isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
             for mon in self.getMoneys():
-                copySelf.moneys[mon.currency.code] = Money(
-                    amount=(self.amount / other).quantize(self.currency.quantizer).normalize(),
-                    currency=self.currency)
-            return copySelf
-        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
-            for mon in self.getMoneys():
-                copySelf.moneys[mon.currency.code] = Money(
-                    amount=(self.amount / Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
-                    currency=self.currency)
+                copySelf.moneys[mon.currency.code] = mon / other
             return copySelf
         raise TypeError('Cannot multiply two non-number instances.')
 
@@ -452,9 +444,7 @@ class MultiMoney(object):
     # _______________________________________
     # Override comparison operators
     def __eq__(self, other):
-        if not isinstance(other, MultiMoney):
-            raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
-        else:
+        if isinstance(other, MultiMoney):
             for mon in other.getMoneys():
                 if not self.hasCurrency(str(mon.currency)):
                     if mon == 0:
@@ -462,7 +452,7 @@ class MultiMoney(object):
                     else:
                         return False
                 else:
-                    if not mon == self.moneys[str(mon.currency)]:
+                    if not mon == self.getMoneys(str(mon.currency)):
                         return False
             for mon in self.getMoneys():
                 if not other.hasCurrency(mon.currency.code):
@@ -470,6 +460,15 @@ class MultiMoney(object):
                         continue
                     else:
                         return False
+                else:
+                    if not mon == other.getMoneys(str(mon.currency)):
+                        return False
+        elif isinstance(other, Money):
+            return self.__eq__(MultiMoney(other))
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, Decimal):
+            return self.__eq__(MultiMoney(Money(other)))
+        else:
+            raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
         return True
 
     def __ne__(self, other):
@@ -478,58 +477,54 @@ class MultiMoney(object):
     def __lt__(self, other):
         # Assume any currency not present has a 0 amount.
         if isinstance(other, MultiMoney):
-            didcompare = False
+            if self == other:
+                return False
             for mon in other.getMoneys():
                 if self.hasCurrency(mon.currency.code):
-                    didcompare = True
-                    if self.moneys[mon.currency.code] >= mon:
+                    if self.getMoneys(mon.currency.code) > mon:
                         return False
-                else:
-                    if mon <= 0:
-                        return False
+                elif mon < 0:
+                    return False
             for mon in self.getMoneys():
-                if other.hasCurrency(mon.currency.code):
-                    didcompare = True
-                    if mon >= other.moneys[mon.currency.code]:
-                        return False
-                else:
-                    if mon >= 0:
-                        return False
-            return didcompare
+                if not other.hasCurrency(str(mon.currency)) and mon > 0:
+                    return False
+            return True
         elif isinstance(other, Money):
-            mon = 0
             if self.hasCurrency(other.currency.code):
-                mon = self.moneys[other.currency.code]
-            return mon < other
+                return self.moneys[other.currency.code] < other
+            elif other < 0:
+                return False
+            return True
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, Decimal):
+            for money in self.getMoneys():
+                if money.amount >= Decimal(str(other)):
+                    return False
+            return True
         else:
             raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
 
     def __gt__(self, other):
-        # Assume any currency not present has a 0 amount.
         if isinstance(other, MultiMoney):
-            didcompare = False
+            if self == other:
+                return False
             for mon in other.getMoneys():
                 if self.hasCurrency(mon.currency.code):
-                    didcompare = True
-                    if self.moneys[mon.currency.code] <= mon:
+                    if self.moneys[mon.currency.code] < mon:
                         return False
-                else:
-                    if mon >= 0:
-                        return False
-            for mon in self.getMoneys():
-                if other.hasCurrency(mon.currency.code):
-                    didcompare = True
-                    if mon <= other.moneys[mon.currency.code]:
-                        return False
-                else:
-                    if mon <= 0:
-                        return False
-            return didcompare
+                elif mon > 0:
+                    return False
+            return True
         elif isinstance(other, Money):
-            mon = 0
             if self.hasCurrency(other.currency.code):
-                mon = self.moneys[other.currency.code]
-            return mon > other
+                return self.moneys[other.currency.code] > other
+            elif other > 0:
+                return False
+            return True
+        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, Decimal):
+            for money in self.getMoneys():
+                if money.amount <= Decimal(str(other)):
+                    return False
+            return True
         else:
             raise TypeError("Cannot compare MultiMoney to non-MultiMoney")
 
