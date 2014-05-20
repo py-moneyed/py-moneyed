@@ -239,6 +239,8 @@ class TestMultiMoney:
         assert not MultiMoney(Money(currency='USD')) < MultiMoney()
         assert not self.one_mixed_fortune < MultiMoney()
         assert not self.one_mixed_fortune < one_buck_thousand_bitcoin_piggy
+        assert not MultiMoney() < MultiMoney()
+        assert not MultiMoney() < MultiMoney(Money())
 
     def test_gt(self):
         x = MultiMoney(Money(1, 'BTC'), Money(-1, 'USD'))
@@ -254,3 +256,5 @@ class TestMultiMoney:
         assert not MultiMoney(Money(currency='USD')) > MultiMoney()
         assert not MultiMoney() > self.one_mixed_fortune
         assert not one_buck_thousand_bitcoin_piggy > self.one_mixed_fortune
+        assert not MultiMoney() > MultiMoney()
+        assert not MultiMoney() > MultiMoney(Money())
