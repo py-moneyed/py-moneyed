@@ -9,11 +9,10 @@ DEFAULT_CURRENCY_CODE = 'BTC'
 
 class Currency(object):
     """
-    A Currency represents a form of money issued by governments, and
-    used in one or more states/countries.  A Currency instance
-    encapsulates the related data of: the ISO currency/numeric code, a
-    canonical name, countries the currency is used in, and an exchange
-    rate - the last remains unimplemented however.
+    A Currency represents money in market circulation as a medium of exchange, irrespective of state recognition.
+    A Currency instance encapsulates the related data of: the ISO currency/numeric code, a
+    canonical name, countries the currency is used in, and the number of significant digits
+    to use in performing mathematic operations.
     """
 
     def __init__(self, code='', numeric='999', name='', countries=[], significantDigits=8):
@@ -250,7 +249,7 @@ class Money(object):
 class MultiMoney(object):
     """
     A MultiMoney is a dict that may contain multiple Money objects of different currencies.
-    This is mainly used for performing address accounting, but can also be applied to conversions
+    This is mainly used for performing wallet accounting, but can also be applied to conversions
     with a little tweaking.
     """
     moneys = {}
