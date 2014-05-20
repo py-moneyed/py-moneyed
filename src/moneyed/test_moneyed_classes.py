@@ -241,6 +241,10 @@ class TestMultiMoney:
         assert not self.one_mixed_fortune < one_buck_thousand_bitcoin_piggy
 
     def test_gt(self):
+        x = MultiMoney(Money(1, 'BTC'), Money(-1, 'USD'))
+        y = MultiMoney(Money(0.5, 'BTC'))
+        assert not x > y
+
         one_buck_piggy = MultiMoney(Money(amount=1, currency=self.USD))
         assert MultiMoney(self.one_million_bucks) > one_buck_piggy
         assert self.one_mixed_fortune > one_buck_piggy
