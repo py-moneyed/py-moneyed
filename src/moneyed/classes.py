@@ -26,6 +26,13 @@ class Currency(object):
     def __repr__(self):
         return self.code
 
+    def __eq__(self, other):
+        return (isinstance(other, Currency) and
+                (self.code == other.code) and
+                (self.countries == other.countries) and
+                (self.name == other.name) and
+                (self.numeric == other.numeric))
+
 
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
