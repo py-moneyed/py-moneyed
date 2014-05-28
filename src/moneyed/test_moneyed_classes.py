@@ -41,6 +41,15 @@ class TestCurrency:
         assert US_dollars.name == 'US Dollar'
         assert US_dollars.numeric == '840'
 
+    def test_equals(self):
+        currency1 = Currency(code='USD',numeric='840',name='US Dollar', countries =['UNITED STATES'])
+        currency2 = Currency(code='USD',numeric='840',name='US Dollar', countries =['UNITED STATES'])
+        currency3 = Currency(code='USD',numeric='840',name='US Dollar', countries =['UNITED STATES', 'PALAU'])
+
+        assert currency1 == currency2
+        assert currency2 == currency1
+        assert currency1 != currency3
+
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
 
