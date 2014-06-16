@@ -194,3 +194,8 @@ class TestMoney:
         assert abs(x) == abs_money
         y = Money(amount=1, currency=self.USD)
         assert abs(x) == abs_money
+
+    def test_sum(self):
+        assert (sum([Money(amount=1, currency=self.USD),
+                     Money(amount=2, currency=self.USD)]) ==
+                Money(amount=3, currency=self.USD))

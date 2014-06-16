@@ -88,6 +88,10 @@ class Money(object):
             currency=self.currency)
 
     def __add__(self, other):
+        if other == 0:
+            # This allows things like 'sum' to work on list of Money instances,
+            # just like list of Decimal.
+            return self
         if not isinstance(other, Money):
             raise TypeError('Cannot add or subtract a ' +
                             'Money and non-Money instance.')
