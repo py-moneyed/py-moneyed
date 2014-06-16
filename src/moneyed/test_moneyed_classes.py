@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 
 from copy import deepcopy
 from decimal import Decimal
+import warnings
+
 import pytest  # Works with less code, more consistency than unittest.
 
 from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY
@@ -132,6 +134,18 @@ class TestMoney:
         assert 3 * x == Money(333.99, currency=self.USD)
         assert Money(333.99, currency=self.USD) == 3 * x
 
+    def test_mul_float_warning(self):
+        # This should be changed to TypeError exception after deprecation period is over.
+        with warnings.catch_warnings(record=True) as warning_list:
+            warnings.simplefilter("always")
+            Money(amount="10") * 1.2
+            assert "Multiplying Money instances with floats is deprecated" in [w.message.args[0] for w in warning_list]
+
+        with warnings.catch_warnings(record=True) as warning_list:
+            warnings.simplefilter("always")
+            1.2 * Money(amount="10")
+            assert "Multiplying Money instances with floats is deprecated" in [w.message.args[0] for w in warning_list]
+
     def test_mul_bad(self):
         with pytest.raises(TypeError):
             self.one_million_bucks * self.one_million_bucks
@@ -152,6 +166,13 @@ class TestMoney:
         y = 2
         assert x / y == Money(amount=25, currency=self.USD)
 
+    def test_div_float_warning(self):
+        # This should be changed to TypeError exception after deprecation period is over.
+        with warnings.catch_warnings(record=True) as warning_list:
+            warnings.simplefilter("always")
+            Money(amount="10") / 1.2
+            assert "Dividing Money instances by floats is deprecated" in [w.message.args[0] for w in warning_list]
+
     def test_rmod(self):
         assert 1 % self.one_million_bucks == Money(amount=10000,
                                                    currency=self.USD)
@@ -160,6 +181,13 @@ class TestMoney:
         with pytest.raises(TypeError):
             assert (self.one_million_bucks % self.one_million_bucks
                     == 1)
+
+    def test_rmod_float_warning(self):
+        # This should be changed to TypeError exception after deprecation period is over.
+        with warnings.catch_warnings(record=True) as warning_list:
+            warnings.simplefilter("always")
+            2.0 % Money(amount="10")
+            assert "Calculating percentages of Money instances using floats is deprecated" in [w.message.args[0] for w in warning_list]
 
     def test_convert_to_default(self):
         # Currency conversions are not implemented as of 2/2011; when

@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import unicode_literals
 
 from decimal import Decimal, ROUND_DOWN
+import warnings
 
 # Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'XYZ'
@@ -114,6 +115,8 @@ class Money(object):
         if isinstance(other, Money):
             raise TypeError('Cannot multiply two Money instances.')
         else:
+            if isinstance(other, float):
+                warnings.warn("Multiplying Money instances with floats is deprecated", DeprecationWarning)
             return Money(
                 amount=(self.amount * Decimal(str(other))),
                 currency=self.currency)
@@ -124,6 +127,8 @@ class Money(object):
                 raise TypeError('Cannot divide two different currencies.')
             return self.amount / other.amount
         else:
+            if isinstance(other, float):
+                warnings.warn("Dividing Money instances by floats is deprecated", DeprecationWarning)
             return Money(
                 amount=self.amount / Decimal(str(other)),
                 currency=self.currency)
@@ -146,6 +151,8 @@ class Money(object):
         if isinstance(other, Money):
             raise TypeError('Invalid __rmod__ operation')
         else:
+            if isinstance(other, float):
+                warnings.warn("Calculating percentages of Money instances using floats is deprecated", DeprecationWarning)
             return Money(
                 amount=(Decimal(str(other)) * self.amount / 100),
                 currency=self.currency)
