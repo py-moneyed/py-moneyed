@@ -33,6 +33,8 @@ class Currency(object):
                 (self.name == other.name) and
                 (self.numeric == other.numeric))
 
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own

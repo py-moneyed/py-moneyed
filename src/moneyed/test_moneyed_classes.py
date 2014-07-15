@@ -49,6 +49,7 @@ class TestCurrency:
         assert currency1 == currency2
         assert currency2 == currency1
         assert currency1 != currency3
+        assert not (currency1 != currency2)
 
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
