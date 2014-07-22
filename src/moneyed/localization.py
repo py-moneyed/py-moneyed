@@ -300,6 +300,8 @@ _sign(DEFAULT, moneyed.ZAR, prefix=u'R')
 _sign(DEFAULT, moneyed.ZMK, prefix=u'ZK')
 _sign(DEFAULT, moneyed.ZWL, prefix=u'Z$')
 _sign(DEFAULT, moneyed.BTC, prefix=u'฿')
+_sign(DEFAULT, moneyed.XAU, suffix=u' Gold oz')
+_sign(DEFAULT, moneyed.XAG, suffix=u' Silver oz')
 
 _sign('en_US', moneyed.USD, prefix=u'$')
 _sign('en_UK', moneyed.GBP, prefix=u'£')
