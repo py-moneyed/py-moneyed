@@ -330,3 +330,15 @@ _sign('pl_PL', moneyed.PLN, suffix=' zł')
 _sign('de_DE', moneyed.EUR, suffix=' €')
 _sign('de_AT', moneyed.EUR, suffix=' €')
 _sign('de_CH', moneyed.CHF, prefix='Fr.')
+
+# Adding translations for missing currencies
+_sign('en_US', moneyed.KWD, prefix='KD')
+_sign('en_US', moneyed.BHD, prefix='BD')
+_sign('en_US', moneyed.SAR, prefix='SR')
+_sign('en_US', moneyed.DZD, prefix='DA')
+_sign('en_US', moneyed.LYD, prefix='LD')
+_sign('en_US', moneyed.TND, prefix='DT')
+_sign('en_US', moneyed.AED, prefix='Dhs')
+_sign('en_US', moneyed.EGP, prefix='L.E.')
+_sign('en_US', moneyed.QAR, prefix='QR')
+
