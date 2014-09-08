@@ -90,11 +90,11 @@ class Money(object):
 
     def __unicode__(self):
         from moneyed.localization import format_money
-        return format_money(self)
+        return format_money(self, decimal_places=self.currency.significantDigits)
 
     def __str__(self):
         from moneyed.localization import format_money
-        return format_money(self)
+        return format_money(self, decimal_places=self.currency.significantDigits)
 
     def __copy__(self):
         return Money(amount=str(self.amount), currency=str(self.currency))
