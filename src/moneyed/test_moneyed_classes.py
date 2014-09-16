@@ -1,5 +1,7 @@
+# -*- encoding: utf-8 -*-
 #file test_moneyed_classes.py
-
+from __future__ import division
+from __future__ import unicode_literals
 from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
@@ -15,7 +17,25 @@ class TestCurrency:
 
     def test_init(self):
         usd_countries = CURRENCIES['USD'].countries
-        US_dollars = Currency(code='USD', numeric='840', name='US Dollar', countries=['AMERICAN SAMOA', 'BRITISH INDIAN OCEAN TERRITORY', 'ECUADOR', 'GUAM', 'MARSHALL ISLANDS', 'MICRONESIA', 'NORTHERN MARIANA ISLANDS', 'PALAU', 'PUERTO RICO', 'TIMOR-LESTE', 'TURKS AND CAICOS ISLANDS', 'UNITED STATES MINOR OUTLYING ISLANDS', 'VIRGIN ISLANDS (BRITISH)', 'VIRGIN ISLANDS (U.S.)'])
+        US_dollars = Currency(
+            code='USD',
+            numeric='840',
+            name='US Dollar',
+            countries=['AMERICAN SAMOA',
+                       'BRITISH INDIAN OCEAN TERRITORY',
+                       'ECUADOR',
+                       'GUAM',
+                       'MARSHALL ISLANDS',
+                       'MICRONESIA',
+                       'NORTHERN MARIANA ISLANDS',
+                       'PALAU',
+                       'PUERTO RICO',
+                       'TIMOR-LESTE',
+                       'TURKS AND CAICOS ISLANDS',
+                       'UNITED STATES',
+                       'UNITED STATES MINOR OUTLYING ISLANDS',
+                       'VIRGIN ISLANDS (BRITISH)',
+                       'VIRGIN ISLANDS (U.S.)'])
         assert US_dollars.code == 'USD'
         assert US_dollars.countries == usd_countries
         assert US_dollars.name == 'US Dollar'
@@ -58,6 +78,9 @@ class TestMoney:
     def test_repr(self):
         assert repr(self.one_million_bucks) == '1000000 USD'
         assert repr(Money(Decimal('2.000'), 'PLN')) == '2 PLN'
+        m_1 = Money(Decimal('2.000'), 'PLN')
+        m_2 = Money(Decimal('2.000000'), 'PLN')
+        assert repr(m_1) == repr(m_2)
 
     def test_str(self):
         assert str(self.one_million_bucks) == 'US$1,000,000.00'
@@ -67,6 +90,14 @@ class TestMoney:
         assert format_money(self.one_million_bucks) == 'US$1,000,000.00'
         # No decimal point without fractional part
         assert format_money(self.one_million_bucks, decimal_places=0) == 'US$1,000,000'
+        # locale == pl_PL
+        one_million_pln = Money('1000000', 'PLN')
+        # Two decimal places by default
+        assert format_money(one_million_pln, locale='pl_PL') == '1 000 000,00 zł'
+        assert format_money(self.one_million_bucks, locale='pl_PL') == '1 000 000,00 USD'
+        # No decimal point without fractional part
+        assert format_money(one_million_pln, locale='pl_PL',
+                            decimal_places=0) == '1 000 000 zł'
 
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks
