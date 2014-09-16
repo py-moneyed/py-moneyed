@@ -150,6 +150,7 @@ class Money(object):
     __rsub__ = __sub__
     __rmul__ = __mul__
     __rtruediv__ = __truediv__
+    __div__ = __truediv__
 
     # _______________________________________
     # Override comparison operators
