@@ -186,6 +186,7 @@ class Money(object):
 # Source: http://www.iso.org/iso/support/faqs/faqs_widely_used_standards/widely_used_standards_other/currency_codes/currency_codes_list-1.htm
 
 CURRENCIES = {}
+CURRENCIES_BY_ISO = {}
 
 
 def add_currency(code, numeric, name, countries):
@@ -195,11 +196,14 @@ def add_currency(code, numeric, name, countries):
         numeric=numeric,
         name=name,
         countries=countries)
+    CURRENCIES_BY_ISO[numeric] = CURRENCIES[code]
     return CURRENCIES[code]
 
 
-def get_currency(code):
+def get_currency(code=None, iso=None):
     try:
+        if iso:
+            return CURRENCIES_BY_ISO[str(iso)]
         return CURRENCIES[code]
     except KeyError:
         raise CurrencyDoesNotExist(code)
