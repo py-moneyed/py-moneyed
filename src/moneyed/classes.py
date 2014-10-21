@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from decimal import Decimal
 import copy
-
 from json import dumps
+from decimal import Decimal
 
 DEFAULT_CURRENCY_CODE = 'BTC'
+
 
 class Currency(object):
     """
@@ -15,13 +15,15 @@ class Currency(object):
     to use in performing mathematic operations.
     """
 
-    def __init__(self, code='', numeric='999', name='', countries=[], significantDigits=8):
+    def __init__(self, code='', numeric='999', name='', countries=[], significantDigits=8,
+                 displayDigits=2):
         self.code = code
         self.countries = countries
         self.name = name
         self.numeric = numeric
         self.significantDigits = significantDigits
         self.quantizer = Decimal(10) ** (Decimal(-1) * significantDigits)
+        self.displayDigits = displayDigits
 
     def __repr__(self):
         return self.code
@@ -37,6 +39,7 @@ class Currency(object):
     def __ne__(self, other):
         result = self.__eq__(other)
         return not result
+
 
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
@@ -68,13 +71,13 @@ class Money(object):
     """
 
     def __init__(self, amount=Decimal('0.0'), currency=DEFAULT_CURRENCY_CODE):
-        if not isinstance(amount, Decimal):
-            amount = Decimal(str(amount))
-        self.amount = amount
-
         if not isinstance(currency, Currency):
             currency = get_currency(str(currency).upper())
         self.currency = currency
+
+        if not isinstance(amount, Decimal):
+            amount = Decimal(amount)
+        self.amount = amount.quantize(self.currency.quantizer).normalize()
 
     def __dict__(self):
         return {'a': self.amount, 'c': self.currency}
@@ -90,17 +93,17 @@ class Money(object):
 
     def __unicode__(self):
         from moneyed.localization import format_money
-        return format_money(self, decimal_places=self.currency.significantDigits)
+        return format_money(self)
 
     def __str__(self):
         from moneyed.localization import format_money
-        return format_money(self, decimal_places=self.currency.significantDigits)
+        return format_money(self)
 
     def __copy__(self):
-        return Money(amount=str(self.amount), currency=str(self.currency))
+        return Money(amount=self.amount, currency=str(self.currency))
 
     def prep_json(self):
-        return {u'a':unicode(self.amount), u'c': unicode(self.currency)}
+        return {u'a': unicode(self.amount), u'c': unicode(self.currency)}
 
     def to_json(self):
         return dumps(self.prep_json())
@@ -123,8 +126,8 @@ class Money(object):
                     currency=self.currency)
         elif isinstance(other, Decimal):
             return Money(amount=self.amount + other, currency=self.currency)
-        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
-            return Money(amount=self.amount + Decimal(str(other)), currency=self.currency)
+        elif isinstance(other, (float, int, str)):
+            return Money(amount=self.amount + Decimal(other), currency=self.currency)
         raise TypeError('Cannot add or subtract a ' +
                         'Money and non-number instance.')
 
@@ -143,9 +146,9 @@ class Money(object):
             return Money(
                 amount=(self.amount * other).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
-        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+        elif isinstance(other, (float, int, str)):
             return Money(
-                amount=(self.amount * Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
+                amount=(self.amount * Decimal(other)).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
         raise TypeError('Cannot multiply two non-number instances.')
 
@@ -161,12 +164,11 @@ class Money(object):
             return Money(
                 amount=(self.amount / other).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
-        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+        elif isinstance(other, (float, int, str)):
             return Money(
-                amount=(self.amount / Decimal(str(other))).quantize(self.currency.quantizer).normalize(),
+                amount=(self.amount / Decimal(other)).quantize(self.currency.quantizer).normalize(),
                 currency=self.currency)
         raise TypeError('Cannot multiply two non-number instances.')
-
 
     def __abs__(self):
         return Money(
@@ -188,7 +190,7 @@ class Money(object):
             raise TypeError('Invalid __rmod__ operation')
         else:
             return Money(
-                amount=(Decimal(str(other)) * self.amount / 100),
+                amount=(Decimal(other) * self.amount / 100),
                 currency=self.currency)
 
     __radd__ = __add__
@@ -200,12 +202,11 @@ class Money(object):
     # Override comparison operators
     def __eq__(self, other):
         if isinstance(other, Money):
-            return self.amount == other.amount \
-                   and (self.currency == other.currency)
+            return self.amount == other.amount and (self.currency == other.currency)
         elif isinstance(other, Decimal):
             return self.amount == other
-        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
-            return self.amount == Decimal(str(other))
+        elif isinstance(other, (float, int, str)):
+            return self.amount == Decimal(other)
         else:
             return False
 
@@ -221,8 +222,8 @@ class Money(object):
                 raise MoneyComparisonError(other)
         elif isinstance(other, Decimal):
             return self.amount < other
-        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
-            return self.amount < Decimal(str(other))
+        elif isinstance(other, (float, int, str)):
+            return self.amount < Decimal(other)
         else:
             raise MoneyComparisonError(other)
 
@@ -234,8 +235,8 @@ class Money(object):
                 raise MoneyComparisonError(other)
         elif isinstance(other, Decimal):
             return self.amount > other
-        elif isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
-            return self.amount > Decimal(str(other))
+        elif isinstance(other, (float, int, str)):
+            return self.amount > Decimal(other)
         else:
             raise MoneyComparisonError(other)
 
@@ -282,7 +283,7 @@ class MultiMoney(object):
         return newSelf
 
     def prep_json(self):
-        encMoney = {u'mm':True}
+        encMoney = {u'mm': True}
         tself = copy.copy(self)
         for mon in tself.getMoneys():
             encMoney[unicode(mon.currency)] = mon.prep_json()
@@ -405,7 +406,8 @@ class MultiMoney(object):
             else:
                 copySelf.moneys[other.currency.code] = Money(amount=0, currency=other.currency.code)
             return copySelf
-        elif isinstance(other, Decimal) or isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+        elif isinstance(other, (Decimal, float, int, str)):
+            # XXX This fails for str!
             for mon in self.getMoneys():
                 copySelf.moneys[mon.currency.code] = mon * other
             return copySelf
@@ -429,7 +431,8 @@ class MultiMoney(object):
             else:
                 copySelf.moneys[other.currency.code] = Money(amount=0, currency=other.currency.code)
             return copySelf
-        elif isinstance(other, Decimal) or isinstance(other, float) or isinstance(other, int) or isinstance(other, str):
+        elif isinstance(other, (Decimal, float, int, str)):
+            # XXX This fails for str!
             for mon in self.getMoneys():
                 copySelf.moneys[mon.currency.code] = mon / other
             return copySelf
@@ -546,14 +549,16 @@ class MultiMoney(object):
 CURRENCIES = {}
 
 
-def add_currency(code, numeric, name, countries, significantDigits=5):
+def add_currency(code, numeric, name, countries, significantDigits=5,
+                 displayDigits=2):
     global CURRENCIES
     CURRENCIES[code] = Currency(
         code=code,
         numeric=numeric,
         name=name,
         countries=countries,
-        significantDigits=significantDigits)
+        significantDigits=significantDigits,
+        displayDigits=displayDigits)
     return CURRENCIES[code]
 
 
@@ -586,7 +591,7 @@ BMD = add_currency('BMD', '060', 'Bermudian Dollar (customarily known as Bermuda
 BND = add_currency('BND', '096', 'Brunei Dollar', ['BRUNEI DARUSSALAM'])
 BRL = add_currency('BRL', '986', 'Brazilian Real', ['BRAZIL'])
 BSD = add_currency('BSD', '044', 'Bahamian Dollar', ['BAHAMAS'])
-BTC = add_currency('BTC', 'Nil', 'Bitcoin', [], 8)
+BTC = add_currency('BTC', 'Nil', 'Bitcoin', [], 8, 8)
 BTN = add_currency('BTN', '064', 'Bhutanese ngultrum', ['BHUTAN'])
 BWP = add_currency('BWP', '072', 'Pula', ['BOTSWANA'])
 BYR = add_currency('BYR', '974', 'Belarussian Ruble', ['BELARUS'])
@@ -719,8 +724,8 @@ VND = add_currency('VND', '704', 'Dong', ['VIET NAM'])
 VUV = add_currency('VUV', '548', 'Vatu', ['VANUATU'])
 WST = add_currency('WST', '882', 'Tala', ['SAMOA'])
 XAF = add_currency('XAF', '950', 'CFA franc BEAC', ['CAMEROON', 'CENTRAL AFRICAN REPUBLIC', 'REPUBLIC OF THE CONGO', 'CHAD', 'EQUATORIAL GUINEA', 'GABON'])
-XAG = add_currency('XAG', '961', 'Silver', [])
-XAU = add_currency('XAU', '959', 'Gold', [])
+XAG = add_currency('XAG', '961', 'Silver', [], displayDigits=4)
+XAU = add_currency('XAU', '959', 'Gold', [], displayDigits=4)
 XBA = add_currency('XBA', '955', 'Bond Markets Units European Composite Unit (EURCO)', [])
 XBB = add_currency('XBB', '956', 'European Monetary Unit (E.M.U.-6)', [])
 XBC = add_currency('XBC', '957', 'European Unit of Account 9(E.U.A.-9)', [])

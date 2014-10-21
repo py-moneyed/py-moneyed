@@ -14,7 +14,7 @@ class CurrencyFormatter(object):
     def add_sign_definition(self, locale, currency, prefix=u'', suffix=u''):
         locale = locale.upper()
         currency_code = currency.code.upper()
-        if not locale in self.sign_definitions:
+        if locale not in self.sign_definitions:
             self.sign_definitions[locale] = {}
         self.sign_definitions[locale][currency_code] = (prefix, suffix)
 
@@ -65,8 +65,7 @@ class CurrencyFormatter(object):
             rounding_method = formatting['rounding_method']
 
         if decimal_places is None:
-            # TODO: Use individual defaults for each currency
-            decimal_places = 2
+            decimal_places = money.currency.displayDigits
 
         q = Decimal(10) ** -decimal_places  # 2 places --> '0.01'
         quantized = money.amount.quantize(q, rounding_method)
@@ -125,7 +124,7 @@ format_money = _FORMATTER.format
 _sign = _FORMATTER.add_sign_definition
 _format = _FORMATTER.add_formatting_definition
 
-## FORMATTING RULES
+# FORMATTING RULES
 
 _format(DEFAULT, group_size=3, group_separator=",", decimal_point=".",
                  positive_sign="",  trailing_positive_sign="",
@@ -142,7 +141,8 @@ _format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
 
-## CURRENCY SIGNS
+# CURRENCY SIGNS
+#
 # Default currency signs. These can be overridden for locales where
 # foreign or local currency signs for one reason or another differ
 # from the norm.
