@@ -203,10 +203,8 @@ class Money(object):
     def __eq__(self, other):
         if isinstance(other, Money):
             return self.amount == other.amount and (self.currency == other.currency)
-        elif isinstance(other, Decimal):
-            return self.amount == other
-        elif isinstance(other, (float, int, str)):
-            return self.amount == Decimal(other)
+        elif isinstance(other, (Decimal, float, int, str)):
+            return self.amount == Decimal(other).quantize(self.currency.quantizer)
         else:
             return False
 
@@ -220,10 +218,8 @@ class Money(object):
                 return self.amount < other.amount
             else:
                 raise MoneyComparisonError(other)
-        elif isinstance(other, Decimal):
-            return self.amount < other
-        elif isinstance(other, (float, int, str)):
-            return self.amount < Decimal(other)
+        elif isinstance(other, (Decimal, float, int, str)):
+            return self.amount < Decimal(other).quantize(self.currency.quantizer)
         else:
             raise MoneyComparisonError(other)
 
@@ -233,10 +229,8 @@ class Money(object):
                 return self.amount > other.amount
             else:
                 raise MoneyComparisonError(other)
-        elif isinstance(other, Decimal):
-            return self.amount > other
-        elif isinstance(other, (float, int, str)):
-            return self.amount > Decimal(other)
+        elif isinstance(other, (Decimal, float, int, str)):
+            return self.amount > Decimal(other).quantize(self.currency.quantizer)
         else:
             raise MoneyComparisonError(other)
 
