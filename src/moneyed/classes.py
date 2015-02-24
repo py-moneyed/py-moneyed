@@ -87,12 +87,12 @@ class Money(object):
         return format_money(self)
 
     def __pos__(self):
-        return Money(
+        return self.__class__(
             amount=self.amount,
             currency=self.currency)
 
     def __neg__(self):
-        return Money(
+        return self.__class__(
             amount= -self.amount,
             currency=self.currency)
 
@@ -105,7 +105,7 @@ class Money(object):
             raise TypeError('Cannot add or subtract a ' +
                             'Money and non-Money instance.')
         if self.currency == other.currency:
-            return Money(
+            return self.__class__(
                 amount=self.amount + other.amount,
                 currency=self.currency)
 
@@ -121,7 +121,7 @@ class Money(object):
         else:
             if isinstance(other, float):
                 warnings.warn("Multiplying Money instances with floats is deprecated", DeprecationWarning)
-            return Money(
+            return self.__class__(
                 amount=(self.amount * Decimal(str(other))),
                 currency=self.currency)
 
@@ -133,12 +133,12 @@ class Money(object):
         else:
             if isinstance(other, float):
                 warnings.warn("Dividing Money instances by floats is deprecated", DeprecationWarning)
-            return Money(
+            return self.__class__(
                 amount=self.amount / Decimal(str(other)),
                 currency=self.currency)
 
     def __abs__(self):
-        return Money(
+        return self.__class__(
             amount=abs(self.amount),
             currency=self.currency)
 
@@ -157,7 +157,7 @@ class Money(object):
         else:
             if isinstance(other, float):
                 warnings.warn("Calculating percentages of Money instances using floats is deprecated", DeprecationWarning)
-            return Money(
+            return self.__class__(
                 amount=(Decimal(str(other)) * self.amount / 100),
                 currency=self.currency)
 
