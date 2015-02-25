@@ -194,3 +194,34 @@ class TestMoney:
         assert abs(x) == abs_money
         y = Money(amount=1, currency=self.USD)
         assert abs(x) == abs_money
+
+    def test_arithmetic_operations_return_real_subclass_instance(self):
+        """
+        Arithmetic operations on a subclass instance should return instances in the same subclass
+        type.
+        """
+
+        extended_money = ExtendedMoney(amount=2, currency=self.USD)
+
+        operated_money = +extended_money
+        assert type(extended_money) == type(operated_money)
+        operated_money = -extended_money
+        assert type(extended_money) == type(operated_money)
+        operated_money = ExtendedMoney(amount=1, currency=self.USD) + ExtendedMoney(amount=1, currency=self.USD)
+        assert type(extended_money) == type(operated_money)
+        operated_money = ExtendedMoney(amount=3, currency=self.USD) - Money(amount=1, currency=self.USD)
+        assert type(extended_money) == type(operated_money)
+        operated_money = (1 * extended_money)
+        assert type(extended_money) == type(operated_money)
+        operated_money = (extended_money / 1)
+        assert type(extended_money) == type(operated_money)
+        operated_money = abs(ExtendedMoney(amount=-2, currency=self.USD))
+        assert type(extended_money) == type(operated_money)
+        operated_money = (50 % ExtendedMoney(amount=4, currency=self.USD))
+        assert type(extended_money) == type(operated_money)
+
+
+class ExtendedMoney(Money):
+
+    def do_my_behaviour(self):
+        pass
