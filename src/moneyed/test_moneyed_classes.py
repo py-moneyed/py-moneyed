@@ -270,6 +270,19 @@ class TestMoney:
         operated_money = (50 % ExtendedMoney(amount=4, currency=self.USD))
         assert type(extended_money) == type(operated_money)
 
+    def test_can_call_subclass_method_after_arithmetic_operations(self):
+        """
+        Calls to `ExtendedMoney::do_my_behaviour` method throws
+        AttributeError: 'Money' object has no attribute 'do_my_behaviour'
+        if multiplication operator doesn't return subclass instance.
+        """
+
+        extended_money = ExtendedMoney(amount=2, currency=self.USD)
+        # no problem
+        extended_money.do_my_behaviour()
+        # throws error if `__mul__` doesn't return subclass instance
+        (1 * extended_money).do_my_behaviour()
+
 
 class ExtendedMoney(Money):
 
