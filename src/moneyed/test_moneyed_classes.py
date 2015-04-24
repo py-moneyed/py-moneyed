@@ -20,6 +20,7 @@ class TestCurrency:
         US_dollars = Currency(
             code='USD',
             numeric='840',
+            sub_unit=100,
             name='US Dollar',
             countries=['AMERICAN SAMOA',
                        'BRITISH INDIAN OCEAN TERRITORY',
@@ -38,6 +39,7 @@ class TestCurrency:
                        'VIRGIN ISLANDS (U.S.)'])
         assert US_dollars.code == 'USD'
         assert US_dollars.countries == usd_countries
+        assert US_dollars.sub_unit == 100
         assert US_dollars.name == 'US Dollar'
         assert US_dollars.numeric == '840'
 
@@ -194,3 +196,51 @@ class TestMoney:
         assert abs(x) == abs_money
         y = Money(amount=1, currency=self.USD)
         assert abs(x) == abs_money
+
+    def test_get_sub_unit(self):
+        m = Money(amount=123, currency=self.USD)
+        assert m.get_amount_in_sub_unit() == 12300
+
+    def test_arithmetic_operations_return_real_subclass_instance(self):
+        """
+        Arithmetic operations on a subclass instance should return instances in the same subclass
+        type.
+        """
+
+        extended_money = ExtendedMoney(amount=2, currency=self.USD)
+
+        operated_money = +extended_money
+        assert type(extended_money) == type(operated_money)
+        operated_money = -extended_money
+        assert type(extended_money) == type(operated_money)
+        operated_money = ExtendedMoney(amount=1, currency=self.USD) + ExtendedMoney(amount=1, currency=self.USD)
+        assert type(extended_money) == type(operated_money)
+        operated_money = ExtendedMoney(amount=3, currency=self.USD) - Money(amount=1, currency=self.USD)
+        assert type(extended_money) == type(operated_money)
+        operated_money = (1 * extended_money)
+        assert type(extended_money) == type(operated_money)
+        operated_money = (extended_money / 1)
+        assert type(extended_money) == type(operated_money)
+        operated_money = abs(ExtendedMoney(amount=-2, currency=self.USD))
+        assert type(extended_money) == type(operated_money)
+        operated_money = (50 % ExtendedMoney(amount=4, currency=self.USD))
+        assert type(extended_money) == type(operated_money)
+
+    def test_can_call_subclass_method_after_arithmetic_operations(self):
+        """
+        Calls to `ExtendedMoney::do_my_behaviour` method throws
+        AttributeError: 'Money' object has no attribute 'do_my_behaviour'
+        if multiplication operator doesn't return subclass instance.
+        """
+
+        extended_money = ExtendedMoney(amount=2, currency=self.USD)
+        # no problem
+        extended_money.do_my_behaviour()
+        # throws error if `__mul__` doesn't return subclass instance
+        (1 * extended_money).do_my_behaviour()
+
+
+class ExtendedMoney(Money):
+
+    def do_my_behaviour(self):
+        pass
