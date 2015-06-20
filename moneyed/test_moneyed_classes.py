@@ -75,6 +75,14 @@ class TestCurrency:
         assert get_currency(iso='840') == USD
         assert get_currency(iso=840) == USD
 
+    def test_get_currency_of_country(self):
+        assert str(self.get_currency_of_country("INDIA")[0].code) == "INR"
+        assert str(seld.get_currency_of_country("iNdIA")[0].code) == "INR"
+        assert str(self.get_currency_of_country("Tuvalu")[1].code) == "AUD"
+        assert str(self.get_currency_of_country("Greenland")[0].code) == "DKK"
+        with pytest.raises(CountryNameDoesNotExist):
+            self.get_currency_of_country("Oompaland")
+
 
 class TestMoney:
 

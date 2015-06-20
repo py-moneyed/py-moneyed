@@ -70,6 +70,13 @@ class CurrencyDoesNotExist(Exception):
             "No currency with code %s is defined." % code)
 
 
+class CountryNameDoesNotExist(Exception):
+
+    def __init__(self, country):
+        super(CountryNameDoesNotExist, self).__init__(
+            "No country with name %s is defined." % country)
+
+
 class Money(object):
     """
     A Money instance is a combination of data - an amount and a
@@ -246,7 +253,6 @@ class Money(object):
 CURRENCIES = {}
 CURRENCIES_BY_ISO = {}
 
-
 def add_currency(code, numeric, name, countries):
     global CURRENCIES
     CURRENCIES[code] = Currency(
@@ -265,6 +271,25 @@ def get_currency(code=None, iso=None):
         return CURRENCIES[code]
     except KeyError:
         raise CurrencyDoesNotExist(code)
+
+
+def get_currency_of_country(country):
+"""
+Returns list with currency object(s) given the country's name.
+Raises a CountryNameDoesNotExist exception if the country is not found.
+
+country : str
+The full name of the country to be searched for.
+"""
+    country_name = country.upper()
+    currencies_of_country = [ ]
+    for code, currency in CURRENCIES:
+        if country_name in currency.countries:
+            currencies_of_country.append(currency)
+    if len(currencies_of_country) == 0:
+        return CountryNameDoesNotExist(country)
+    else:
+        return currencies_of_country
 
 
 DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 'Default currency.', [])
