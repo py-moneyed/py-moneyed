@@ -187,7 +187,6 @@ class Money(object):
 
 CURRENCIES = {}
 
-
 def add_currency(code, numeric, name, countries):
     global CURRENCIES
     CURRENCIES[code] = Currency(
@@ -203,6 +202,21 @@ def get_currency(code):
         return CURRENCIES[code]
     except KeyError:
         raise CurrencyDoesNotExist(code)
+
+def get_currency_of_country(country):
+    """
+    Returns currency object given the country's name.
+    Returns None if the country is not found.
+    Case insensitive.
+    Eg #1: get_currency_of_country("India") returns INR currency object.
+    Eg #2: get_currency_of_country("Oompaland") returns None.
+    """
+    country_name = country.upper()
+
+    for code in CURRENCIES:
+        if country_name in CURRENCIES[code].countries:
+            return CURRENCIES[code]
+    return None
 
 DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 'Default currency.', [])
 
