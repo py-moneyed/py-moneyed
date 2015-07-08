@@ -38,21 +38,17 @@ class CurrencyFormatter(object):
     def get_sign_definition(self, currency_code, locale):
         currency_code = currency_code.upper()
 
-        if locale.upper() not in self.sign_definitions:
-            locale = DEFAULT
+        # allow us to display correctly the money sign even if our locale is
+        # different than the locale of the money is in EUR, but locale is en_US.
+        for loc in [locale, DEFAULT]:
+            loc = loc.upper()
+            if loc not in self.sign_definitions:
+                continue
+            sign_definitions = self.sign_definitions[loc]
+            if currency_code in sign_definitions:
+                return sign_definitions[currency_code]
 
-        local_set = self.sign_definitions.get(locale.upper())
-
-        if currency_code in local_set:
-            return local_set.get(currency_code)
-        else:
-            # allow us to display correctly the money sign even if our locale is different than the locale of the money
-            # ex money is in EUR, but locale is en_US (overridden in the present file).
-            for loc in self.sign_definitions:
-                if currency_code in self.sign_definitions.get(loc):
-                    return self.sign_definitions.get(loc).get(currency_code)
-
-            return ('', "\u00a0%s" % currency_code)
+        return ('', "\u00a0%s" % currency_code)
 
     def get_formatting_definition(self, locale):
         if locale.upper() not in self.formatting_definitions:
