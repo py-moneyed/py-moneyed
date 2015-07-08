@@ -80,12 +80,12 @@ class Money(object):
         return format_money(self)
 
     def __pos__(self):
-        return Money(
+        return self.__class__(
             amount=self.amount,
             currency=self.currency)
 
     def __neg__(self):
-        return Money(
+        return self.__class__(
             amount= -self.amount,
             currency=self.currency)
 
@@ -94,7 +94,7 @@ class Money(object):
             raise TypeError('Cannot add or subtract a ' +
                             'Money and non-Money instance.')
         if self.currency == other.currency:
-            return Money(
+            return self.__class__(
                 amount=self.amount + other.amount,
                 currency=self.currency)
 
@@ -108,7 +108,7 @@ class Money(object):
         if isinstance(other, Money):
             raise TypeError('Cannot multiply two Money instances.')
         else:
-            return Money(
+            return self.__class__(
                 amount=(self.amount * Decimal(str(other))),
                 currency=self.currency)
 
@@ -118,12 +118,12 @@ class Money(object):
                 raise TypeError('Cannot divide two different currencies.')
             return self.amount / other.amount
         else:
-            return Money(
+            return self.__class__(
                 amount=self.amount / Decimal(str(other)),
                 currency=self.currency)
 
     def __abs__(self):
-        return Money(
+        return self.__class__(
             amount=abs(self.amount),
             currency=self.currency)
 
@@ -140,7 +140,7 @@ class Money(object):
         if isinstance(other, Money):
             raise TypeError('Invalid __rmod__ operation')
         else:
-            return Money(
+            return self.__class__(
                 amount=(Decimal(str(other)) * self.amount / 100),
                 currency=self.currency)
 
