@@ -1,0 +1,14 @@
+language: python
+# See tox.ini for env list
+env:
+- TOXENV=py26
+- TOXENV=py27
+- TOXENV=py32
+- TOXENV=py33
+- TOXENV=pypy
+- TOXENV=flake
+- TOXENV=checkmanifest
+install:
+- pip install tox>=2.1
+script:
+- tox
