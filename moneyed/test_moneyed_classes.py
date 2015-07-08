@@ -133,23 +133,23 @@ class TestMoney:
                             decimal_places=0) == '1\u2009000\u2009000\u00a0zł'
 
         # overriden sign/format locale display default sign with locale group parameter
-        assert format_money(self.one_million_bucks, locale='pl_PL') == '$1\u2009000\u2009000,00'
+        assert format_money(self.one_million_bucks, locale='pl_PL') == 'US$1\u2009000\u2009000,00'
         # non overriden sign/format locale display default money sign with default group parameter
-        assert format_money(self.one_million_bucks, locale='fr_FR') == '$1,000,000.00'
+        assert format_money(self.one_million_bucks, locale='fr_FR') == 'US$1\u2009000\u2009000.00'
 
         # No decimal point without fractional part
-        assert format_money(one_million_pln, locale='pl_PL', decimal_places=0) == '1 000 000 zł'
+        assert format_money(one_million_pln, locale='pl_PL', decimal_places=0) == '1\u2009000\u2009000\u00a0zł'
 
         # add different sign for money USD in locale pl_PL
         _sign('pl_PL', moneyed.USD, prefix='$')
-        assert format_money(self.one_million_bucks, locale='pl_PL') == '$1 000 000,00'
+        assert format_money(self.one_million_bucks, locale='pl_PL') == '$1\u2009000\u2009000,00'
 
         # default locale display correct money sign with default group parameter
-        assert format_money(self.one_million_euros) == '1,000,000.00 €'
+        assert format_money(self.one_million_euros) == '1\u2009000\u2009000.00\u00a0€'
         # non overriden sign/format locale display default money sign with default group parameter
-        assert format_money(self.one_million_euros, locale='fr_FR') == '1,000,000.00 €'
+        assert format_money(self.one_million_euros, locale='fr_FR') == '1\u2009000\u2009000.00\u00a0€'
         # overriden sign/locale locale display default money sign with locale group parameter
-        assert format_money(self.one_million_euros, locale='en_US') == '1,000,000.00 €'
+        assert format_money(self.one_million_euros, locale='en_US') == '1,000,000.00\u00a0€'
 
         # add format for fr_FR locale
         _format("fr_FR", group_size=3, group_separator=" ", decimal_point=",",
@@ -157,7 +157,7 @@ class TestMoney:
                 negative_sign="-", trailing_negative_sign="",
                 rounding_method=ROUND_HALF_EVEN)
         # overriden format locale display correct sign with locale group parameter
-        assert format_money(self.one_million_euros, locale='fr_FR') == '1 000 000,00 €'
+        assert format_money(self.one_million_euros, locale='fr_FR') == '1 000 000,00\u00a0€'
 
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks
