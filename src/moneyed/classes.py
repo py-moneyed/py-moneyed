@@ -34,6 +34,10 @@ class Currency(object):
     def __repr__(self):
         return self.code
 
+    def __eq__(self, other):
+        """We user numeric as currency indentifier"""
+        return self.numeric == other.numeric
+
 
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
@@ -99,7 +103,7 @@ class Money(object):
         if not isinstance(other, Money):
             raise TypeError('Cannot add or subtract a ' +
                             'Money and non-Money instance.')
-        if self.currency == other.currency:
+        if self.currency.code == other.currency.code:
             return Money(
                 amount=self.amount + other.amount,
                 currency=self.currency)
@@ -154,6 +158,7 @@ class Money(object):
     __rsub__ = __sub__
     __rmul__ = __mul__
     __rtruediv__ = __truediv__
+    __div__ = __truediv__
 
     # _______________________________________
     # Override comparison operators

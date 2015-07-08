@@ -139,17 +139,17 @@ _format("en_US", group_size=3, group_separator=",", decimal_point=".",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
-                 
+
 _format("de_DE", group_size=3, group_separator=" ", decimal_point=",",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
-                 
+
 _format("de_AT", group_size=3, group_separator=" ", decimal_point=",",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
-                 
+
 _format("de_CH", group_size=3, group_separator=" ", decimal_point=".",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
@@ -162,6 +162,11 @@ _format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
 
 _format("pl_PL", group_size=3, group_separator=" ", decimal_point=",",
                  positive_sign="", trailing_positive_sign="",
+                 negative_sign="-", trailing_negative_sign="",
+                 rounding_method=ROUND_HALF_EVEN)
+
+_format("fi_FI", group_size=3, group_separator=" ", decimal_point=",",
+                 positive_sign="",  trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
                  rounding_method=ROUND_HALF_EVEN)
 
@@ -330,3 +335,4 @@ _sign('pl_PL', moneyed.PLN, suffix=' zł')
 _sign('de_DE', moneyed.EUR, suffix=' €')
 _sign('de_AT', moneyed.EUR, suffix=' €')
 _sign('de_CH', moneyed.CHF, prefix='Fr.')
+_sign('fi_FI', moneyed.EUR, suffix=u' €')
