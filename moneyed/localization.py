@@ -321,6 +321,7 @@ _sign(DEFAULT, moneyed.XDR, prefix='SDR')
 _sign(DEFAULT, moneyed.XOF, prefix='CFA')
 _sign(DEFAULT, moneyed.ZAR, prefix='R')
 _sign(DEFAULT, moneyed.ZMK, prefix='ZK')
+_sign(DEFAULT, moneyed.ZMW, prefix='ZK')
 _sign(DEFAULT, moneyed.ZWL, prefix='Z$')
 
 _sign('en_US', moneyed.USD, prefix='$')
