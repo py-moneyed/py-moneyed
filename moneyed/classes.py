@@ -3,11 +3,13 @@ from __future__ import division
 from __future__ import unicode_literals
 
 from decimal import Decimal, ROUND_DOWN
+import sys
 import warnings
 
 # Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'XYZ'
 
+PYTHON2 = sys.version_info[0] == 2
 
 class Currency(object):
     """
@@ -142,8 +144,11 @@ class Money(object):
             amount=abs(self.amount),
             currency=self.currency)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.amount)
+
+    if PYTHON2:
+        __nonzero__ = __bool__
 
     def __rmod__(self, other):
         """
