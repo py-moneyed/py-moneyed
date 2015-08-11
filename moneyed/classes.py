@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from __future__ import division
 from __future__ import unicode_literals
 
@@ -280,7 +281,7 @@ DZD = add_currency('DZD', '012', 'Algerian Dinar', ['ALGERIA'])
 EGP = add_currency('EGP', '818', 'Egyptian Pound', ['EGYPT'])
 ERN = add_currency('ERN', '232', 'Nakfa', ['ERITREA'])
 ETB = add_currency('ETB', '230', 'Ethiopian Birr', ['ETHIOPIA'])
-EUR = add_currency('EUR', '978', 'Euro', ['ANDORRA', 'AUSTRIA', 'BELGIUM', 'ESTONIA', 'FINLAND', 'FRANCE', 'FRENCH GUIANA', 'FRENCH SOUTHERN TERRITORIES', 'GERMANY', 'GREECE', 'GUADELOUPE', 'IRELAND', 'ITALY', 'LUXEMBOURG', 'MARTINIQUE', 'MAYOTTE', 'MONACO', 'MONTENEGRO', 'NETHERLANDS', 'PORTUGAL', 'R.UNION', 'SAINT PIERRE AND MIQUELON', 'SAN MARINO', 'SLOVAKIA', 'SLOVENIA', 'SPAIN'])
+EUR = add_currency('EUR', '978', 'Euro', ['AKROTIRI AND DHEKELIA', 'ANDORRA', 'AUSTRIA', 'BELGIUM', 'CYPRUS', 'ESTONIA', 'FINLAND', 'FRANCE', 'GERMANY', 'GREECE', 'GUADELOUPE', 'IRELAND', 'ITALY', 'KOSOVO', 'LATVIA', 'LITHUANIA', 'LUXEMBOURG', 'MALTA' 'MARTINIQUE', 'MAYOTTE', 'MONACO', 'MONTENEGRO', 'NETHERLANDS', 'PORTUGAL', 'RÉUNION', 'SAN MARINO', 'SAINT BARTHÉLEMY', 'SAINT PIERRE AND MIQUELON', 'SAN MARINO', 'SLOVAKIA', 'SLOVENIA', 'SPAIN', 'VATICAN CITY'])
 FJD = add_currency('FJD', '242', 'Fiji Dollar', ['FIJI'])
 FKP = add_currency('FKP', '238', 'Falkland Islands Pound', ['FALKLAND ISLANDS (MALVINAS)'])
 GBP = add_currency('GBP', '826', 'Pound Sterling', ['UNITED KINGDOM'])
