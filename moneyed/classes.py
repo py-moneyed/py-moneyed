@@ -142,6 +142,9 @@ class Money(object):
             amount=abs(self.amount),
             currency=self.currency)
 
+    def __nonzero__(self):
+        return bool(self.amount)
+
     def __rmod__(self, other):
         """
         Calculate percentage of an amount.  The left-hand side of the

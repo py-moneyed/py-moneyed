@@ -283,6 +283,10 @@ class TestMoney:
         # throws error if `__mul__` doesn't return subclass instance
         (1 * extended_money).do_my_behaviour()
 
+    def test_bool(self):
+        assert bool(Money(amount=1, currency=self.USD))
+        assert not bool(Money(amount=0, currency=self.USD))
+
 
 class ExtendedMoney(Money):
 
