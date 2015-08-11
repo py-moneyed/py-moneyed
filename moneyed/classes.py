@@ -17,8 +17,7 @@ class Currency(object):
     A Currency represents a form of money issued by governments, and
     used in one or more states/countries.  A Currency instance
     encapsulates the related data of: the ISO currency/numeric code, a
-    canonical name, countries the currency is used in, and an exchange
-    rate - the last remains unimplemented however.
+    canonical name, and countries the currency is used in.
     """
 
     def __init__(self, code='', numeric='999', name='', countries=None):
