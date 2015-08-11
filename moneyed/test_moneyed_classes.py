@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-#file test_moneyed_classes.py
+
 from __future__ import division
 from __future__ import unicode_literals
 
@@ -209,7 +209,7 @@ class TestMoney:
 
     def test_equality_to_other_types(self):
         x = Money(amount=0, currency=self.USD)
-        assert x != None
+        assert x != None  # NOQA
         assert x != {}
 
     def test_not_equal_to_decimal_types(self):
@@ -238,7 +238,7 @@ class TestMoney:
         x = Money(amount=-1, currency=self.USD)
         assert abs(x) == abs_money
         y = Money(amount=1, currency=self.USD)
-        assert abs(x) == abs_money
+        assert abs(y) == abs_money
 
     def test_sum(self):
         assert (sum([Money(amount=1, currency=self.USD),

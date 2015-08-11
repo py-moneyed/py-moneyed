@@ -11,6 +11,7 @@ DEFAULT_CURRENCY_CODE = 'XYZ'
 
 PYTHON2 = sys.version_info[0] == 2
 
+
 class Currency(object):
     """
     A Currency represents a form of money issued by governments, and
@@ -95,7 +96,7 @@ class Money(object):
 
     def __neg__(self):
         return self.__class__(
-            amount= -self.amount,
+            amount=-self.amount,
             currency=self.currency)
 
     def __add__(self, other):
@@ -177,9 +178,9 @@ class Money(object):
     # _______________________________________
     # Override comparison operators
     def __eq__(self, other):
-        return isinstance(other, Money)\
-               and (self.amount == other.amount) \
-               and (self.currency == other.currency)
+        return (isinstance(other, Money)
+                and (self.amount == other.amount)
+                and (self.currency == other.currency))
 
     def __ne__(self, other):
         result = self.__eq__(other)
