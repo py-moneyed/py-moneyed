@@ -205,18 +205,23 @@ def get_currency(code):
 
 def get_currency_of_country(country):
     """
-    Returns currency object given the country's name.
+    Returns list with currency object(s) given the country's name.
     Returns None if the country is not found.
     Case insensitive.
-    Eg #1: get_currency_of_country("India") returns INR currency object.
+    Eg #1: get_currency_of_country("India") returns INR currency object in a list.
     Eg #2: get_currency_of_country("Oompaland") returns None.
     """
     country_name = country.upper()
+    currencies_of_country = [ ]
 
     for code in CURRENCIES:
         if country_name in CURRENCIES[code].countries:
-            return CURRENCIES[code]
-    return None
+            currencies_of_country.append(CURRENCIES[code])
+    
+    if not currencies_of_country:
+        return None
+    else:
+        return currencies_of_country
 
 DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 'Default currency.', [])
 

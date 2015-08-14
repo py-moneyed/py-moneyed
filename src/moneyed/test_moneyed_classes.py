@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
-from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY
+from moneyed.classes import Currency, get_currency_of_country, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY
 from moneyed.localization import format_money
 
 
@@ -44,6 +44,12 @@ class TestCurrency:
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
 
+    def test_get_currency_of_country(self):
+        assert str(get_currency_of_country("INDIA")[0].code) == "INR"
+        assert str(get_currency_of_country("iNdIA")[0].code) == "INR"
+        assert str(get_currency_of_country("Tuvalu")[1].code) == "AUD"
+        assert str(get_currency_of_country("Greenland")[0].code) == "DKK"
+        assert get_currency_of_country("Oompaland") == None
 
 class TestMoney:
 
