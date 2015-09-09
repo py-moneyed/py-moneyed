@@ -23,28 +23,69 @@ Usage
 
 On to the code! The Money class is instantiated with:
 
-- An amount which can be of type string, float, or Decimal.  
+- An amount which can be of type int, string, float, or Decimal.
+  It will be converted to a Decimal internally. Therefore, it is best
+  to avoid float objects, since they do not convert losslessly
+  to Decimal.
+
 - A currency, which usually is specified by the three-capital-letters
   ISO currency code, e.g. USD, EUR, CNY, and so on.
+  It will be converted to a Currency object.
 
 For example,
 
 .. sourcecode:: python
 
-    from moneyed.classes import Money
+    from moneyed import Money
     sale_price_today = Money(amount='99.99', currency='USD')
 
-The Money class also provides operators with type checking, matching
-currency checking, and sensible dimensional behavior, e.g. you cannot
-multiply two Money instances, nor can you add a Money instance to a
-non-Money number; dividing a Money instance by another results in a
-Decimal value, etc.
+
+You then use Money instances as a normal number. The Money class provides
+operators with type checking, matching currency checking, and sensible
+dimensional behavior, e.g. you cannot multiply two Money instances, nor can you
+add a Money instance to a non-Money number; dividing a Money instance by another
+results in a Decimal value, etc.
 
 The Currency class is provided with a complete dictionary of ISO 4217
 currencies data, each key (e.g. 'USD') mapping to a Currency instance
 with ISO numeric code, canonical name in English, and countries using
 the currency.  Thanks to the python-money developers for their
 (possibly tedious) data-entry of the ISO codes!
+
+All of these are available as pre-built Currency objects in the `moneyed`
+module.
+
+You can also pass in the arguments to Money as positional arguments.
+So you can also write::
+
+.. sourcecode:: python
+
+    >>> from moneyed import Money, USD
+    >>> price = Money('19.50', USD)
+    >>> price
+    19 USD
+
+    >>> price.amount
+    Decimal('19.50')
+
+    >>> price.currency
+    USD
+
+    >>> price.currency.code
+    'USD'
+
+
+Formatting
+----------
+
+You can print Money object as follows::
+
+.. sourcecode:: python
+
+   >>> from moneyed.localization import format_money
+   >>> format_money(Money(10, USD), locale='en_US')
+   '$10.00'
+
 
 Testing
 -------
@@ -57,7 +98,7 @@ tool to automate running tests and deployment; install it to your
 global Python environment with: ::
 
     sudo pip install tox
-    
+
 Then you can activate a virtualenv (any will do - by design tox will
 not run from your globally-installed python), cd to the py-moneyed
 source directory then run the tests at the shell: ::
