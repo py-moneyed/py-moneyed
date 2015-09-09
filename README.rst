@@ -56,7 +56,7 @@ All of these are available as pre-built Currency objects in the `moneyed`
 module.
 
 You can also pass in the arguments to Money as positional arguments.
-So you can also write::
+So you can also write:
 
 .. sourcecode:: python
 
@@ -78,7 +78,7 @@ So you can also write::
 Formatting
 ----------
 
-You can print Money object as follows::
+You can print Money object as follows:
 
 .. sourcecode:: python
 
