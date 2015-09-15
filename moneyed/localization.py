@@ -165,6 +165,12 @@ _format("pl_PL", group_size=3, group_separator=" ", decimal_point=",",
         negative_sign="-", trailing_negative_sign="",
         rounding_method=ROUND_HALF_EVEN)
 
+_format("en_GB", group_size=3, group_separator=",", decimal_point=".",
+        positive_sign="", trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
+
+
 # CURRENCY SIGNS
 # Default currency signs. These can be overridden for locales where
 # foreign or local currency signs for one reason or another differ
@@ -325,7 +331,7 @@ _sign(DEFAULT, moneyed.ZMW, prefix='ZK')
 _sign(DEFAULT, moneyed.ZWL, prefix='Z$')
 
 _sign('en_US', moneyed.USD, prefix='$')
-_sign('en_UK', moneyed.GBP, prefix='£')
+_sign('en_GB', moneyed.GBP, prefix='£')
 _sign('sv_SE', moneyed.SEK, prefix=' kr')
 _sign('pl_PL', moneyed.PLN, suffix=' zł')
 _sign('de_DE', moneyed.EUR, suffix=' €')
