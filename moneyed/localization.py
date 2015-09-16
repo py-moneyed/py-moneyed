@@ -66,8 +66,7 @@ class CurrencyFormatter(object):
             rounding_method = formatting['rounding_method']
 
         if decimal_places is None:
-            # TODO: Use individual defaults for each currency
-            decimal_places = 2
+            decimal_places = money.currency.decimal_places
 
         q = Decimal(10) ** -decimal_places  # 2 places --> '0.01'
         quantized = money.amount.quantize(q, rounding_method)
