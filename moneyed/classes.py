@@ -3,7 +3,7 @@
 from __future__ import division
 from __future__ import unicode_literals
 
-from decimal import Decimal, ROUND_DOWN
+from decimal import Decimal
 import sys
 import warnings
 
@@ -85,8 +85,7 @@ class Money(object):
         self.currency = currency
 
     def __repr__(self):
-        return "%s %s" % (self.amount.to_integral_value(ROUND_DOWN),
-                          self.currency)
+        return "<Money: %s %s>" % (self.amount, self.currency)
 
     def __unicode__(self):
         from moneyed.localization import format_money

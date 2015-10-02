@@ -104,11 +104,11 @@ class TestMoney:
         assert one_million_dollars.amount == self.one_million_decimal
 
     def test_repr(self):
-        assert repr(self.one_million_bucks) == '1000000 USD'
-        assert repr(Money(Decimal('2.000'), 'PLN')) == '2 PLN'
-        m_1 = Money(Decimal('2.000'), 'PLN')
-        m_2 = Money(Decimal('2.000000'), 'PLN')
-        assert repr(m_1) == repr(m_2)
+        assert repr(self.one_million_bucks) == '<Money: 1000000 USD>'
+        assert repr(Money(Decimal('2.000'), 'PLN')) == '<Money: 2.000 PLN>'
+        m_1 = Money(Decimal('2.00'), 'PLN')
+        m_2 = Money(Decimal('2.01'), 'PLN')
+        assert repr(m_1) != repr(m_2)
 
     def test_str(self):
         assert str(self.one_million_bucks) == 'US$1,000,000.00'
