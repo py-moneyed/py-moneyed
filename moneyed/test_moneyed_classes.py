@@ -3,13 +3,14 @@
 from __future__ import division
 from __future__ import unicode_literals
 
+import sys
 from copy import deepcopy
 from decimal import Decimal
 import warnings
 
 import pytest  # Works with less code, more consistency than unittest.
 
-from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY, USD, get_currency
+from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY, USD, get_currency, PYTHON2
 from moneyed.localization import format_money
 
 
@@ -102,10 +103,13 @@ class TestMoney:
         assert repr(m_1) == repr(m_2)
 
     def test_str(self):
-        assert str(self.one_million_bucks) == 'US$1,000,000.00'
-
         one_million_pln = Money('1000000', 'PLN')
-        assert str(one_million_pln) == 'PLN1000000'
+        if PYTHON2:
+            assert str(one_million_pln) == 'PLN1,000,000.00'
+            assert str(self.one_million_bucks) == 'USD1,000,000.00'
+        else:
+            assert str(one_million_pln) == '1,000,000.00 zł'
+            assert str(self.one_million_bucks) == 'US$1,000,000.00'
 
     def test_format_money(self):
         # Two decimal places by default

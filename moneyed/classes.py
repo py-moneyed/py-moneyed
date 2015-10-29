@@ -87,7 +87,10 @@ class Money(object):
 
     def __str__(self):
         from moneyed.localization import format_money
-        return format_money(self)
+        if PYTHON2:
+            return '%s%s' % (self.currency.code, format_money(self, include_symbol=False))
+        else:
+            return format_money(self)
 
     def __pos__(self):
         return self.__class__(
