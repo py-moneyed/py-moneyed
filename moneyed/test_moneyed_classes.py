@@ -104,6 +104,9 @@ class TestMoney:
     def test_str(self):
         assert str(self.one_million_bucks) == 'US$1,000,000.00'
 
+        one_million_pln = Money('1000000', 'PLN')
+        assert str(one_million_pln) == 'PLN1000000'
+
     def test_format_money(self):
         # Two decimal places by default
         assert format_money(self.one_million_bucks) == 'US$1,000,000.00'
