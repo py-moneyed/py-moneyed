@@ -49,11 +49,10 @@ class CurrencyFormatter(object):
             return ('', " %s" % currency_code)
 
     def get_formatting_definition(self, locale):
-        locale = locale.upper()
-        if locale in self.formatting_definitions:
-            return self.formatting_definitions.get(locale)
-        else:
-            return self.formatting_definitions.get(DEFAULT)
+        if locale.upper() not in self.formatting_definitions:
+            locale = DEFAULT
+
+        return self.formatting_definitions.get(locale.upper())
 
     def format(self, money, include_symbol=True, locale=DEFAULT,
                decimal_places=None, rounding_method=None):
