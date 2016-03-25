@@ -13,6 +13,13 @@ DEFAULT_CURRENCY_CODE = 'XYZ'
 PYTHON2 = sys.version_info[0] == 2
 
 
+def force_decimal(amount):
+    """Given an amount of unknown type, type cast it to be a Decimal."""
+    if not isinstance(amount, Decimal):
+        return Decimal(str(amount))
+    return amount
+
+
 class Currency(object):
     """
     A Currency represents a form of money issued by governments, and
@@ -125,7 +132,7 @@ class Money(object):
             if isinstance(other, float):
                 warnings.warn("Multiplying Money instances with floats is deprecated", DeprecationWarning)
             return self.__class__(
-                amount=(self.amount * Decimal(str(other))),
+                amount=(self.amount * force_decimal(other)),
                 currency=self.currency)
 
     def __truediv__(self, other):
@@ -137,7 +144,7 @@ class Money(object):
             if isinstance(other, float):
                 warnings.warn("Dividing Money instances by floats is deprecated", DeprecationWarning)
             return self.__class__(
-                amount=self.amount / Decimal(str(other)),
+                amount=(self.amount / force_decimal(other)),
                 currency=self.currency)
 
     def __abs__(self):
