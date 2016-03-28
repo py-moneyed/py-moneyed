@@ -9,6 +9,6 @@ env:
 - TOXENV=flake
 - TOXENV=checkmanifest
 install:
-- pip install tox>=2.1
+- pip install tox>=2.1 'virtualenv<14'
 script:
 - tox
