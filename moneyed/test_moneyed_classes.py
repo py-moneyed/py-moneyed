@@ -8,10 +8,17 @@ from decimal import Decimal
 import warnings
 
 import pytest  # Works with less code, more consistency than unittest.
-from mock import patch
 
 from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY, USD, get_currency, force_decimal
 from moneyed.localization import format_money
+
+
+class CustomDecimal(Decimal):
+    """Test class to ensure Decimal.__str__ is not
+    used in calculations.
+    """
+    def __str__(self):
+        return 'error'
 
 
 class TestCurrency:
@@ -293,21 +300,17 @@ class TestMoney:
         assert force_decimal(53) == Decimal('53')
         assert force_decimal(Decimal('53.55')) == Decimal('53.55')
 
-    def test_decimal_not_cast_to_string_when_multiplying(self):
-        m = Money('531', self.USD)
-        a = Decimal('53.313')
-        with patch.object(Decimal, '__str__') as mock_str:
-            result = m * a
-            mock_str.assert_not_called()
-        assert result == Money('28309.203', self.USD)
+    def test_decimal_doesnt_use_str_when_multiplying(self):
+        m = Money('531', 'GBP')
+        a = CustomDecimal('53.313')
+        result = m * a
+        assert result == Money('28309.203', 'GBP')
 
-    def test_decimal_not_cast_to_string_when_dividing(self):
-        m = Money('15.60', self.USD)
-        a = Decimal('3.2')
-        with patch.object(Decimal, '__str__') as mock_str:
-            result = m / a
-            mock_str.assert_not_called()
-        assert result == Money('4.875', self.USD)
+    def test_decimal_doesnt_use_str_when_dividing(self):
+        m = Money('15.60', 'GBP')
+        a = CustomDecimal('3.2')
+        result = m / a
+        assert result == Money('4.875', 'GBP')
 
 
 class ExtendedMoney(Money):
