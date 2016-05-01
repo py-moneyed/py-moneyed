@@ -127,6 +127,21 @@ class TestMoney:
         assert format_money(one_million_pln, locale='pl_PL',
                             decimal_places=0) == '1 000 000 zł'
 
+    def test_format_money_fr(self):
+        # locale == fr_FR
+        one_million_eur = Money('1000000', 'EUR')
+        one_million_cad = Money('1000000', 'CAD')
+        assert format_money(one_million_eur, locale='fr_FR') == '1 000 000,00 €'
+        assert format_money(self.one_million_bucks, locale='fr_FR') == '1 000 000,00 $ US'
+        assert format_money(one_million_cad, locale='fr_FR') == '1 000 000,00 $ CA'
+        # No decimal point without fractional part
+        assert format_money(one_million_eur, locale='fr_FR',
+                            decimal_places=0) == '1 000 000 €'
+        # locale == fr_CA
+        assert format_money(one_million_cad, locale='fr_CA') == '1 000 000,00 $'
+        assert format_money(self.one_million_bucks, locale='fr_CA') == '1 000 000,00 $ US'
+        assert format_money(one_million_eur, locale='fr_CA') == '1 000 000,00 €'
+
     def test_add(self):
         assert (self.one_million_bucks + self.one_million_bucks ==
                 Money(amount='2000000', currency=self.USD))
