@@ -10,8 +10,12 @@ import warnings
 import pytest  # Works with less code, more consistency than unittest.
 
 from moneyed.classes import (Currency, Money, MoneyComparisonError, CURRENCIES,
-                             DEFAULT_CURRENCY, USD, get_currency, force_decimal)
+                             DEFAULT_CURRENCY, get_currency, force_decimal)
 from moneyed.localization import format_money
+
+
+USD = CURRENCIES['USD']
+AED = CURRENCIES['AED']
 
 
 class CustomDecimal(Decimal):
