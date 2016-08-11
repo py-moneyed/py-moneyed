@@ -57,6 +57,9 @@ class TestCurrency:
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
 
+    def test_hash(self):
+        assert self.default_curr in set([self.default_curr])
+
     def test_compare(self):
         other = deepcopy(self.default_curr)
         # equality
@@ -112,6 +115,9 @@ class TestMoney:
 
     def test_str(self):
         assert str(self.one_million_bucks) == 'US$1,000,000.00'
+
+    def test_hash(self):
+        assert self.one_million_bucks in set([self.one_million_bucks])
 
     def test_format_money(self):
         # Two decimal places by default

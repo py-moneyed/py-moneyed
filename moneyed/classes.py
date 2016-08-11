@@ -36,6 +36,9 @@ class Currency(object):
         self.name = name
         self.numeric = numeric
 
+    def __hash__(self):
+        return hash(self.code)
+
     def __eq__(self, other):
         return type(self) is type(other) and self.code == other.code
 
@@ -94,6 +97,9 @@ class Money(object):
     def __str__(self):
         from moneyed.localization import format_money
         return format_money(self)
+
+    def __hash__(self):
+        return hash((self.amount, self.currency))
 
     def __pos__(self):
         return self.__class__(
