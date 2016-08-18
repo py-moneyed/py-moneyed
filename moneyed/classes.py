@@ -446,7 +446,6 @@ XPF = add_currency('XPF', '953', 'CFP Franc', ['FRENCH POLYNESIA', 'NEW CALEDONI
 XPT = add_currency('XPT', '962', 'Platinum', [])
 XSU = add_currency('XSU', '994', 'Sucre', ['SISTEMA UNITARIO DE COMPENSACION REGIONAL DE PAGOS "SUCRE"'])
 XTS = add_currency('XTS', '963', 'Codes specifically reserved for testing purposes', [])
-XSU = add_currency('XSU', '965', 'ADB Unit of Account', ['MEMBER COUNTRIES OF THE AFRICAN DEVELOPMENT BANK GROUP'])
 XXX = add_currency('XXX', '999', 'The codes assigned for transactions where no currency is involved', ['ZZ07_No_Currency'])
 YER = add_currency('YER', '886', 'Yemeni Rial', ['YEMEN'])
 ZAR = add_currency('ZAR', '710', 'Rand', ['SOUTH AFRICA'])
