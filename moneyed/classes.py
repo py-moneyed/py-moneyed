@@ -282,6 +282,7 @@ CDF = add_currency('CDF', '976', 'Congolese franc', ['DEMOCRATIC REPUBLIC OF CON
 CHE = add_currency('CHE', '947', 'WIR Euro', ['SWITZERLAND'])
 CHF = add_currency('CHF', '756', 'Swiss Franc', ['LIECHTENSTEIN'])
 CHW = add_currency('CHW', '948', 'WIR Franc', ['SWITZERLAND'])
+CLF = add_currency('CLF', '990', 'Unidad de Fomento', ['CHILE'])
 CLP = add_currency('CLP', '152', 'Chilean peso', ['CHILE'])
 CNY = add_currency('CNY', '156', 'Yuan Renminbi', ['CHINA'])
 COP = add_currency('COP', '170', 'Colombian peso', ['COLOMBIA'])
