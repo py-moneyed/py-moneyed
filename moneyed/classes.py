@@ -370,6 +370,7 @@ NOK = add_currency('NOK', '578', 'Norwegian Krone', ['BOUVET ISLAND', 'NORWAY', 
 NPR = add_currency('NPR', '524', 'Nepalese Rupee', ['NEPAL'])
 NZD = add_currency('NZD', '554', 'New Zealand Dollar', ['COOK ISLANDS', 'NEW ZEALAND', 'NIUE', 'PITCAIRN', 'TOKELAU'])
 OMR = add_currency('OMR', '512', 'Rial Omani', ['OMAN'])
+PAB = add_currency('PAB', '590', 'Balboa', ['PANAMA'])
 PEN = add_currency('PEN', '604', 'Nuevo Sol', ['PERU'])
 PGK = add_currency('PGK', '598', 'Kina', ['PAPUA NEW GUINEA'])
 PHP = add_currency('PHP', '608', 'Philippine Peso', ['PHILIPPINES'])
