@@ -444,6 +444,7 @@ XOF = add_currency('XOF', '952', 'CFA Franc BCEAO', ['BENIN', 'BURKINA FASO', 'C
 XPD = add_currency('XPD', '964', 'Palladium', [])
 XPF = add_currency('XPF', '953', 'CFP Franc', ['FRENCH POLYNESIA', 'NEW CALEDONIA', 'WALLIS AND FUTUNA'])
 XPT = add_currency('XPT', '962', 'Platinum', [])
+XSU = add_currency('XSU', '994', 'Sucre', ['SISTEMA UNITARIO DE COMPENSACION REGIONAL DE PAGOS "SUCRE"'])
 XTS = add_currency('XTS', '963', 'Codes specifically reserved for testing purposes', [])
 YER = add_currency('YER', '886', 'Yemeni Rial', ['YEMEN'])
 ZAR = add_currency('ZAR', '710', 'Rand', ['SOUTH AFRICA'])
