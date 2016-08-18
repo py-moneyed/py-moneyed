@@ -416,6 +416,7 @@ USD = add_currency('USD', '840', 'US Dollar', ['AMERICAN SAMOA', 'BRITISH INDIAN
                                                'TIMOR-LESTE', 'TURKS AND CAICOS ISLANDS', 'UNITED STATES',
                                                'UNITED STATES MINOR OUTLYING ISLANDS',
                                                'VIRGIN ISLANDS (BRITISH)', 'VIRGIN ISLANDS (U.S.)'])
+USN = add_currency('USN', '997', 'US Dollar (Next day)', ['UNITED STATES OF AMERICA (THE)'])
 UYU = add_currency('UYU', '858', 'Uruguayan peso', ['URUGUAY'])
 UZS = add_currency('UZS', '860', 'Uzbekistan Sum', ['UZBEKISTAN'])
 VEF = add_currency('VEF', '937', 'Bolivar Fuerte', ['VENEZUELA'])
