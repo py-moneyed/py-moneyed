@@ -56,7 +56,7 @@ class MoneyComparisonError(TypeError):
 
     def __str__(self):
         # Note: at least w/ Python 2.x, use __str__, not __unicode__.
-        return "Cannot compare instances of Money and %s" \
+        return 'Cannot compare instances of Money and %s' \
                % self.other.__class__.__name__
 
 
@@ -64,7 +64,7 @@ class CurrencyDoesNotExist(Exception):
 
     def __init__(self, code):
         super(CurrencyDoesNotExist, self).__init__(
-            "No currency with code %s is defined." % code)
+            'No currency with code %s is defined.' % code)
 
 
 class Money(object):
@@ -85,7 +85,7 @@ class Money(object):
         self.currency = currency
 
     def __repr__(self):
-        return "<Money: %s %s>" % (self.amount, self.currency)
+        return '<Money: %s %s>' % (self.amount, self.currency)
 
     def __unicode__(self):
         from moneyed.localization import format_money
@@ -129,7 +129,7 @@ class Money(object):
             raise TypeError('Cannot multiply two Money instances.')
         else:
             if isinstance(other, float):
-                warnings.warn("Multiplying Money instances with floats is deprecated", DeprecationWarning)
+                warnings.warn('Multiplying Money instances with floats is deprecated', DeprecationWarning)
             return self.__class__(
                 amount=(self.amount * force_decimal(other)),
                 currency=self.currency)
@@ -141,7 +141,7 @@ class Money(object):
             return self.amount / other.amount
         else:
             if isinstance(other, float):
-                warnings.warn("Dividing Money instances by floats is deprecated", DeprecationWarning)
+                warnings.warn('Dividing Money instances by floats is deprecated', DeprecationWarning)
             return self.__class__(
                 amount=(self.amount / force_decimal(other)),
                 currency=self.currency)
@@ -171,7 +171,7 @@ class Money(object):
             raise TypeError('Invalid __rmod__ operation')
         else:
             if isinstance(other, float):
-                warnings.warn("Calculating percentages of Money instances using floats is deprecated",
+                warnings.warn('Calculating percentages of Money instances using floats is deprecated',
                               DeprecationWarning)
             return self.__class__(
                 amount=(Decimal(str(other)) * self.amount / 100),
@@ -196,16 +196,16 @@ class Money(object):
     def __lt__(self, other):
         if not isinstance(other, Money):
             raise MoneyComparisonError(other)
-        if (self.currency == other.currency):
-            return (self.amount < other.amount)
+        if self.currency == other.currency:
+            return self.amount < other.amount
         else:
             raise TypeError('Cannot compare Money with different currencies.')
 
     def __gt__(self, other):
         if not isinstance(other, Money):
             raise MoneyComparisonError(other)
-        if (self.currency == other.currency):
-            return (self.amount > other.amount)
+        if self.currency == other.currency:
+            return self.amount > other.amount
         else:
             raise TypeError('Cannot compare Money with different currencies.')
 
@@ -273,6 +273,7 @@ BSD = add_currency('BSD', '044', 'Bahamian Dollar', ['BAHAMAS'])
 BTN = add_currency('BTN', '064', 'Bhutanese ngultrum', ['BHUTAN'])
 BWP = add_currency('BWP', '072', 'Pula', ['BOTSWANA'])
 BYR = add_currency('BYR', '974', 'Belarussian Ruble', ['BELARUS'])
+BYN = add_currency('BYN', '933', 'Belarussian Ruble (Denominated)', ['BELARUS'])
 BZD = add_currency('BZD', '084', 'Belize Dollar', ['BELIZE'])
 CAD = add_currency('CAD', '124', 'Canadian Dollar', ['CANADA'])
 CDF = add_currency('CDF', '976', 'Congolese franc', ['DEMOCRATIC REPUBLIC OF CONGO'])

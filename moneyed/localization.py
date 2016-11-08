@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from decimal import Decimal, ROUND_HALF_EVEN
 import moneyed
 
-DEFAULT = "default"
+DEFAULT = 'default'
 
 
 class CurrencyFormatter(object):
@@ -46,7 +46,7 @@ class CurrencyFormatter(object):
         if currency_code in local_set:
             return local_set.get(currency_code)
         else:
-            return ('', " %s" % currency_code)
+            return '', ' %s' % currency_code
 
     def get_formatting_definition(self, locale):
         locale = locale.upper()
@@ -130,54 +130,59 @@ _format = _FORMATTER.add_formatting_definition
 
 # FORMATTING RULES
 
-_format(DEFAULT, group_size=3, group_separator=",", decimal_point=".",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format(DEFAULT, group_size=3, group_separator=',', decimal_point='.',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
-_format("en_US", group_size=3, group_separator=",", decimal_point=".",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format('en_US', group_size=3, group_separator=',', decimal_point='.',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
-_format("de_DE", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format('de_DE', group_size=3, group_separator=' ', decimal_point=',',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
-_format("de_AT", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format('de_AT', group_size=3, group_separator=' ', decimal_point=',',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
-_format("de_CH", group_size=3, group_separator=" ", decimal_point=".",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format('de_CH', group_size=3, group_separator=' ', decimal_point='.',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
-_format("fr_FR", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format('fr_FR', group_size=3, group_separator=' ', decimal_point=',',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
-_format("fr_CA", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format('fr_CA', group_size=3, group_separator=' ', decimal_point=',',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
-_format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format('sv_SE', group_size=3, group_separator=' ', decimal_point=',',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
-_format("pl_PL", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format('pl_PL', group_size=3, group_separator=' ', decimal_point=',',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
-_format("en_GB", group_size=3, group_separator=",", decimal_point=".",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
+_format('en_GB', group_size=3, group_separator=',', decimal_point='.',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
+        rounding_method=ROUND_HALF_EVEN)
+
+_format('ru_RU', group_size=3, group_separator=' ', decimal_point='.',
+        positive_sign='', trailing_positive_sign='',
+        negative_sign='-', trailing_negative_sign='',
         rounding_method=ROUND_HALF_EVEN)
 
 
@@ -212,6 +217,7 @@ _sign(DEFAULT, moneyed.BSD, prefix='B$')
 _sign(DEFAULT, moneyed.BTN, prefix='Nu.')
 _sign(DEFAULT, moneyed.BWP, prefix='P')
 _sign(DEFAULT, moneyed.BYR, prefix='Br')
+_sign(DEFAULT, moneyed.BYN, prefix='Br(d)')
 _sign(DEFAULT, moneyed.BZD, prefix='BZ$')
 _sign(DEFAULT, moneyed.CAD, prefix='C$')
 _sign(DEFAULT, moneyed.CDF, prefix='C₣')
