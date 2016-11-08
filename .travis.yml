@@ -1,12 +1,10 @@
 language: python
 # See tox.ini for env list
 env:
-- TOXENV=py26
 - TOXENV=py27
 - TOXENV=py32
 - TOXENV=py33
 - TOXENV=py34
-- TOXENV=py35
 - TOXENV=pypy
 - TOXENV=flake
 - TOXENV=checkmanifest
