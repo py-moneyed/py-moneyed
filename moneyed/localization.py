@@ -155,6 +155,16 @@ _format("de_CH", group_size=3, group_separator=" ", decimal_point=".",
         negative_sign="-", trailing_negative_sign="",
         rounding_method=ROUND_HALF_EVEN)
 
+_format("fr_FR", group_size=3, group_separator=" ", decimal_point=",",
+        positive_sign="", trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
+
+_format("fr_CA", group_size=3, group_separator=" ", decimal_point=",",
+        positive_sign="", trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
+
 _format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
         positive_sign="", trailing_positive_sign="",
         negative_sign="-", trailing_negative_sign="",
@@ -291,7 +301,7 @@ _sign(DEFAULT, moneyed.PLN, suffix=' zł')
 _sign(DEFAULT, moneyed.PYG, prefix='₲')
 _sign(DEFAULT, moneyed.QAR, prefix='ر.ق')
 _sign(DEFAULT, moneyed.RSD, prefix='RSD ')
-_sign(DEFAULT, moneyed.RUB, prefix='руб.')
+_sign(DEFAULT, moneyed.RUB, suffix=' руб.')
 _sign(DEFAULT, moneyed.RWF, prefix='FRw')
 _sign(DEFAULT, moneyed.SAR, prefix='ر.س')
 _sign(DEFAULT, moneyed.SBD, prefix='SI$')
@@ -337,6 +347,12 @@ _sign('pl_PL', moneyed.PLN, suffix=' zł')
 _sign('de_DE', moneyed.EUR, suffix=' €')
 _sign('de_AT', moneyed.EUR, suffix=' €')
 _sign('de_CH', moneyed.CHF, prefix='Fr.')
+_sign('fr_FR', moneyed.EUR, suffix=' €')
+_sign('fr_FR', moneyed.USD, suffix=' $ US')
+_sign('fr_CA', moneyed.USD, suffix=' $ US')
+_sign('fr_FR', moneyed.CAD, suffix=' $ CA')
+_sign('fr_CA', moneyed.CAD, suffix=' $')
+_sign('fr_CA', moneyed.EUR, suffix=' €')
 
 # Adding translations for missing currencies
 _sign('en_US', moneyed.KWD, prefix='KD')

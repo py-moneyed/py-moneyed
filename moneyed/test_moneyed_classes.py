@@ -1,17 +1,25 @@
 # -*- encoding: utf-8 -*-
 
-from __future__ import division
-from __future__ import unicode_literals
+from __future__ import division, unicode_literals
 
-import sys
+import warnings
 from copy import deepcopy
 from decimal import Decimal
-import warnings
 
 import pytest  # Works with less code, more consistency than unittest.
 
-from moneyed.classes import Currency, Money, MoneyComparisonError, CURRENCIES, DEFAULT_CURRENCY, USD, get_currency, PYTHON2
+from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
+                             Currency, Money, MoneyComparisonError,
+                             force_decimal, get_currency)
 from moneyed.localization import format_money
+
+
+class CustomDecimal(Decimal):
+    """Test class to ensure Decimal.__str__ is not
+    used in calculations.
+    """
+    def __str__(self):
+        return 'error'
 
 
 class TestCurrency:
@@ -48,6 +56,9 @@ class TestCurrency:
 
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
+
+    def test_hash(self):
+        assert self.default_curr in set([self.default_curr])
 
     def test_compare(self):
         other = deepcopy(self.default_curr)
@@ -96,11 +107,11 @@ class TestMoney:
         assert one_million_dollars.amount == self.one_million_decimal
 
     def test_repr(self):
-        assert repr(self.one_million_bucks) == '1000000 USD'
-        assert repr(Money(Decimal('2.000'), 'PLN')) == '2 PLN'
-        m_1 = Money(Decimal('2.000'), 'PLN')
-        m_2 = Money(Decimal('2.000000'), 'PLN')
-        assert repr(m_1) == repr(m_2)
+        assert repr(self.one_million_bucks) == '<Money: 1000000 USD>'
+        assert repr(Money(Decimal('2.000'), 'PLN')) == '<Money: 2.000 PLN>'
+        m_1 = Money(Decimal('2.00'), 'PLN')
+        m_2 = Money(Decimal('2.01'), 'PLN')
+        assert repr(m_1) != repr(m_2)
 
     def test_str(self):
         one_million_pln = Money('1000000', 'PLN')
@@ -110,6 +121,9 @@ class TestMoney:
         else:
             assert str(one_million_pln) == '1,000,000.00 zł'
             assert str(self.one_million_bucks) == 'US$1,000,000.00'
+
+    def test_hash(self):
+        assert self.one_million_bucks in set([self.one_million_bucks])
 
     def test_format_money(self):
         # Two decimal places by default
@@ -125,9 +139,24 @@ class TestMoney:
         assert format_money(one_million_pln, locale='pl_PL',
                             decimal_places=0) == '1 000 000 zł'
 
+    def test_format_money_fr(self):
+        # locale == fr_FR
+        one_million_eur = Money('1000000', 'EUR')
+        one_million_cad = Money('1000000', 'CAD')
+        assert format_money(one_million_eur, locale='fr_FR') == '1 000 000,00 €'
+        assert format_money(self.one_million_bucks, locale='fr_FR') == '1 000 000,00 $ US'
+        assert format_money(one_million_cad, locale='fr_FR') == '1 000 000,00 $ CA'
+        # No decimal point without fractional part
+        assert format_money(one_million_eur, locale='fr_FR',
+                            decimal_places=0) == '1 000 000 €'
+        # locale == fr_CA
+        assert format_money(one_million_cad, locale='fr_CA') == '1 000 000,00 $'
+        assert format_money(self.one_million_bucks, locale='fr_CA') == '1 000 000,00 $ US'
+        assert format_money(one_million_eur, locale='fr_CA') == '1 000 000,00 €'
+
     def test_add(self):
-        assert (self.one_million_bucks + self.one_million_bucks
-                == Money(amount='2000000', currency=self.USD))
+        assert (self.one_million_bucks + self.one_million_bucks ==
+                Money(amount='2000000', currency=self.USD))
 
     def test_add_non_money(self):
         with pytest.raises(TypeError):
@@ -191,15 +220,15 @@ class TestMoney:
 
     def test_rmod_bad(self):
         with pytest.raises(TypeError):
-            assert (self.one_million_bucks % self.one_million_bucks
-                    == 1)
+            assert (self.one_million_bucks % self.one_million_bucks == 1)
 
     def test_rmod_float_warning(self):
         # This should be changed to TypeError exception after deprecation period is over.
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
             2.0 % Money(amount="10")
-            assert "Calculating percentages of Money instances using floats is deprecated" in [w.message.args[0] for w in warning_list]
+            assert ("Calculating percentages of Money instances using floats is deprecated"
+                    in [w.message.args[0] for w in warning_list])
 
     def test_convert_to_default(self):
         # Currency conversions are not implemented as of 2/2011; when
@@ -293,6 +322,23 @@ class TestMoney:
     def test_bool(self):
         assert bool(Money(amount=1, currency=self.USD))
         assert not bool(Money(amount=0, currency=self.USD))
+
+    def test_force_decimal(self):
+        assert force_decimal('53.55') == Decimal('53.55')
+        assert force_decimal(53) == Decimal('53')
+        assert force_decimal(Decimal('53.55')) == Decimal('53.55')
+
+    def test_decimal_doesnt_use_str_when_multiplying(self):
+        m = Money('531', 'GBP')
+        a = CustomDecimal('53.313')
+        result = m * a
+        assert result == Money('28309.203', 'GBP')
+
+    def test_decimal_doesnt_use_str_when_dividing(self):
+        m = Money('15.60', 'GBP')
+        a = CustomDecimal('3.2')
+        result = m / a
+        assert result == Money('4.875', 'GBP')
 
 
 class ExtendedMoney(Money):

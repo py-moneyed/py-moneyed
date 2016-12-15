@@ -1,3 +1,11 @@
+.. image:: https://travis-ci.org/limist/py-moneyed.svg?branch=master
+    :target: https://travis-ci.org/limist/py-moneyed
+    :alt: Build Status
+
+.. image:: https://badge.fury.io/py/py-moneyed.svg
+    :target: https://badge.fury.io/py/py-moneyed
+    :alt: Latest PyPI version
+
 Overview
 ========
 
