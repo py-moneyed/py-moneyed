@@ -178,14 +178,14 @@ class TestMoney:
     def test_mul_float_warning(self):
         # This should be changed to TypeError exception after deprecation period is over.
         with warnings.catch_warnings(record=True) as warning_list:
-            warnings.simplefilter("always")
-            Money(amount="10") * 1.2
-            assert "Multiplying Money instances with floats is deprecated" in [w.message.args[0] for w in warning_list]
+            warnings.simplefilter('always')
+            Money(amount='10') * 1.2
+            assert 'Multiplying Money instances with floats is deprecated' in [w.message.args[0] for w in warning_list]
 
         with warnings.catch_warnings(record=True) as warning_list:
-            warnings.simplefilter("always")
-            1.2 * Money(amount="10")
-            assert "Multiplying Money instances with floats is deprecated" in [w.message.args[0] for w in warning_list]
+            warnings.simplefilter('always')
+            1.2 * Money(amount='10')
+            assert 'Multiplying Money instances with floats is deprecated' in [w.message.args[0] for w in warning_list]
 
     def test_mul_bad(self):
         with pytest.raises(TypeError):
@@ -210,9 +210,9 @@ class TestMoney:
     def test_div_float_warning(self):
         # This should be changed to TypeError exception after deprecation period is over.
         with warnings.catch_warnings(record=True) as warning_list:
-            warnings.simplefilter("always")
-            Money(amount="10") / 1.2
-            assert "Dividing Money instances by floats is deprecated" in [w.message.args[0] for w in warning_list]
+            warnings.simplefilter('always')
+            Money(amount='10') / 1.2
+            assert 'Dividing Money instances by floats is deprecated' in [w.message.args[0] for w in warning_list]
 
     def test_rmod(self):
         assert 1 % self.one_million_bucks == Money(amount=10000,
@@ -225,9 +225,9 @@ class TestMoney:
     def test_rmod_float_warning(self):
         # This should be changed to TypeError exception after deprecation period is over.
         with warnings.catch_warnings(record=True) as warning_list:
-            warnings.simplefilter("always")
-            2.0 % Money(amount="10")
-            assert ("Calculating percentages of Money instances using floats is deprecated"
+            warnings.simplefilter('always')
+            2.0 % Money(amount='10')
+            assert ('Calculating percentages of Money instances using floats is deprecated'
                     in [w.message.args[0] for w in warning_list])
 
     def test_convert_to_default(self):

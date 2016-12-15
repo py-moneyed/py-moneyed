@@ -26,7 +26,7 @@ setup(
     author_email='k@limist.com',
     url='http://github.com/limist/py-moneyed',
     download_url='',
-    keywords="money currency class abstraction",
+    keywords='money currency class abstraction',
     license='BSD',
     install_requires=[],
     classifiers=[
