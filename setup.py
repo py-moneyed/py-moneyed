@@ -17,6 +17,7 @@ class Tox(TestCommand):
         errno = tox.cmdline(self.test_args)
         sys.exit(errno)
 
+
 setup(
     name='py-moneyed',
     packages=['moneyed'],

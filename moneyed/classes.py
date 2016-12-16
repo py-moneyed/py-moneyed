@@ -252,6 +252,7 @@ def get_currency(code=None, iso=None):
     except KeyError:
         raise CurrencyDoesNotExist(code)
 
+
 DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 'Default currency.', [])
 
 

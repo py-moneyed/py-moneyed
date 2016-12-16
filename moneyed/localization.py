@@ -121,6 +121,7 @@ class CurrencyFormatter(object):
 
         return ''.join(reversed(result))
 
+
 _FORMATTER = CurrencyFormatter()
 
 format_money = _FORMATTER.format
