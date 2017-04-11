@@ -184,6 +184,10 @@ _format('es_BO', group_size=3, group_separator=".", decimal_point=",",
         negative_sign="-", trailing_negative_sign="",
         rounding_method=ROUND_HALF_EVEN)
 
+_format("nl_NL", group_size=3, group_separator=".", decimal_point=",",
+        positive_sign="", trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
 
 # CURRENCY SIGNS
 # Default currency signs. These can be overridden for locales where
@@ -374,6 +378,7 @@ _sign('fr_CA', moneyed.USD, suffix=' $ US')
 _sign('fr_FR', moneyed.CAD, suffix=' $ CA')
 _sign('fr_CA', moneyed.CAD, suffix=' $')
 _sign('fr_CA', moneyed.EUR, suffix=' €')
+_sign('nl_NL', moneyed.EUR, prefix='€ ')
 
 # Adding translations for missing currencies
 _sign('en_US', moneyed.KWD, prefix='KD')
