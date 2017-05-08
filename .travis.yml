@@ -1,6 +1,6 @@
 language: python
-# Make Python 3.6 and 3.5 available:
-python: 3.6
+# Make Python 3.5 available:
+python: 3.5
 # See tox.ini for env list
 env:
 - TOXENV=py26
@@ -9,7 +9,6 @@ env:
 - TOXENV=py33
 - TOXENV=py34
 - TOXENV=py35
-- TOXENV=py36
 - TOXENV=pypy
 - TOXENV=flake
 - TOXENV=checkmanifest
