@@ -5,8 +5,8 @@
 Significant or incompatible changes listed here.
 
 
-Changes in development version
-------------------------------
+Changes in v0.7
+---------------
 
 * Money.__str__ changed under Python 2 to use only ASCII characters.
   This means that currency codes, rather than symbols, are used.
