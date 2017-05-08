@@ -23,6 +23,8 @@ Release process
 
     git tag v0.7
 
+    git push --tags
+
 Post release
 ~~~~~~~~~~~~
 
