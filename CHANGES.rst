@@ -4,6 +4,8 @@
 
 Significant or incompatible changes listed here.
 
+Changes in development version
+------------------------------
 
 Changes in v0.7
 ---------------

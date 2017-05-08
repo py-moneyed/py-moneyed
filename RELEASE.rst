@@ -3,7 +3,7 @@ Release process
 
 * Check that all tests are passing on Travis: https://travis-ci.org/limist/py-moneyed
 
-* Increment version number in setup.py
+* Remove "-dev" suffix in setup.py, change version number if required.
 
 * Fix 'CHANGES.rst' so the top section says "Changes in [new version number]"
 
@@ -27,3 +27,5 @@ Post release
 ~~~~~~~~~~~~
 
 * Add new section to CHANGES.rst - "Changes in development version"
+
+* Add next version number plus "-dev" suffix in setup.py
