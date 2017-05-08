@@ -1,6 +1,9 @@
 language: python
-# Make Python 3.5 available:
-python: 3.5
+# Make Python 3.5 and 3.6 available:
+python: '3.6'
+dist: trusty
+sudo: false
+
 # See tox.ini for env list
 env:
 - TOXENV=py26
@@ -12,6 +15,9 @@ env:
 - TOXENV=pypy
 - TOXENV=flake
 - TOXENV=checkmanifest
+before_install:
+  - if [[ $TOXENV = py35 && -f ~/virtualenv/python3.5/bin/activate ]]; then source ~/virtualenv/python3.5/bin/activate; fi
+
 install:
 - pip install tox>=2.1 'virtualenv<14'
 script:
