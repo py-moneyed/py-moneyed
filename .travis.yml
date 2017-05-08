@@ -1,4 +1,6 @@
 language: python
+# Make Python 3.6 and 3.5 available:
+python: 3.6
 # See tox.ini for env list
 env:
 - TOXENV=py26
