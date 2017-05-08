@@ -19,4 +19,11 @@ Release process
 
     ./setup.py sdist bdist_wheel register upload
 
+* Tag the release e.g.::
+
+    git tag v0.7
+
+Post release
+~~~~~~~~~~~~
+
 * Add new section to CHANGES.rst - "Changes in development version"
