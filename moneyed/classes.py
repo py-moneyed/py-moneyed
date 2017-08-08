@@ -96,10 +96,7 @@ class Money(object):
 
     def __str__(self):
         from moneyed.localization import format_money
-        if PYTHON2:
-            return '%s%s' % (self.currency.code, format_money(self, include_symbol=False))
-        else:
-            return format_money(self)
+        return format_money(self)
 
     def __hash__(self):
         return hash((self.amount, self.currency))
