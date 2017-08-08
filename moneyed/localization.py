@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from decimal import Decimal, ROUND_HALF_EVEN
 import moneyed
 
-DEFAULT = "default"
+DEFAULT = "DEFAULT"
 
 
 class CurrencyFormatter(object):
@@ -49,11 +49,9 @@ class CurrencyFormatter(object):
             return ('', " %s" % currency_code)
 
     def get_formatting_definition(self, locale):
-        locale = locale.upper()
-        if locale in self.formatting_definitions:
-            return self.formatting_definitions.get(locale)
-        else:
-            return self.formatting_definitions.get(DEFAULT)
+        if locale.upper() not in self.formatting_definitions:
+            locale = DEFAULT
+        return self.formatting_definitions.get(locale.upper())
 
     def format(self, money, include_symbol=True, locale=DEFAULT,
                decimal_places=None, rounding_method=None):
@@ -121,6 +119,7 @@ class CurrencyFormatter(object):
 
         return ''.join(reversed(result))
 
+
 _FORMATTER = CurrencyFormatter()
 
 format_money = _FORMATTER.format
@@ -155,6 +154,16 @@ _format("de_CH", group_size=3, group_separator=" ", decimal_point=".",
         negative_sign="-", trailing_negative_sign="",
         rounding_method=ROUND_HALF_EVEN)
 
+_format("fr_FR", group_size=3, group_separator=" ", decimal_point=",",
+        positive_sign="", trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
+
+_format("fr_CA", group_size=3, group_separator=" ", decimal_point=",",
+        positive_sign="", trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
+
 _format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
         positive_sign="", trailing_positive_sign="",
         negative_sign="-", trailing_negative_sign="",
@@ -170,6 +179,15 @@ _format("en_GB", group_size=3, group_separator=",", decimal_point=".",
         negative_sign="-", trailing_negative_sign="",
         rounding_method=ROUND_HALF_EVEN)
 
+_format('es_BO', group_size=3, group_separator=".", decimal_point=",",
+        positive_sign="",  trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
+
+_format("nl_NL", group_size=3, group_separator=".", decimal_point=",",
+        positive_sign="", trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
 
 # CURRENCY SIGNS
 # Default currency signs. These can be overridden for locales where
@@ -197,18 +215,25 @@ _sign(DEFAULT, moneyed.BHD, prefix='.د.ب')
 _sign(DEFAULT, moneyed.BIF, prefix='FBu')
 _sign(DEFAULT, moneyed.BMD, prefix='BD$')
 _sign(DEFAULT, moneyed.BND, prefix='B$')
+_sign(DEFAULT, moneyed.BOB, prefix='Bs.')
+_sign(DEFAULT, moneyed.BOV, prefix='Bs.')
 _sign(DEFAULT, moneyed.BRL, prefix='R$')
 _sign(DEFAULT, moneyed.BSD, prefix='B$')
 _sign(DEFAULT, moneyed.BTN, prefix='Nu.')
 _sign(DEFAULT, moneyed.BWP, prefix='P')
+_sign(DEFAULT, moneyed.BYN, prefix='Br')
 _sign(DEFAULT, moneyed.BYR, prefix='Br')
 _sign(DEFAULT, moneyed.BZD, prefix='BZ$')
 _sign(DEFAULT, moneyed.CAD, prefix='C$')
 _sign(DEFAULT, moneyed.CDF, prefix='C₣')
+_sign(DEFAULT, moneyed.CHE, prefix='CHE')
 _sign(DEFAULT, moneyed.CHF, prefix='Fr.')
+_sign(DEFAULT, moneyed.CHW, prefix='CHW')
+_sign(DEFAULT, moneyed.CLF, prefix='UF')
 _sign(DEFAULT, moneyed.CLP, prefix='CLP$')
 _sign(DEFAULT, moneyed.CNY, prefix='¥')
 _sign(DEFAULT, moneyed.COP, prefix='COL$')
+_sign(DEFAULT, moneyed.COU, prefix='COU')
 _sign(DEFAULT, moneyed.CRC, prefix='₡')
 _sign(DEFAULT, moneyed.CUC, prefix='CUC$')
 _sign(DEFAULT, moneyed.CUP, prefix='$MN')
@@ -274,6 +299,7 @@ _sign(DEFAULT, moneyed.MUR, prefix='₨')
 _sign(DEFAULT, moneyed.MVR, prefix='Rf.')
 _sign(DEFAULT, moneyed.MWK, prefix='MK')
 _sign(DEFAULT, moneyed.MXN, prefix='Mex$')
+_sign(DEFAULT, moneyed.MXV, prefix='UDI')
 _sign(DEFAULT, moneyed.MYR, prefix='RM')
 _sign(DEFAULT, moneyed.MZN, prefix='MT')
 _sign(DEFAULT, moneyed.NAD, prefix='N$')
@@ -283,6 +309,7 @@ _sign(DEFAULT, moneyed.NOK, suffix=' Nkr')
 _sign(DEFAULT, moneyed.NPR, prefix='₨')
 _sign(DEFAULT, moneyed.NZD, prefix='NZ$')
 _sign(DEFAULT, moneyed.OMR, prefix='ر.ع.')
+_sign(DEFAULT, moneyed.PAB, prefix='B/.')
 _sign(DEFAULT, moneyed.PEN, prefix='S/.')
 _sign(DEFAULT, moneyed.PGK, prefix='K')
 _sign(DEFAULT, moneyed.PHP, prefix='₱')
@@ -291,7 +318,7 @@ _sign(DEFAULT, moneyed.PLN, suffix=' zł')
 _sign(DEFAULT, moneyed.PYG, prefix='₲')
 _sign(DEFAULT, moneyed.QAR, prefix='ر.ق')
 _sign(DEFAULT, moneyed.RSD, prefix='RSD ')
-_sign(DEFAULT, moneyed.RUB, prefix='руб.')
+_sign(DEFAULT, moneyed.RUB, suffix=' руб.')
 _sign(DEFAULT, moneyed.RWF, prefix='FRw')
 _sign(DEFAULT, moneyed.SAR, prefix='ر.س')
 _sign(DEFAULT, moneyed.SBD, prefix='SI$')
@@ -303,11 +330,14 @@ _sign(DEFAULT, moneyed.SHP, prefix='SH£')
 _sign(DEFAULT, moneyed.SLL, prefix='Le')
 _sign(DEFAULT, moneyed.SOS, prefix='Sh.So.')
 _sign(DEFAULT, moneyed.SRD, prefix='SRD$')
+_sign(DEFAULT, moneyed.SSP, prefix='£')
 _sign(DEFAULT, moneyed.STD, prefix='Db')
+_sign(DEFAULT, moneyed.SVC, prefix='₡')
 _sign(DEFAULT, moneyed.SYP, prefix='£S')
 _sign(DEFAULT, moneyed.SZL, prefix='E')
 _sign(DEFAULT, moneyed.THB, prefix='฿')
 _sign(DEFAULT, moneyed.TND, prefix='د.ت')
+_sign(DEFAULT, moneyed.TMT, prefix='m')
 _sign(DEFAULT, moneyed.TOP, prefix='TOP$')
 _sign(DEFAULT, moneyed.TRY, prefix='₺')
 _sign(DEFAULT, moneyed.TTD, prefix='TT$')
@@ -316,6 +346,8 @@ _sign(DEFAULT, moneyed.TWD, prefix='NT$')
 _sign(DEFAULT, moneyed.UAH, prefix='₴')
 _sign(DEFAULT, moneyed.UGX, prefix='USh')
 _sign(DEFAULT, moneyed.USD, prefix='$')
+_sign(DEFAULT, moneyed.USN, prefix='USN')
+_sign(DEFAULT, moneyed.UYI, prefix='$U')
 _sign(DEFAULT, moneyed.UYU, prefix='$U')
 _sign(DEFAULT, moneyed.VEF, prefix='Bs.')
 _sign(DEFAULT, moneyed.VND, prefix='₫')
@@ -325,6 +357,9 @@ _sign(DEFAULT, moneyed.XAF, prefix='FCFA')
 _sign(DEFAULT, moneyed.XCD, prefix='EC$')
 _sign(DEFAULT, moneyed.XDR, prefix='SDR')
 _sign(DEFAULT, moneyed.XOF, prefix='CFA')
+_sign(DEFAULT, moneyed.XSU, prefix='Sucre')
+_sign(DEFAULT, moneyed.XUA, prefix='XUA')
+_sign(DEFAULT, moneyed.XXX, prefix='XXX')
 _sign(DEFAULT, moneyed.ZAR, prefix='R')
 _sign(DEFAULT, moneyed.ZMK, prefix='ZK')
 _sign(DEFAULT, moneyed.ZMW, prefix='ZK')
@@ -337,6 +372,13 @@ _sign('pl_PL', moneyed.PLN, suffix=' zł')
 _sign('de_DE', moneyed.EUR, suffix=' €')
 _sign('de_AT', moneyed.EUR, suffix=' €')
 _sign('de_CH', moneyed.CHF, prefix='Fr.')
+_sign('fr_FR', moneyed.EUR, suffix=' €')
+_sign('fr_FR', moneyed.USD, suffix=' $ US')
+_sign('fr_CA', moneyed.USD, suffix=' $ US')
+_sign('fr_FR', moneyed.CAD, suffix=' $ CA')
+_sign('fr_CA', moneyed.CAD, suffix=' $')
+_sign('fr_CA', moneyed.EUR, suffix=' €')
+_sign('nl_NL', moneyed.EUR, prefix='€ ')
 
 # Adding translations for missing currencies
 _sign('en_US', moneyed.KWD, prefix='KD')

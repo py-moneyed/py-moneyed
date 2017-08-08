@@ -1,4 +1,6 @@
 include README.rst
+include CHANGES.rst
 include CONTRIBUTORS
 include LICENSE
+include RELEASE.rst
 include tox.ini

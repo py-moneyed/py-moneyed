@@ -17,10 +17,11 @@ class Tox(TestCommand):
         errno = tox.cmdline(self.test_args)
         sys.exit(errno)
 
+
 setup(
     name='py-moneyed',
     packages=['moneyed'],
-    version='0.6.2',
+    version='0.7.0',
     description='Provides Currency and Money classes for use in your Python code.',
     author='Kai',
     author_email='k@limist.com',
@@ -31,7 +32,12 @@ setup(
     install_requires=[],
     classifiers=[
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Development Status :: 3 - Alpha',

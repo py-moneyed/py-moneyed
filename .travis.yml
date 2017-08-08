@@ -1,14 +1,18 @@
 language: python
+# Make Python 3.5 available:
+python: 3.5
 # See tox.ini for env list
 env:
 - TOXENV=py26
 - TOXENV=py27
 - TOXENV=py32
 - TOXENV=py33
+- TOXENV=py34
+- TOXENV=py35
 - TOXENV=pypy
 - TOXENV=flake
 - TOXENV=checkmanifest
 install:
-- pip install tox>=2.1
+- pip install tox>=2.1 'virtualenv<14'
 script:
 - tox
