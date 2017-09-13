@@ -46,7 +46,8 @@ class CurrencyFormatter(object):
         if currency_code in local_set:
             return local_set.get(currency_code)
         else:
-            return ('', " %s" % currency_code)
+            ret = self.sign_definitions.get(DEFAULT).get(currency_code)
+            return ret if ret is not None else ('', " %s" % currency_code)
 
     def get_formatting_definition(self, locale):
         if locale.upper() not in self.formatting_definitions:
