@@ -136,7 +136,7 @@ class TestMoney:
         one_million_pln = Money('1000000', 'PLN')
         # Two decimal places by default
         assert format_money(one_million_pln, locale='pl_PL') == '1 000 000,00 zł'
-        assert format_money(self.one_million_bucks, locale='pl_PL') == '1 000 000,00 USD'
+        assert format_money(self.one_million_bucks, locale='pl_PL') == 'US$1 000 000,00'
         # No decimal point without fractional part
         assert format_money(one_million_pln, locale='pl_PL',
                             decimal_places=0) == '1 000 000 zł'
