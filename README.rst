@@ -94,6 +94,21 @@ You can print Money object as follows:
    >>> format_money(Money(10, USD), locale='en_US')
    '$10.00'
 
+Division on Python 2 code
+-------------------------
+
+This package uses the special method `__truediv__` to add division support to
+`Money` class. So, if you are using python 2, make sure that you have imported 
+division on your code that calls division operation, otherwise you will get 
+unsupported operand error.
+
+.. sourcecode:: python
+
+    >>> from __future__ import division
+    >>> from moneyed import Money
+    >>> price = Money(amount='50', currency='USD')
+    >>> price / 2
+    <Money: 25 USD>
 
 Testing
 -------
