@@ -46,7 +46,8 @@ class CurrencyFormatter(object):
         if currency_code in local_set:
             return local_set.get(currency_code)
         else:
-            return ('', " %s" % currency_code)
+            ret = self.sign_definitions.get(DEFAULT).get(currency_code)
+            return ret if ret is not None else ('', " %s" % currency_code)
 
     def get_formatting_definition(self, locale):
         if locale.upper() not in self.formatting_definitions:
@@ -185,6 +186,16 @@ _format('es_BO', group_size=3, group_separator=".", decimal_point=",",
         rounding_method=ROUND_HALF_EVEN)
 
 _format("nl_NL", group_size=3, group_separator=".", decimal_point=",",
+        positive_sign="", trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
+
+_format("nb_NO", group_size=3, group_separator=" ", decimal_point=",",
+        positive_sign="", trailing_positive_sign="",
+        negative_sign="-", trailing_negative_sign="",
+        rounding_method=ROUND_HALF_EVEN)
+
+_format("nn_NO", group_size=3, group_separator=" ", decimal_point=",",
         positive_sign="", trailing_positive_sign="",
         negative_sign="-", trailing_negative_sign="",
         rounding_method=ROUND_HALF_EVEN)
@@ -368,7 +379,7 @@ _sign(DEFAULT, moneyed.ZWL, prefix='Z$')
 _sign('en_US', moneyed.USD, prefix='$')
 _sign('en_GB', moneyed.GBP, prefix='£')
 _sign('en_GB', moneyed.EUR, prefix='€')
-_sign('sv_SE', moneyed.SEK, prefix=' kr')
+_sign('sv_SE', moneyed.SEK, prefix='kr ')
 _sign('pl_PL', moneyed.PLN, suffix=' zł')
 _sign('de_DE', moneyed.EUR, suffix=' €')
 _sign('de_AT', moneyed.EUR, suffix=' €')
@@ -380,6 +391,8 @@ _sign('fr_FR', moneyed.CAD, suffix=' $ CA')
 _sign('fr_CA', moneyed.CAD, suffix=' $')
 _sign('fr_CA', moneyed.EUR, suffix=' €')
 _sign('nl_NL', moneyed.EUR, prefix='€ ')
+_sign('nb_NO', moneyed.NOK, prefix='kr ')
+_sign('nn_NO', moneyed.NOK, prefix='kr ')
 
 # Adding translations for missing currencies
 _sign('en_US', moneyed.KWD, prefix='KD')
