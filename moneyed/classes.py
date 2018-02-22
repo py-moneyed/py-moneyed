@@ -155,6 +155,16 @@ class Money(object):
                 amount=(self.amount / force_decimal(other)),
                 currency=self.currency)
 
+    def round(self, ndigits=0):
+        """
+        Rounds the amount using the current ``Decimal`` rounding algorithm.
+        """
+        if ndigits is None:
+            ndigits = 0
+        return self.__class__(
+            amount=self.amount.quantize(Decimal('1e' + str(-ndigits))),
+            currency=self.currency)
+
     def __abs__(self):
         return self.__class__(
             amount=abs(self.amount),
