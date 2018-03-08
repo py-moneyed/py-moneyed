@@ -4,6 +4,19 @@
 
 Significant or incompatible changes listed here.
 
+Changes in development version
+------------------------------
+
+* ``Money.round([ndigits])`` added.
+  Uses ``decimal.ROUND_HALF_EVEN`` by default, but this can be overriden
+  by setting ``rounding`` in the ``decimal`` context before calling ``Money.round()``.
+
+
+Changes in v0.8
+---------------
+
+* DEFAULT locale is now used as a fallback to return a currency symbol if your chosen locale has no symbol set for that currency, rather than just returning the currency code.
+
 
 Changes in v0.7
 ---------------
