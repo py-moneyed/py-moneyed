@@ -393,6 +393,8 @@ _sign('fr_CA', moneyed.EUR, suffix=' €')
 _sign('nl_NL', moneyed.EUR, prefix='€ ')
 _sign('nb_NO', moneyed.NOK, prefix='kr ')
 _sign('nn_NO', moneyed.NOK, prefix='kr ')
+_sign('en_US', moneyed.EUR, prefix='€')
+_sign('en_GB', moneyed.EUR, prefix='€')
 
 # Adding translations for missing currencies
 _sign('en_US', moneyed.KWD, prefix='KD')
