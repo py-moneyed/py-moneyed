@@ -323,9 +323,9 @@ EUR = add_currency('EUR', '978', 'Euro', ['AKROTIRI AND DHEKELIA', 'ANDORRA', 'A
                                           'CYPRUS', 'ESTONIA', 'FINLAND', 'FRANCE', 'GERMANY', 'GREECE',
                                           'GUADELOUPE', 'IRELAND', 'ITALY', 'KOSOVO', 'LATVIA', 'LITHUANIA',
                                           'LUXEMBOURG', 'MALTA', 'MARTINIQUE', 'MAYOTTE', 'MONACO',
-                                          'MONTENEGRO', 'NETHERLANDS', 'PORTUGAL', 'RÉUNION', 'SAN MARINO',
-                                          'SAINT BARTHÉLEMY', 'SAINT PIERRE AND MIQUELON', 'SAN MARINO',
-                                          'SLOVAKIA', 'SLOVENIA', 'SPAIN', 'VATICAN CITY'])
+                                          'MONTENEGRO', 'NETHERLANDS', 'PORTUGAL', 'RÉUNION', 'SAINT BARTHÉLEMY',
+                                          'SAINT PIERRE AND MIQUELON', 'SAN MARINO', 'SLOVAKIA', 'SLOVENIA', 'SPAIN',
+                                          'VATICAN CITY'])
 FJD = add_currency('FJD', '242', 'Fiji Dollar', ['FIJI'])
 FKP = add_currency('FKP', '238', 'Falkland Islands Pound', ['FALKLAND ISLANDS (MALVINAS)'])
 GBP = add_currency('GBP', '826', 'Pound Sterling', ['UNITED KINGDOM'])
