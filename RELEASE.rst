@@ -17,7 +17,8 @@ Release process
 
 * Release to PyPI::
 
-    ./setup.py sdist bdist_wheel register upload
+    $ ./setup.py sdist bdist_wheel
+    $ twine upload dist/*
 
 * Tag the release e.g.::
 
