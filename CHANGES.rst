@@ -4,6 +4,11 @@
 
 Significant or incompatible changes listed here.
 
+Changes in development version (unreleased)
+-------------------------------------------
+* Dropped official support for Python 2.6, 3.2 and 3.3 (mainly because
+  our test tools don't support them any more).
+
 Changes in v0.8
 ---------------
 
