@@ -24,7 +24,7 @@ Release process
 
     git tag v0.7
 
-    git push --tags
+    git push upstream --tags
 
 Post release
 ~~~~~~~~~~~~
