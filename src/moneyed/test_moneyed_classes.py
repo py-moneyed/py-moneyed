@@ -92,6 +92,12 @@ class TestMoney:
         assert format_money(self.one_million_bucks) == 'US$1,000,000.00'
         # No decimal point without fractional part
         assert format_money(self.one_million_bucks, decimal_places=0) == 'US$1,000,000'
+        # Use a customized decimal places
+        assert format_money(self.one_million_bucks, decimal_places=4) == 'US$1,000,000.0000'
+        # Use default decimal places for a currency, eg. CLP
+        one_million_clp = Money('1000000', 'CLP')
+        assert one_million_clp.currency.decimal_places == 0
+        assert format_money(one_million_clp) == 'CLP$1,000,000'
         # locale == pl_PL
         one_million_pln = Money('1000000', 'PLN')
         # Two decimal places by default

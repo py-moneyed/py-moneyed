@@ -23,8 +23,7 @@ class CurrencyFormatter(object):
                                   group_separator, decimal_point,
                                   positive_sign, trailing_positive_sign,
                                   negative_sign, trailing_negative_sign,
-                                  rounding_method,
-                                  decimal_places=2):
+                                  rounding_method):
         locale = locale.upper()
         self.formatting_definitions[locale] = {
             'group_size': group_size,
@@ -35,7 +34,7 @@ class CurrencyFormatter(object):
             'negative_sign': negative_sign,
             'trailing_negative_sign': trailing_negative_sign,
             'rounding_method': rounding_method,
-            'decimal_places': decimal_places}
+        }
 
     def get_sign_definition(self, currency_code, locale):
         currency_code = currency_code.upper()
@@ -67,10 +66,15 @@ class CurrencyFormatter(object):
         if rounding_method is None:
             rounding_method = formatting['rounding_method']
 
+        # set default formatting as specified by the currency
+        # or use the requested decimal places
         if decimal_places is None:
-            decimal_places = formatting['decimal_places']
+            formatting['decimal_places'] = money.currency.decimal_places
+            decimal_places = money.currency.decimal_places
+        else:
+            formatting['decimal_places'] = decimal_places
 
-        q = Decimal(10) ** -decimal_places  # 2 places --> '0.01'
+        q = Decimal(10) ** - decimal_places  # 2 places --> '0.01'
         quantized = money.amount.quantize(q, rounding_method)
         negative, digits, e = quantized.as_tuple()
 
@@ -134,7 +138,7 @@ _format = _FORMATTER.add_formatting_definition
 _format(DEFAULT, group_size=3, group_separator=",", decimal_point=".",
                  positive_sign="", trailing_positive_sign="",
                  negative_sign="-", trailing_negative_sign="",
-                 rounding_method=ROUND_HALF_EVEN)
+                 rounding_method=ROUND_HALF_EVEN,)
 
 _format("en_US", group_size=3, group_separator=",", decimal_point=".",
                  positive_sign="", trailing_positive_sign="",
