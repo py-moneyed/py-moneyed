@@ -35,11 +35,13 @@ class TestCurrency:
                        'UNITED STATES',
                        'UNITED STATES MINOR OUTLYING ISLANDS',
                        'VIRGIN ISLANDS (BRITISH)',
-                       'VIRGIN ISLANDS (U.S.)'])
+                       'VIRGIN ISLANDS (U.S.)'],
+            decimal_places=2)
         assert US_dollars.code == 'USD'
         assert US_dollars.countries == usd_countries
         assert US_dollars.name == 'US Dollar'
         assert US_dollars.numeric == '840'
+        assert US_dollars.decimal_places == 2
 
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code

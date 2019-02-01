@@ -17,11 +17,12 @@ class Currency(object):
     rate - the last remains unimplemented however.
     """
 
-    def __init__(self, code='', numeric='999', name='', countries=[]):
+    def __init__(self, code='', numeric='999', name='', countries=[], decimal_places=2):
         self.code = code
         self.countries = countries
         self.name = name
         self.numeric = numeric
+        self.decimal_places = decimal_places
 
     def __repr__(self):
         return self.code
@@ -183,18 +184,19 @@ class Money(object):
 
 # ____________________________________________________________________
 # Definitions of ISO 4217 Currencies
-# Source: http://www.iso.org/iso/support/faqs/faqs_widely_used_standards/widely_used_standards_other/currency_codes/currency_codes_list-1.htm
+# Source: https://es.wikipedia.org/wiki/ISO_4217
 
 CURRENCIES = {}
 
 
-def add_currency(code, numeric, name, countries):
+def add_currency(code, numeric, name, countries, decimal_places):
     global CURRENCIES
     CURRENCIES[code] = Currency(
         code=code,
         numeric=numeric,
         name=name,
-        countries=countries)
+        countries=countries,
+        decimal_places=decimal_places)
     return CURRENCIES[code]
 
 
