@@ -40,7 +40,10 @@ class Currency(object):
         return hash(self.code)
 
     def __eq__(self, other):
-        return type(self) is type(other) and self.code == other.code
+        if isinstance(other, str):
+            return self.code == other
+        else:
+            return type(self) is type(other) and self.code == other.code
 
     def __ne__(self, other):
         return not self.__eq__(other)
