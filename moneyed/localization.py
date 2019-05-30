@@ -6,6 +6,7 @@
 from __future__ import unicode_literals
 from decimal import Decimal, ROUND_HALF_EVEN
 import moneyed
+import warnings
 
 DEFAULT = "DEFAULT"
 
@@ -59,6 +60,7 @@ class CurrencyFormatter(object):
 
     def format(self, money, include_symbol=True, locale=DEFAULT,
                decimal_places=None, rounding_method=None):
+        warnings.warn('This method is deprecated in favour of new i18n module.', Warning)
         locale = locale.upper()
         code = money.currency.code.upper()
         prefix, suffix = self.get_sign_definition(code, locale)
