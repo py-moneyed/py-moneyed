@@ -20,7 +20,7 @@ def format_money(money, include_symbol=True, locale=LC_NUMERIC,
     format = locale.currency_formats['standard'].pattern
     if not include_symbol:
         format = format.replace('¤', '').strip()
-    if decimal_places:
+    if decimal_places is not None:
         zeroes = '0' * decimal_places
         format = re.sub(DECIMAL_PLACES_REGEX, '.' + zeroes, format)
 
