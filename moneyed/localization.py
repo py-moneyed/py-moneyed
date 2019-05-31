@@ -20,11 +20,18 @@ class CurrencyFormatter(object):
             self.sign_definitions[locale] = {}
         self.sign_definitions[locale][currency_code] = (prefix, suffix)
 
-    def add_formatting_definition(self, locale, group_size,
-                                  group_separator, decimal_point,
-                                  positive_sign, trailing_positive_sign,
-                                  negative_sign, trailing_negative_sign,
-                                  rounding_method):
+    def add_formatting_definition(
+        self,
+        locale,
+        group_size,
+        group_separator,
+        decimal_point,
+        positive_sign,
+        trailing_positive_sign,
+        negative_sign,
+        trailing_negative_sign,
+        rounding_method,
+    ):
         locale = locale.upper()
         self.formatting_definitions[locale] = {
             'group_size': group_size,
@@ -34,7 +41,8 @@ class CurrencyFormatter(object):
             'trailing_positive_sign': trailing_positive_sign,
             'negative_sign': negative_sign,
             'trailing_negative_sign': trailing_negative_sign,
-            'rounding_method': rounding_method}
+            'rounding_method': rounding_method,
+        }
 
     def get_sign_definition(self, currency_code, locale):
         currency_code = currency_code.upper()
@@ -55,9 +63,17 @@ class CurrencyFormatter(object):
             locale = DEFAULT
         return self.formatting_definitions.get(locale.upper())
 
-    def format(self, money, include_symbol=True, locale=DEFAULT,
-               decimal_places=None, rounding_method=None):
-        warnings.warn('This method is deprecated in favour of new i18n module.', Warning)
+    def format(
+        self,
+        money,
+        include_symbol=True,
+        locale=DEFAULT,
+        decimal_places=None,
+        rounding_method=None,
+    ):
+        warnings.warn(
+            'This method is deprecated in favour of new i18n module.', Warning
+        )
         locale = locale.upper()
         code = money.currency.code.upper()
         prefix, suffix = self.get_sign_definition(code, locale)
@@ -132,75 +148,173 @@ _format = _FORMATTER.add_formatting_definition
 
 # FORMATTING RULES
 
-_format(DEFAULT, group_size=3, group_separator=",", decimal_point=".",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    DEFAULT,
+    group_size=3,
+    group_separator=",",
+    decimal_point=".",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("en_US", group_size=3, group_separator=",", decimal_point=".",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "en_US",
+    group_size=3,
+    group_separator=",",
+    decimal_point=".",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("de_DE", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "de_DE",
+    group_size=3,
+    group_separator=" ",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("de_AT", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "de_AT",
+    group_size=3,
+    group_separator=" ",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("de_CH", group_size=3, group_separator=" ", decimal_point=".",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "de_CH",
+    group_size=3,
+    group_separator=" ",
+    decimal_point=".",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("fr_FR", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "fr_FR",
+    group_size=3,
+    group_separator=" ",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("fr_CA", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "fr_CA",
+    group_size=3,
+    group_separator=" ",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("sv_SE", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "sv_SE",
+    group_size=3,
+    group_separator=" ",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("pl_PL", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "pl_PL",
+    group_size=3,
+    group_separator=" ",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("en_GB", group_size=3, group_separator=",", decimal_point=".",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "en_GB",
+    group_size=3,
+    group_separator=",",
+    decimal_point=".",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format('es_BO', group_size=3, group_separator=".", decimal_point=",",
-        positive_sign="",  trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    'es_BO',
+    group_size=3,
+    group_separator=".",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("nl_NL", group_size=3, group_separator=".", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "nl_NL",
+    group_size=3,
+    group_separator=".",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("nb_NO", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "nb_NO",
+    group_size=3,
+    group_separator=" ",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
-_format("nn_NO", group_size=3, group_separator=" ", decimal_point=",",
-        positive_sign="", trailing_positive_sign="",
-        negative_sign="-", trailing_negative_sign="",
-        rounding_method=ROUND_HALF_EVEN)
+_format(
+    "nn_NO",
+    group_size=3,
+    group_separator=" ",
+    decimal_point=",",
+    positive_sign="",
+    trailing_positive_sign="",
+    negative_sign="-",
+    trailing_negative_sign="",
+    rounding_method=ROUND_HALF_EVEN,
+)
 
 # CURRENCY SIGNS
 # Default currency signs. These can be overridden for locales where

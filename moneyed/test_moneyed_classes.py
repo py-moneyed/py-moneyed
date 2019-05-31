@@ -8,9 +8,17 @@ from decimal import Decimal
 
 import pytest  # Works with less code, more consistency than unittest.
 
-from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
-                             Currency, Money, MoneyComparisonError,
-                             force_decimal, get_currency)
+from moneyed.classes import (
+    CURRENCIES,
+    DEFAULT_CURRENCY,
+    PYTHON2,
+    USD,
+    Currency,
+    Money,
+    MoneyComparisonError,
+    force_decimal,
+    get_currency,
+)
 from moneyed.localization import format_money
 from moneyed.l10n import format_money as new_format_money
 
@@ -25,7 +33,6 @@ class CustomDecimal(Decimal):
 
 
 class TestCurrency:
-
     def setup_method(self, method):
         self.default_curr_code = 'XYZ'
         self.default_curr = CURRENCIES[self.default_curr_code]
@@ -36,29 +43,32 @@ class TestCurrency:
             code='USD',
             numeric='840',
             name='US Dollar',
-            countries=['AMERICAN SAMOA',
-                       'CARIBBEAN NETHERLANDS',
-                       'CUBA',
-                       'DIEGO GARCIA',
-                       'DOMINICAN REPUBLIC',
-                       'ECUADOR',
-                       'MICRONESIA',
-                       'GUAM',
-                       'HAITI',
-                       'BRITISH INDIAN OCEAN TERRITORY',
-                       'MARSHALL ISLANDS',
-                       'NORTHERN MARIANA ISLANDS',
-                       'PANAMA',
-                       'PUERTO RICO',
-                       'PALAU',
-                       'EL SALVADOR',
-                       'TURKS & CAICOS ISLANDS',
-                       'TIMOR-LESTE',
-                       'U.S. OUTLYING ISLANDS',
-                       'UNITED STATES',
-                       'BRITISH VIRGIN ISLANDS',
-                       'U.S. VIRGIN ISLANDS',
-                       'ZIMBABWE'])
+            countries=[
+                'AMERICAN SAMOA',
+                'CARIBBEAN NETHERLANDS',
+                'CUBA',
+                'DIEGO GARCIA',
+                'DOMINICAN REPUBLIC',
+                'ECUADOR',
+                'MICRONESIA',
+                'GUAM',
+                'HAITI',
+                'BRITISH INDIAN OCEAN TERRITORY',
+                'MARSHALL ISLANDS',
+                'NORTHERN MARIANA ISLANDS',
+                'PANAMA',
+                'PUERTO RICO',
+                'PALAU',
+                'EL SALVADOR',
+                'TURKS & CAICOS ISLANDS',
+                'TIMOR-LESTE',
+                'U.S. OUTLYING ISLANDS',
+                'UNITED STATES',
+                'BRITISH VIRGIN ISLANDS',
+                'U.S. VIRGIN ISLANDS',
+                'ZIMBABWE',
+            ],
+        )
 
         assert US_dollars.code == 'USD'
         assert US_dollars.countries == usd_countries
@@ -88,22 +98,20 @@ class TestCurrency:
 
 
 class TestMoney:
-
     def setup_method(self, method):
         self.one_million_decimal = Decimal('1000000')
         self.USD = CURRENCIES['USD']
-        self.one_million_bucks = Money(amount=self.one_million_decimal,
-                                       currency=self.USD)
+        self.one_million_bucks = Money(
+            amount=self.one_million_decimal, currency=self.USD
+        )
 
     def test_init(self):
-        one_million_dollars = Money(amount=self.one_million_decimal,
-                                    currency=self.USD)
+        one_million_dollars = Money(amount=self.one_million_decimal, currency=self.USD)
         assert one_million_dollars.amount == self.one_million_decimal
         assert one_million_dollars.currency == self.USD
 
     def test_init_string_currency_code(self):
-        one_million_dollars = Money(amount=self.one_million_decimal,
-                                    currency='usd')
+        one_million_dollars = Money(amount=self.one_million_decimal, currency='usd')
         assert one_million_dollars.amount == self.one_million_decimal
         assert one_million_dollars.currency == self.USD
 
@@ -149,80 +157,128 @@ class TestMoney:
         assert format_money(one_million_pln, locale='pl_PL') == '1 000 000,00 zł'
         assert format_money(self.one_million_bucks, locale='pl_PL') == 'US$1 000 000,00'
         # No decimal point without fractional part
-        assert format_money(one_million_pln, locale='pl_PL',
-                            decimal_places=0) == '1 000 000 zł'
+        assert (
+            format_money(one_million_pln, locale='pl_PL', decimal_places=0)
+            == '1 000 000 zł'
+        )
 
     def test_format_money_fr(self):
         # locale == fr_FR
         one_million_eur = Money('1000000', 'EUR')
         one_million_cad = Money('1000000', 'CAD')
         assert format_money(one_million_eur, locale='fr_FR') == '1 000 000,00 €'
-        assert format_money(self.one_million_bucks, locale='fr_FR') == '1 000 000,00 $ US'
+        assert (
+            format_money(self.one_million_bucks, locale='fr_FR') == '1 000 000,00 $ US'
+        )
         assert format_money(one_million_cad, locale='fr_FR') == '1 000 000,00 $ CA'
         # No decimal point without fractional part
-        assert format_money(one_million_eur, locale='fr_FR',
-                            decimal_places=0) == '1 000 000 €'
+        assert (
+            format_money(one_million_eur, locale='fr_FR', decimal_places=0)
+            == '1 000 000 €'
+        )
         # locale == fr_CA
         assert format_money(one_million_cad, locale='fr_CA') == '1 000 000,00 $'
-        assert format_money(self.one_million_bucks, locale='fr_CA') == '1 000 000,00 $ US'
+        assert (
+            format_money(self.one_million_bucks, locale='fr_CA') == '1 000 000,00 $ US'
+        )
         assert format_money(one_million_eur, locale='fr_CA') == '1 000 000,00 €'
 
     def test_new_format_money(self):
         # Two decimal places by default
-        assert new_format_money(self.one_million_bucks, locale='en_US') == '$1,000,000.00'
+        assert (
+            new_format_money(self.one_million_bucks, locale='en_US') == '$1,000,000.00'
+        )
         # No decimal point without fractional part
-        assert new_format_money(self.one_million_bucks, decimal_places=0) == '$1,000,000'
+        assert (
+            new_format_money(self.one_million_bucks, decimal_places=0) == '$1,000,000'
+        )
         # Locale format not included, should fallback to DEFAULT
-        assert new_format_money(self.one_million_bucks, locale='es_ES') \
-            .replace('\xa0', ' ') == '1.000.000,00 US$'
+        assert (
+            new_format_money(self.one_million_bucks, locale='es_ES').replace(
+                '\xa0', ' '
+            )
+            == '1.000.000,00 US$'
+        )
         # locale == pl_PL
         one_million_pln = Money('1000000', 'PLN')
         # Two decimal places by default
-        assert new_format_money(one_million_pln, locale='pl_PL') \
-            .replace('\xa0', ' ') == '1 000 000,00 zł'
-        assert new_format_money(self.one_million_bucks, locale='pl_PL') \
-            .replace('\xa0', ' ') == '1 000 000,00 USD'
+        assert (
+            new_format_money(one_million_pln, locale='pl_PL').replace('\xa0', ' ')
+            == '1 000 000,00 zł'
+        )
+        assert (
+            new_format_money(self.one_million_bucks, locale='pl_PL').replace(
+                '\xa0', ' '
+            )
+            == '1 000 000,00 USD'
+        )
         # No decimal point without fractional part
-        assert new_format_money(one_million_pln, locale='pl_PL', decimal_places=0) \
-            .replace('\xa0', ' ') == '1 000 000 zł'
+        assert (
+            new_format_money(one_million_pln, locale='pl_PL', decimal_places=0).replace(
+                '\xa0', ' '
+            )
+            == '1 000 000 zł'
+        )
 
     def test_new_format_money_fr(self):
         # locale == fr_FR
         one_million_eur = Money('1000000', 'EUR')
         one_million_cad = Money('1000000', 'CAD')
-        assert new_format_money(one_million_eur, locale='fr_FR') \
-            .replace('\u202f', ' ') \
-            .replace('\xa0', ' ') == '1 000 000,00 €'
+        assert (
+            new_format_money(one_million_eur, locale='fr_FR')
+            .replace('\u202f', ' ')
+            .replace('\xa0', ' ')
+            == '1 000 000,00 €'
+        )
 
-        assert new_format_money(self.one_million_bucks, locale='fr_FR') \
-            .replace('\u202f', ' ') \
-            .replace('\xa0', ' ') == '1 000 000,00 $US'
+        assert (
+            new_format_money(self.one_million_bucks, locale='fr_FR')
+            .replace('\u202f', ' ')
+            .replace('\xa0', ' ')
+            == '1 000 000,00 $US'
+        )
 
-        assert new_format_money(one_million_cad, locale='fr_FR') \
-            .replace('\u202f', ' ') \
-            .replace('\xa0', ' ') == '1 000 000,00 $CA'
+        assert (
+            new_format_money(one_million_cad, locale='fr_FR')
+            .replace('\u202f', ' ')
+            .replace('\xa0', ' ')
+            == '1 000 000,00 $CA'
+        )
 
         # No decimal point without fractional part
-        assert new_format_money(one_million_eur, locale='fr_FR',  decimal_places=0) \
-            .replace('\u202f', ' ') \
-            .replace('\xa0', ' ') == '1 000 000 €'
+        assert (
+            new_format_money(one_million_eur, locale='fr_FR', decimal_places=0)
+            .replace('\u202f', ' ')
+            .replace('\xa0', ' ')
+            == '1 000 000 €'
+        )
 
         # locale == fr_CA
-        assert new_format_money(one_million_cad,  locale='fr_CA') \
-            .replace('\u202f', ' ') \
-            .replace('\xa0', ' ') == '1 000 000,00 $'
+        assert (
+            new_format_money(one_million_cad, locale='fr_CA')
+            .replace('\u202f', ' ')
+            .replace('\xa0', ' ')
+            == '1 000 000,00 $'
+        )
 
-        assert new_format_money(self.one_million_bucks, locale='fr_CA') \
-            .replace('\u202f', ' ') \
-            .replace('\xa0', ' ') == '1 000 000,00 $US'
+        assert (
+            new_format_money(self.one_million_bucks, locale='fr_CA')
+            .replace('\u202f', ' ')
+            .replace('\xa0', ' ')
+            == '1 000 000,00 $US'
+        )
 
-        assert new_format_money(one_million_eur, locale='fr_CA') \
-            .replace('\u202f', ' ') \
-            .replace('\xa0', ' ') == '1 000 000,00 €'
+        assert (
+            new_format_money(one_million_eur, locale='fr_CA')
+            .replace('\u202f', ' ')
+            .replace('\xa0', ' ')
+            == '1 000 000,00 €'
+        )
 
     def test_add(self):
-        assert (self.one_million_bucks + self.one_million_bucks ==
-                Money(amount='2000000', currency=self.USD))
+        assert self.one_million_bucks + self.one_million_bucks == Money(
+            amount='2000000', currency=self.USD
+        )
 
     def test_add_non_money(self):
         with pytest.raises(TypeError):
@@ -246,12 +302,16 @@ class TestMoney:
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
             Money(amount="10") * 1.2
-            assert "Multiplying Money instances with floats is deprecated" in [w.message.args[0] for w in warning_list]
+            assert "Multiplying Money instances with floats is deprecated" in [
+                w.message.args[0] for w in warning_list
+            ]
 
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
             1.2 * Money(amount="10")
-            assert "Multiplying Money instances with floats is deprecated" in [w.message.args[0] for w in warning_list]
+            assert "Multiplying Money instances with floats is deprecated" in [
+                w.message.args[0] for w in warning_list
+            ]
 
     def test_mul_bad(self):
         with pytest.raises(TypeError):
@@ -278,23 +338,26 @@ class TestMoney:
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
             Money(amount="10") / 1.2
-            assert "Dividing Money instances by floats is deprecated" in [w.message.args[0] for w in warning_list]
+            assert "Dividing Money instances by floats is deprecated" in [
+                w.message.args[0] for w in warning_list
+            ]
 
     def test_rmod(self):
-        assert 1 % self.one_million_bucks == Money(amount=10000,
-                                                   currency=self.USD)
+        assert 1 % self.one_million_bucks == Money(amount=10000, currency=self.USD)
 
     def test_rmod_bad(self):
         with pytest.raises(TypeError):
-            assert (self.one_million_bucks % self.one_million_bucks == 1)
+            assert self.one_million_bucks % self.one_million_bucks == 1
 
     def test_rmod_float_warning(self):
         # This should be changed to TypeError exception after deprecation period is over.
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
             2.0 % Money(amount="10")
-            assert ("Calculating percentages of Money instances using floats is deprecated"
-                    in [w.message.args[0] for w in warning_list])
+            assert (
+                "Calculating percentages of Money instances using floats is deprecated"
+                in [w.message.args[0] for w in warning_list]
+            )
 
     def test_convert_to_default(self):
         # Currency conversions are not implemented as of 2/2011; when
@@ -343,9 +406,9 @@ class TestMoney:
         assert abs(y) == abs_money
 
     def test_sum(self):
-        assert (sum([Money(amount=1, currency=self.USD),
-                     Money(amount=2, currency=self.USD)]) ==
-                Money(amount=3, currency=self.USD))
+        assert sum(
+            [Money(amount=1, currency=self.USD), Money(amount=2, currency=self.USD)]
+        ) == Money(amount=3, currency=self.USD)
 
     def test_round(self):
         x = Money(amount='1234.33569', currency=self.USD)
@@ -387,17 +450,21 @@ class TestMoney:
         assert type(extended_money) == type(operated_money)
         operated_money = -extended_money
         assert type(extended_money) == type(operated_money)
-        operated_money = ExtendedMoney(amount=1, currency=self.USD) + ExtendedMoney(amount=1, currency=self.USD)
+        operated_money = ExtendedMoney(amount=1, currency=self.USD) + ExtendedMoney(
+            amount=1, currency=self.USD
+        )
         assert type(extended_money) == type(operated_money)
-        operated_money = ExtendedMoney(amount=3, currency=self.USD) - Money(amount=1, currency=self.USD)
+        operated_money = ExtendedMoney(amount=3, currency=self.USD) - Money(
+            amount=1, currency=self.USD
+        )
         assert type(extended_money) == type(operated_money)
-        operated_money = (1 * extended_money)
+        operated_money = 1 * extended_money
         assert type(extended_money) == type(operated_money)
-        operated_money = (extended_money / 1)
+        operated_money = extended_money / 1
         assert type(extended_money) == type(operated_money)
         operated_money = abs(ExtendedMoney(amount=-2, currency=self.USD))
         assert type(extended_money) == type(operated_money)
-        operated_money = (50 % ExtendedMoney(amount=4, currency=self.USD))
+        operated_money = 50 % ExtendedMoney(amount=4, currency=self.USD)
         assert type(extended_money) == type(operated_money)
 
     def test_can_call_subclass_method_after_arithmetic_operations(self):
@@ -436,6 +503,5 @@ class TestMoney:
 
 
 class ExtendedMoney(Money):
-
     def do_my_behaviour(self):
         pass

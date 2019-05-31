@@ -14,8 +14,13 @@ def format_currency(money, *args, **kwargs):
 DECIMAL_PLACES_REGEX = re.compile(r'\.0*')
 
 
-def format_money(money, include_symbol=True, locale=LC_NUMERIC,
-                 decimal_places=None, rounding_method=None):
+def format_money(
+    money,
+    include_symbol=True,
+    locale=LC_NUMERIC,
+    decimal_places=None,
+    rounding_method=None,
+):
     # FIXME: rounding_method is doing nothing
     locale = Locale.parse(locale)
     format = locale.currency_formats['standard'].pattern
@@ -25,4 +30,10 @@ def format_money(money, include_symbol=True, locale=LC_NUMERIC,
         zeroes = '0' * decimal_places
         format = re.sub(DECIMAL_PLACES_REGEX, '.' + zeroes, format)
 
-    return format_currency(money, format=format, locale=locale, currency_digits=False, decimal_quantization=True)
+    return format_currency(
+        money,
+        format=format,
+        locale=locale,
+        currency_digits=False,
+        decimal_quantization=True,
+    )

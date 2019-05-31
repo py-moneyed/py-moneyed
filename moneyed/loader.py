@@ -3,7 +3,12 @@ import re
 from babel import Locale
 from babel.core import get_global, default_locale
 
-from .constants import OBSELETE_CURRENCIES, COMMON_ISO_CODES, OBSELETE_ISO_CODES, XCOMMON_ISO_CODES
+from .constants import (
+    OBSELETE_CURRENCIES,
+    COMMON_ISO_CODES,
+    OBSELETE_ISO_CODES,
+    XCOMMON_ISO_CODES,
+)
 from .money import add_currency
 
 DEFAULT_LOCALE = default_locale('LC_ALL')
@@ -35,11 +40,13 @@ def get_iso_code(currency_code):
     return 'Nil'
 
 
-def load_currencies(currency_list=None,
-                    load_x_currencies=True,
-                    load_obselete_currencies=False,
-                    load_iso_currency_codes=True,
-                    locale=DEFAULT_LOCALE):
+def load_currencies(
+    currency_list=None,
+    load_x_currencies=True,
+    load_obselete_currencies=False,
+    load_iso_currency_codes=True,
+    locale=DEFAULT_LOCALE,
+):
     # get all currencies from babel, if currency_list not provided
     if currency_list is None:
         currency_list = get_global('all_currencies').keys()
@@ -66,5 +73,7 @@ def load_currencies(currency_list=None,
             currency_code = get_iso_code(currency)
 
         country_codes = get_global('all_currencies')[currency]
-        countries = _find_country_names_by_code(country_codes, locale=locale, force_upper=True)
+        countries = _find_country_names_by_code(
+            country_codes, locale=locale, force_upper=True
+        )
         add_currency(currency, currency_code, name, countries)

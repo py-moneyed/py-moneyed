@@ -394,5 +394,5 @@ OBSELETE_ISO_CODES = {
     'ZMK': '894',
     'ZWL': '932',
     'ZWR': '935',
-    'ZWD': '716'
+    'ZWD': '716',
 }

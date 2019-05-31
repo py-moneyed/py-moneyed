@@ -60,15 +60,16 @@ class MoneyComparisonError(TypeError):
 
     def __str__(self):
         # Note: at least w/ Python 2.x, use __str__, not __unicode__.
-        return "Cannot compare instances of Money and %s" \
-               % self.other.__class__.__name__
+        return (
+            "Cannot compare instances of Money and %s" % self.other.__class__.__name__
+        )
 
 
 class CurrencyDoesNotExist(Exception):
-
     def __init__(self, code):
         super(CurrencyDoesNotExist, self).__init__(
-            "No currency with code %s is defined." % code)
+            "No currency with code %s is defined." % code
+        )
 
 
 class Money(object):
@@ -93,12 +94,17 @@ class Money(object):
 
     def __unicode__(self):
         from moneyed.localization import format_money
+
         return format_money(self)
 
     def __str__(self):
         from moneyed.localization import format_money
+
         if PYTHON2:
-            return '%s%s' % (self.currency.code, format_money(self, include_symbol=False))
+            return '%s%s' % (
+                self.currency.code,
+                format_money(self, include_symbol=False),
+            )
         else:
             return format_money(self)
 
@@ -106,14 +112,10 @@ class Money(object):
         return hash((self.amount, self.currency))
 
     def __pos__(self):
-        return self.__class__(
-            amount=self.amount,
-            currency=self.currency)
+        return self.__class__(amount=self.amount, currency=self.currency)
 
     def __neg__(self):
-        return self.__class__(
-            amount=-self.amount,
-            currency=self.currency)
+        return self.__class__(amount=-self.amount, currency=self.currency)
 
     def __add__(self, other):
         if other == 0:
@@ -121,15 +123,17 @@ class Money(object):
             # just like list of Decimal.
             return self
         if not isinstance(other, Money):
-            raise TypeError('Cannot add or subtract a ' +
-                            'Money and non-Money instance.')
+            raise TypeError(
+                'Cannot add or subtract a ' + 'Money and non-Money instance.'
+            )
         if self.currency == other.currency:
             return self.__class__(
-                amount=self.amount + other.amount,
-                currency=self.currency)
+                amount=self.amount + other.amount, currency=self.currency
+            )
 
-        raise TypeError('Cannot add or subtract two Money ' +
-                        'instances with different currencies.')
+        raise TypeError(
+            'Cannot add or subtract two Money ' + 'instances with different currencies.'
+        )
 
     def __sub__(self, other):
         return self.__add__(-other)
@@ -139,10 +143,13 @@ class Money(object):
             raise TypeError('Cannot multiply two Money instances.')
         else:
             if isinstance(other, float):
-                warnings.warn("Multiplying Money instances with floats is deprecated", DeprecationWarning)
+                warnings.warn(
+                    "Multiplying Money instances with floats is deprecated",
+                    DeprecationWarning,
+                )
             return self.__class__(
-                amount=(self.amount * force_decimal(other)),
-                currency=self.currency)
+                amount=(self.amount * force_decimal(other)), currency=self.currency
+            )
 
     def __truediv__(self, other):
         if isinstance(other, Money):
@@ -151,10 +158,13 @@ class Money(object):
             return self.amount / other.amount
         else:
             if isinstance(other, float):
-                warnings.warn("Dividing Money instances by floats is deprecated", DeprecationWarning)
+                warnings.warn(
+                    "Dividing Money instances by floats is deprecated",
+                    DeprecationWarning,
+                )
             return self.__class__(
-                amount=(self.amount / force_decimal(other)),
-                currency=self.currency)
+                amount=(self.amount / force_decimal(other)), currency=self.currency
+            )
 
     def round(self, ndigits=0):
         """
@@ -164,12 +174,11 @@ class Money(object):
             ndigits = 0
         return self.__class__(
             amount=self.amount.quantize(Decimal('1e' + str(-ndigits))),
-            currency=self.currency)
+            currency=self.currency,
+        )
 
     def __abs__(self):
-        return self.__class__(
-            amount=abs(self.amount),
-            currency=self.currency)
+        return self.__class__(amount=abs(self.amount), currency=self.currency)
 
     def __bool__(self):
         return bool(self.amount)
@@ -191,11 +200,13 @@ class Money(object):
             raise TypeError('Invalid __rmod__ operation')
         else:
             if isinstance(other, float):
-                warnings.warn("Calculating percentages of Money instances using floats is deprecated",
-                              DeprecationWarning)
+                warnings.warn(
+                    "Calculating percentages of Money instances using floats is deprecated",
+                    DeprecationWarning,
+                )
             return self.__class__(
-                amount=(Decimal(str(other)) * self.amount / 100),
-                currency=self.currency)
+                amount=(Decimal(str(other)) * self.amount / 100), currency=self.currency
+            )
 
     __radd__ = __add__
     __rsub__ = __sub__
@@ -205,9 +216,11 @@ class Money(object):
     # _______________________________________
     # Override comparison operators
     def __eq__(self, other):
-        return (isinstance(other, Money) and
-                (self.amount == other.amount) and
-                (self.currency == other.currency))
+        return (
+            isinstance(other, Money)
+            and (self.amount == other.amount)
+            and (self.currency == other.currency)
+        )
 
     def __ne__(self, other):
         result = self.__eq__(other)
@@ -216,16 +229,16 @@ class Money(object):
     def __lt__(self, other):
         if not isinstance(other, Money):
             raise MoneyComparisonError(other)
-        if (self.currency == other.currency):
-            return (self.amount < other.amount)
+        if self.currency == other.currency:
+            return self.amount < other.amount
         else:
             raise TypeError('Cannot compare Money with different currencies.')
 
     def __gt__(self, other):
         if not isinstance(other, Money):
             raise MoneyComparisonError(other)
-        if (self.currency == other.currency):
-            return (self.amount > other.amount)
+        if self.currency == other.currency:
+            return self.amount > other.amount
         else:
             raise TypeError('Cannot compare Money with different currencies.')
 
@@ -243,10 +256,8 @@ CURRENCIES_BY_ISO = {}
 def add_currency(code, numeric, name, countries):
     global CURRENCIES
     CURRENCIES[code] = Currency(
-        code=code,
-        numeric=numeric,
-        name=name,
-        countries=countries)
+        code=code, numeric=numeric, name=name, countries=countries
+    )
     CURRENCIES_BY_ISO[numeric] = CURRENCIES[code]
     return CURRENCIES[code]
 

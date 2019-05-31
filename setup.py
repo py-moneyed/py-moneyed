@@ -14,6 +14,7 @@ class Tox(TestCommand):
     def run_tests(self):
         # import here, cause outside the eggs aren't loaded
         import tox
+
         errno = tox.cmdline(self.test_args)
         sys.exit(errno)
 
@@ -42,13 +43,10 @@ setup(
         'Environment :: Other Environment',
         'Intended Audience :: Developers',
         'Topic :: Office/Business :: Financial',
-        'Topic :: Software Development :: Libraries :: Python Modules'],
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ],
     long_description=open('README.rst', 'r').read(),
-    extras_require={
-        'tests': [
-            'pytest>=2.3.0',
-            'tox>=1.6.0'
-        ]},
+    extras_require={'tests': ['pytest>=2.3.0', 'tox>=1.6.0']},
     tests_require=['tox>=1.6.0', 'pytest>=2.3.0'],
     cmdclass={'test': Tox},
     include_package_data=True,
