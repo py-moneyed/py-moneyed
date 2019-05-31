@@ -37,20 +37,29 @@ class TestCurrency:
             numeric='840',
             name='US Dollar',
             countries=['AMERICAN SAMOA',
-                       'BRITISH INDIAN OCEAN TERRITORY',
+                       'CARIBBEAN NETHERLANDS',
+                       'CUBA',
+                       'DIEGO GARCIA',
+                       'DOMINICAN REPUBLIC',
                        'ECUADOR',
-                       'GUAM',
-                       'MARSHALL ISLANDS',
                        'MICRONESIA',
+                       'GUAM',
+                       'HAITI',
+                       'BRITISH INDIAN OCEAN TERRITORY',
+                       'MARSHALL ISLANDS',
                        'NORTHERN MARIANA ISLANDS',
-                       'PALAU',
+                       'PANAMA',
                        'PUERTO RICO',
+                       'PALAU',
+                       'EL SALVADOR',
+                       'TURKS & CAICOS ISLANDS',
                        'TIMOR-LESTE',
-                       'TURKS AND CAICOS ISLANDS',
+                       'U.S. OUTLYING ISLANDS',
                        'UNITED STATES',
-                       'UNITED STATES MINOR OUTLYING ISLANDS',
-                       'VIRGIN ISLANDS (BRITISH)',
-                       'VIRGIN ISLANDS (U.S.)'])
+                       'BRITISH VIRGIN ISLANDS',
+                       'U.S. VIRGIN ISLANDS',
+                       'ZIMBABWE'])
+
         assert US_dollars.code == 'USD'
         assert US_dollars.countries == usd_countries
         assert US_dollars.name == 'US Dollar'
