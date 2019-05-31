@@ -1,6 +1,9 @@
 language: python
 # Make Python 3.5 and 3.6 available:
 python: 3.7
+# Travis workaround to support newer versions of python
+sudo: required
+dist: xenial
 # See tox.ini for env list
 matrix:
   include:
