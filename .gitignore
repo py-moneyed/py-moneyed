@@ -5,11 +5,13 @@ develop-eggs
 dist/
 downloads
 eggs
+py_moneyed.egg-info
 parts
 src/*.egg-info
 build/
 .ropeproject
 .tox
+.cache
 
 .project
 .pydevproject
