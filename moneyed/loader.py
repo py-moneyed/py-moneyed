@@ -17,10 +17,19 @@ DEFAULT_LOCALE = default_locale('LC_ALL')
 CONTAINS_YEAR_REGEX = re.compile('.*([1-3][0-9]{3})')
 
 
-def _find_country_names_by_code(country_codes, locale, force_upper=False):
+def _find_country_names_by_code(
+    country_codes, locale, fallback_locale=None, force_upper=False
+):
+    if fallback_locale is None:
+        fallback_locale = Locale.parse('en_US')
+
     countries = []
     for country_code in country_codes:
-        country = locale.territories.get(country_code)
+        try:
+            country = locale.territories[country_code]
+        except KeyError:
+            country = fallback_locale.territories.get(country_code, None)
+
         if country is not None:
             if force_upper:
                 country = country.upper()
@@ -46,6 +55,7 @@ def load_currencies(
     load_obselete_currencies=False,
     load_iso_currency_codes=True,
     locale=DEFAULT_LOCALE,
+    fallback_locale='en_US',
 ):
     # get all currencies from babel, if currency_list not provided
     if currency_list is None:
@@ -55,9 +65,15 @@ def load_currencies(
         load_obselete_currencies = True
 
     locale = Locale.parse(locale)
+    fallback_locale = Locale.parse(fallback_locale)
 
     for currency in currency_list:
-        name = locale.currencies[currency]
+        # in case our locale does not support the currency, fallback to fallback_locale
+        try:
+            name = locale.currencies[currency]
+        except KeyError:
+            name = fallback_locale.currencies.get(currency, '')
+
         if not load_obselete_currencies:
             if currency in OBSELETE_CURRENCIES:
                 continue
@@ -74,6 +90,9 @@ def load_currencies(
 
         country_codes = get_global('all_currencies')[currency]
         countries = _find_country_names_by_code(
-            country_codes, locale=locale, force_upper=True
+            country_codes,
+            locale=locale,
+            fallback_locale=fallback_locale,
+            force_upper=True,
         )
         add_currency(currency, currency_code, name, countries)
