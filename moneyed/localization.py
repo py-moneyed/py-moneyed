@@ -72,7 +72,7 @@ class CurrencyFormatter(object):
         rounding_method=None,
     ):
         warnings.warn(
-            'This method is deprecated in favour of new i18n module.', Warning
+            'This method is deprecated in favour of new l10n module.', DeprecationWarning
         )
         locale = locale.upper()
         code = money.currency.code.upper()
