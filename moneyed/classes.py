@@ -133,6 +133,9 @@ class Money(object):
     def __sub__(self, other):
         return self.__add__(-other)
 
+    def __rsub__(self, other):
+        return (-self).__add__(other)
+
     def __mul__(self, other):
         if isinstance(other, Money):
             raise TypeError('Cannot multiply two Money instances.')
@@ -197,7 +200,6 @@ class Money(object):
                 currency=self.currency)
 
     __radd__ = __add__
-    __rsub__ = __sub__
     __rmul__ = __mul__
     __rtruediv__ = __truediv__
 
