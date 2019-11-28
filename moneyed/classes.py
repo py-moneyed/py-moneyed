@@ -158,6 +158,9 @@ class Money(object):
                 amount=(self.amount / force_decimal(other)),
                 currency=self.currency)
 
+    def __rtruediv__(self, other):
+        raise TypeError('Cannot divide non-Money by a Money instance.')
+
     def round(self, ndigits=0):
         """
         Rounds the amount using the current ``Decimal`` rounding algorithm.
@@ -201,7 +204,6 @@ class Money(object):
 
     __radd__ = __add__
     __rmul__ = __mul__
-    __rtruediv__ = __truediv__
 
     # _______________________________________
     # Override comparison operators

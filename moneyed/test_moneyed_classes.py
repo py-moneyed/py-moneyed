@@ -214,6 +214,12 @@ class TestMoney:
         y = 2
         assert x / y == Money(amount=25, currency=self.USD)
 
+    def test_rdiv_by_non_Money(self):
+        x = 2
+        y = Money(amount=50, currency=self.USD)
+        with pytest.raises(TypeError):
+            assert x / y == Money(amount=25, currency=self.USD)
+
     def test_div_float_warning(self):
         # This should be changed to TypeError exception after deprecation period is over.
         with warnings.catch_warnings(record=True) as warning_list:
