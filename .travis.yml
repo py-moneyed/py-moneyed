@@ -17,6 +17,6 @@ matrix:
     - env: TOXENV=flake
     - env: TOXENV=checkmanifest
 install:
-- pip install tox>=2.1 'virtualenv<14'
+- pip install tox
 script:
 - tox
