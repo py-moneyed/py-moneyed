@@ -18,8 +18,13 @@ class CustomDecimal(Decimal):
     """Test class to ensure Decimal.__str__ is not
     used in calculations.
     """
-    def __str__(self):
+    def __str__(self, **kwargs):
         return 'error'
+
+
+class CurrencySubclass(Currency):
+    """Currency class used to test subclassed currency equality check has no regression."""
+    pass
 
 
 class TestCurrency:
@@ -57,17 +62,37 @@ class TestCurrency:
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
 
+    def test_str(self):
+        assert str(self.default_curr) == self.default_curr_code
+
     def test_hash(self):
-        assert self.default_curr in set([self.default_curr])
+        assert self.default_curr in {self.default_curr}
 
     def test_compare(self):
         other = deepcopy(self.default_curr)
+
         # equality
         assert self.default_curr == CURRENCIES['XYZ']
         assert self.default_curr == other
         # non-equality
         other.code = 'USD'
         assert self.default_curr != other
+        assert self.default_curr != CURRENCIES['USD']
+
+    def test_subclass_compare(self):
+        subclassed_currency = CurrencySubclass(
+            code=self.default_curr.code,
+            numeric=self.default_curr.numeric,
+            name=self.default_curr.name,
+            countries=self.default_curr.countries,
+        )
+
+        # equality
+        assert self.default_curr == CURRENCIES['XYZ']
+        assert self.default_curr == subclassed_currency
+        # non-equality
+        subclassed_currency.code = 'USD'
+        assert self.default_curr != subclassed_currency
         assert self.default_curr != CURRENCIES['USD']
 
     def test_fetching_currency_by_iso_code(self):
@@ -81,20 +106,31 @@ class TestMoney:
     def setup_method(self, method):
         self.one_million_decimal = Decimal('1000000')
         self.USD = CURRENCIES['USD']
+        self.SUBCLASSED_USD = CurrencySubclass(
+            self.USD.code,
+            self.USD.numeric,
+            self.USD.name,
+            self.USD.countries,
+        )
         self.one_million_bucks = Money(amount=self.one_million_decimal,
                                        currency=self.USD)
+        self.subclassed_one_million_bucks = Money(amount=self.one_million_decimal,
+                                                  currency=self.SUBCLASSED_USD)
 
     def test_init(self):
         one_million_dollars = Money(amount=self.one_million_decimal,
                                     currency=self.USD)
         assert one_million_dollars.amount == self.one_million_decimal
         assert one_million_dollars.currency == self.USD
+        assert one_million_dollars.currency == self.SUBCLASSED_USD
+        assert one_million_dollars == self.subclassed_one_million_bucks
 
     def test_init_string_currency_code(self):
         one_million_dollars = Money(amount=self.one_million_decimal,
                                     currency='usd')
         assert one_million_dollars.amount == self.one_million_decimal
         assert one_million_dollars.currency == self.USD
+        assert one_million_dollars.currency == self.SUBCLASSED_USD
 
     def test_init_default_currency(self):
         one_million = self.one_million_decimal
@@ -123,7 +159,8 @@ class TestMoney:
             assert str(self.one_million_bucks) == 'US$1,000,000.00'
 
     def test_hash(self):
-        assert self.one_million_bucks in set([self.one_million_bucks])
+        assert self.one_million_bucks in {self.one_million_bucks}
+        assert self.subclassed_one_million_bucks in {self.subclassed_one_million_bucks}
 
     def test_format_money(self):
         # Two decimal places by default
@@ -157,8 +194,10 @@ class TestMoney:
         assert format_money(one_million_eur, locale='fr_CA') == '1 000 000,00 €'
 
     def test_add(self):
-        assert (self.one_million_bucks + self.one_million_bucks ==
-                Money(amount='2000000', currency=self.USD))
+        money_sum = self.one_million_bucks + self.one_million_bucks
+        expected_amount = '2000000'
+        assert (money_sum == Money(amount=expected_amount, currency=self.USD))
+        assert (money_sum == Money(amount=expected_amount, currency=self.SUBCLASSED_USD))
 
     def test_add_non_money(self):
         with pytest.raises(TypeError):
@@ -167,6 +206,7 @@ class TestMoney:
     def test_sub(self):
         zeroed_test = self.one_million_bucks - self.one_million_bucks
         assert zeroed_test == Money(amount=0, currency=self.USD)
+        assert zeroed_test == Money(amount=0, currency=self.SUBCLASSED_USD)
 
     def test_sub_non_money(self):
         with pytest.raises(TypeError):
@@ -244,32 +284,43 @@ class TestMoney:
     def test_ne(self):
         x = Money(amount=1, currency=self.USD)
         assert self.one_million_bucks != x
+        assert self.subclassed_one_million_bucks != x
 
     def test_equality_to_other_types(self):
         x = Money(amount=0, currency=self.USD)
-        assert x != None  # NOQA
+        assert x is not None
         assert x != {}
 
     def test_not_equal_to_decimal_types(self):
         assert self.one_million_bucks != self.one_million_decimal
+        assert self.subclassed_one_million_bucks != self.one_million_decimal
 
     def test_lt(self):
         x = Money(amount=1, currency=self.USD)
         assert x < self.one_million_bucks
+        assert x < self.subclassed_one_million_bucks
 
     def test_lt_mistyped(self):
         x = 1.0
+
         with pytest.raises(MoneyComparisonError):
             assert x < self.one_million_bucks
+
+        with pytest.raises(MoneyComparisonError):
+            assert x < self.subclassed_one_million_bucks
 
     def test_gt(self):
         x = Money(amount=1, currency=self.USD)
         assert self.one_million_bucks > x
+        assert self.subclassed_one_million_bucks > x
 
     def test_gt_mistyped(self):
         x = 1.0
         with pytest.raises(MoneyComparisonError):
             assert self.one_million_bucks > x
+
+        with pytest.raises(MoneyComparisonError):
+            assert self.subclassed_one_million_bucks > x
 
     def test_abs(self):
         abs_money = Money(amount=1, currency=self.USD)
