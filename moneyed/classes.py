@@ -133,6 +133,9 @@ class Money(object):
     def __sub__(self, other):
         return self.__add__(-other)
 
+    def __rsub__(self, other):
+        return (-self).__add__(other)
+
     def __mul__(self, other):
         if isinstance(other, Money):
             raise TypeError('Cannot multiply two Money instances.')
@@ -154,6 +157,9 @@ class Money(object):
             return self.__class__(
                 amount=(self.amount / force_decimal(other)),
                 currency=self.currency)
+
+    def __rtruediv__(self, other):
+        raise TypeError('Cannot divide non-Money by a Money instance.')
 
     def round(self, ndigits=0):
         """
@@ -197,9 +203,7 @@ class Money(object):
                 currency=self.currency)
 
     __radd__ = __add__
-    __rsub__ = __sub__
     __rmul__ = __mul__
-    __rtruediv__ = __truediv__
 
     # _______________________________________
     # Override comparison operators

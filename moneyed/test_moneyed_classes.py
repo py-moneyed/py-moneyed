@@ -172,6 +172,11 @@ class TestMoney:
         with pytest.raises(TypeError):
             Money(1000) - 123
 
+    def test_rsub_non_money(self):
+        assert 0 - Money(1, currency=self.USD) == Money(-1, currency=self.USD)
+        with pytest.raises(TypeError):
+            assert 1 - Money(3, currency=self.USD) == Money(-2, currency=self.USD)
+
     def test_mul(self):
         x = Money(amount=111.33, currency=self.USD)
         assert 3 * x == Money(333.99, currency=self.USD)
@@ -208,6 +213,12 @@ class TestMoney:
         x = Money(amount=50, currency=self.USD)
         y = 2
         assert x / y == Money(amount=25, currency=self.USD)
+
+    def test_rdiv_by_non_Money(self):
+        x = 2
+        y = Money(amount=50, currency=self.USD)
+        with pytest.raises(TypeError):
+            assert x / y == Money(amount=25, currency=self.USD)
 
     def test_div_float_warning(self):
         # This should be changed to TypeError exception after deprecation period is over.
