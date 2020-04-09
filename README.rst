@@ -130,7 +130,7 @@ The code below demonstrates this:
     >>> get_currency_of_country("Oompaland")
     Traceback (most recent call last):
         ...
-    CountryNameDoesNotExist: No country with name Oompaland is defined
+    CountryNameDoesNotExist: No country with name OOMPALAND is defined.
 
 Testing
 -------

@@ -9,8 +9,8 @@ from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 
 from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
-                             Currency, Money, MoneyComparisonError,
-                             force_decimal, get_currency)
+                             Currency, Money, MoneyComparisonError, CountryNameDoesNotExist,
+                             force_decimal, get_currency, get_currency_of_country)
 from moneyed.localization import format_money
 
 
@@ -76,12 +76,12 @@ class TestCurrency:
         assert get_currency(iso=840) == USD
 
     def test_get_currency_of_country(self):
-        assert str(self.get_currency_of_country("INDIA")[0].code) == "INR"
-        assert str(seld.get_currency_of_country("iNdIA")[0].code) == "INR"
-        assert str(self.get_currency_of_country("Tuvalu")[1].code) == "AUD"
-        assert str(self.get_currency_of_country("Greenland")[0].code) == "DKK"
-        with pytest.raises(CountryNameDoesNotExist):
-            self.get_currency_of_country("Oompaland")
+        assert str(get_currency_of_country("INDIA")[0].code) == "INR"
+        assert str(get_currency_of_country("iNdIA")[0].code) == "INR"
+        assert len(get_currency_of_country("Tuvalu")) == 2
+        assert str(get_currency_of_country("Greenland")[0].code) == "DKK"
+        with pytest.raises(CountryNameDoesNotExist, match="No country with name OOMPALAND is defined"):
+            get_currency_of_country("Oompaland")
 
 
 class TestMoney:

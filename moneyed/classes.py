@@ -253,6 +253,7 @@ class Money(object):
 CURRENCIES = {}
 CURRENCIES_BY_ISO = {}
 
+
 def add_currency(code, numeric, name, countries):
     global CURRENCIES
     CURRENCIES[code] = Currency(
@@ -274,22 +275,22 @@ def get_currency(code=None, iso=None):
 
 
 def get_currency_of_country(country):
-"""
-Returns list with currency object(s) given the country's name.
-Raises a CountryNameDoesNotExist exception if the country is not found.
+    """
+    Returns list with currency object(s) given the country's name.
+    Raises a CountryNameDoesNotExist exception if the country is not found.
 
-country : str
-The full name of the country to be searched for.
-"""
+    country : str
+    The full name of the country to be searched for.
+    """
     country_name = country.upper()
-    currencies_of_country = [ ]
-    for code, currency in CURRENCIES:
+    currencies_of_country = []
+    for currency in CURRENCIES.values():
         if country_name in currency.countries:
             currencies_of_country.append(currency)
-    if len(currencies_of_country) == 0:
-        return CountryNameDoesNotExist(country)
-    else:
+    if currencies_of_country:
         return currencies_of_country
+    else:
+        raise CountryNameDoesNotExist(country)
 
 
 DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 'Default currency.', [])
