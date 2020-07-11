@@ -98,8 +98,8 @@ Division on Python 2 code
 -------------------------
 
 This package uses the special method `__truediv__` to add division support to
-`Money` class. So, if you are using python 2, make sure that you have imported 
-division on your code that calls division operation, otherwise you will get 
+`Money` class. So, if you are using python 2, make sure that you have imported
+division on your code that calls division operation, otherwise you will get
 unsupported operand error.
 
 .. sourcecode:: python
@@ -133,8 +133,8 @@ If you do not have all versions of Python that are used in testing,
 you can use pyenv_. After installing pyenv, install the additional
 plugin pyenv-implict_.
 
-The py-moneyed package is tested against Python 2.6, 2.7, 3.2, 3.3,
-3.4, 3.5, and PyPy 2.1.
+The py-moneyed package is tested against Python 2.6, 2.7, 3.2 - 3.8
+and PyPy 2.1.
 
 .. _tox: http://tox.testrun.org/latest/
 .. _pyenv: https://github.com/yyuu/pyenv
