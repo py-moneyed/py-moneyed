@@ -26,6 +26,12 @@ tightening types handling in operators, a complete suite of unit
 tests, PEP8 adherence, providing a setup.py, and local currency
 formatting/display.
 
+Installation
+------------
+You can install using pip::
+
+    pip install py-moneyed
+
 Usage
 -----
 
