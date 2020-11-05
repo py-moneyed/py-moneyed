@@ -124,15 +124,13 @@ or just py.test.
 
 If you don't have tox installed on your system, it's a modern Python
 tool to automate running tests and deployment; install it to your
-global Python environment with: ::
+Python environment with::
 
-    sudo pip install tox
+    pip install tox
 
-Then you can activate a virtualenv (any will do - by design tox will
-not run from your globally-installed python), cd to the py-moneyed
-source directory then run the tests at the shell: ::
 
-    cd where/py-moneyed-source/is
+Then run it from the source directory::
+
     tox
 
 If you do not have all versions of Python that are used in testing,
