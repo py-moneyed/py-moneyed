@@ -71,10 +71,6 @@ jobs:
       with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('requirements-test.txt') }}
-    - uses: actions/cache@v2
-      with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ env.PYTHON_VERSION }}-${{ hashFiles('requirements-test.txt') }}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
