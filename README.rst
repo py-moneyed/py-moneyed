@@ -137,8 +137,8 @@ If you do not have all versions of Python that are used in testing,
 you can use pyenv_. After installing pyenv, install the additional
 plugin pyenv-implict_.
 
-The py-moneyed package is tested against Python 2.6, 2.7, 3.2 - 3.8
-and PyPy 2.1.
+The py-moneyed package is tested against Python 2.7, 3.5 - 3.9
+and PyPy 2 and 3
 
 .. _tox: http://tox.testrun.org/latest/
 .. _pyenv: https://github.com/yyuu/pyenv
@@ -149,4 +149,3 @@ Future
 
 Future versions of py-moneyed may provide currency conversions or
 other capabilities, dependent on feedback and usage.
-
