@@ -77,7 +77,7 @@ So you can also write:
     >>> from moneyed import Money, USD
     >>> price = Money('19.50', USD)
     >>> price
-    19 USD
+    <Money: 19.50 USD>
 
     >>> price.amount
     Decimal('19.50')
@@ -96,9 +96,25 @@ You can print Money object as follows:
 
 .. sourcecode:: python
 
-   >>> from moneyed.localization import format_money
+   >>> from moneyed.l10n import format_money
    >>> format_money(Money(10, USD), locale='en_US')
    '$10.00'
+
+Note that you need to specify ``locale`` or you will get the ``LC_NUMERIC``
+default, which will probably not be what you want. For this reason, you may well
+want to add your own wrappers around this function to supply your project
+specific defaults.
+
+This function is a thin wrapper around `babel.numbers.format_currency
+<http://babel.pocoo.org/en/latest/api/numbers.html#babel.numbers.format_currency>`_.
+See those docs for other arguments that can be specified to control the
+formatting of the number. By default, Babel will apply definitions of how to
+format currencies that have been derived from the large `CLDR database
+<http://cldr.unicode.org/>`_.
+
+There is also a deprecated ``format_money`` function in
+``moneyed.localization``, which has a different signature, and relied on our own
+very incomplete lists of formats.
 
 Division on Python 2 code
 -------------------------

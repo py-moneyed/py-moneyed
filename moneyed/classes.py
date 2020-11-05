@@ -91,14 +91,18 @@ class Money(object):
         return "<Money: %s %s>" % (self.amount, self.currency)
 
     def __unicode__(self):
-        from moneyed.localization import format_money
+        from moneyed.l10n import format_money
         return format_money(self)
 
-    def __str__(self):
-        from moneyed.localization import format_money
-        if PYTHON2:
-            return '%s%s' % (self.currency.code, format_money(self, include_symbol=False))
-        else:
+    if PYTHON2:
+        def __str__(self):
+            # On Python 2, `__str__` returns byte strings, so we can't include unicode symbols.
+            # Use a simpler fallback that avoids format_money
+            return '{0}{1:,}'.format(self.currency.code, self.amount)
+
+    else:
+        def __str__(self):
+            from moneyed.l10n import format_money
             return format_money(self)
 
     def __hash__(self):

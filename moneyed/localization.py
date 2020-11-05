@@ -11,6 +11,10 @@ import warnings
 DEFAULT = "DEFAULT"
 
 
+warnings.warn('This module and all its contents is deprecated in favour of new moneyed.l10n.format_money.',
+              DeprecationWarning)
+
+
 class CurrencyFormatter(object):
 
     sign_definitions = {}
@@ -60,7 +64,6 @@ class CurrencyFormatter(object):
 
     def format(self, money, include_symbol=True, locale=DEFAULT,
                decimal_places=None, rounding_method=None):
-        warnings.warn('This method is deprecated in favour of new i18n module.', Warning)
         locale = locale.upper()
         code = money.currency.code.upper()
         prefix, suffix = self.get_sign_definition(code, locale)
