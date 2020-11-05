@@ -1,7 +1,7 @@
 Release process
 ===============
 
-* Check that all tests are passing on Travis: https://travis-ci.org/limist/py-moneyed
+* Check that all tests are passing on GitHub Actions: https://github.com/limist/py-moneyed/actions?query=workflow%3Abuild
 
 * Remove "-dev" suffix in setup.py, change version number if required.
 

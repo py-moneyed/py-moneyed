@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/limist/py-moneyed.svg?branch=master
-    :target: https://travis-ci.org/limist/py-moneyed
+.. image:: https://github.com/limist/py-moneyed/workflows/build/badge.svg
+    :target: https://github.com/limist/py-moneyed/actions?query=workflow%3Abuild
     :alt: Build Status
 
 .. image:: https://badge.fury.io/py/py-moneyed.svg

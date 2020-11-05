@@ -209,7 +209,7 @@ _format("nn_NO", group_size=3, group_separator=" ", decimal_point=",",
 # from the norm.
 
 # READ ME FIRST:
-#  https://github.com/limist/py-moneyed/issues/22#issuecomment-447059971 
+#  https://github.com/limist/py-moneyed/issues/22#issuecomment-447059971
 
 _sign(DEFAULT, moneyed.AED, prefix='د.إ')
 _sign(DEFAULT, moneyed.AFN, suffix='؋')
