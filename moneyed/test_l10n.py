@@ -13,13 +13,8 @@ def test_format_money():
     assert format_money(one_million_eur, locale='en_US') == '€1,000,000.00'
 
 
-def test_format_money_no_locale():
-    # Same as Babel defaults
-    assert format_money(one_million_bucks) == 'US$1,000,000.00'
-
-
 # Test a few things are being passed on. But don't test everything, it is tested in Babel
 
 
 def test_format_money_decimal_quantization():
-    assert format_money(Money('2.0123', 'USD'), decimal_quantization=False) == 'US$2.0123'
+    assert format_money(Money('2.0123', 'USD'), locale='en_US', decimal_quantization=False) == '$2.0123'

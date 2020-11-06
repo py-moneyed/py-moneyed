@@ -13,7 +13,6 @@ from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
                              force_decimal, get_currency)
 from moneyed.localization import format_money
 
-
 if not PYTHON2:
     unicode = str  # Avoid UndefinedName flake8 errors in Python3
 
@@ -118,17 +117,16 @@ class TestMoney:
         assert repr(m_1) != repr(m_2)
 
     def test_str(self):
-        one_million_pln = Money('1000000', 'PLN')
         if PYTHON2:
-            assert unicode(one_million_pln) == 'PLN1,000,000.00'
-            assert unicode(self.one_million_bucks) == 'US$1,000,000.00'
-
             # Bytestring uses a simpler fallback to avoid unicode chars
-            assert str(one_million_pln) == 'PLN1,000,000'
             assert str(self.one_million_bucks) == 'USD1,000,000'
+
+        # Conversion to text use default locale, so results vary
+        # depending on system setup. Just assert that we don't crash.
+        if PYTHON2:
+            assert isinstance(unicode(self.one_million_bucks), unicode)
         else:
-            assert str(one_million_pln) == 'PLN1,000,000.00'
-            assert str(self.one_million_bucks) == 'US$1,000,000.00'
+            assert isinstance(str(self.one_million_bucks), str)
 
     def test_hash(self):
         assert self.one_million_bucks in set([self.one_million_bucks])
