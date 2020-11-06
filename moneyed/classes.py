@@ -9,6 +9,7 @@ from decimal import Decimal
 from babel import Locale
 from babel.core import get_global
 
+from .l10n import format_money
 from .utils import cached_property
 
 # Default, non-existent, currency
@@ -137,7 +138,6 @@ class Money(object):
         return "<Money: %s %s>" % (self.amount, self.currency)
 
     def __unicode__(self):
-        from moneyed.l10n import format_money
         return format_money(self)
 
     if PYTHON2:
@@ -148,7 +148,6 @@ class Money(object):
 
     else:
         def __str__(self):
-            from moneyed.l10n import format_money
             return format_money(self)
 
     def __hash__(self):
