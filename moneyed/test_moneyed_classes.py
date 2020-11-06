@@ -36,7 +36,7 @@ class TestCurrency:
         US_dollars = Currency(
             code='USD',
             numeric='840',
-            name='US Dollar',
+            name='United States Dollar',  # NB deliberately not official name
             countries=['AMERICAN SAMOA',
                        'BRITISH INDIAN OCEAN TERRITORY',
                        'ECUADOR',
@@ -54,8 +54,15 @@ class TestCurrency:
                        'VIRGIN ISLANDS (U.S.)'])
         assert US_dollars.code == 'USD'
         assert US_dollars.countries == usd_countries
-        assert US_dollars.name == 'US Dollar'
+        assert US_dollars.name == 'United States Dollar'
         assert US_dollars.numeric == '840'
+
+    def test_name(self):
+        assert USD.name == "US Dollar"
+
+    def test_get_name(self):
+        assert USD.get_name('es') == 'dólar estadounidense'
+        assert USD.get_name('en_GB', count=10) == 'US dollars'
 
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
