@@ -44,7 +44,7 @@ Changes in development version (unreleased)
   * On Python 2, ``Money.__str__`` (bytestring) output has changed to be more
     basic. You should use the new ``format_money`` function to control output.
 
-* Get currency names from Babel data. Various changes included:
+* Get currency names from Babel data. Several changes, including:
 
   * For all built-in currencies, ``Currency.name`` now comes from Babel ("en_US"
     locale). This means there have been various corrections to currency names.
@@ -53,6 +53,17 @@ Changes in development version (unreleased)
     still specify any name you want.
 
   * ``Currency.get_name(locale)`` has been added.
+
+* Get currency 'countries' from Babel data. Several changes, including:
+
+  * ``Currency.countries`` now sources from Babel, so some names may be different.
+
+  * ``Currency.country_codes`` has been added.
+
+  * ``Currency.countries`` is deprecated, because it is not the most useful form
+    for the data (e.g. upper cased strings, and names in US English only). It is
+    recommended to use ``Currency.country_codes`` and convert to names using
+    ``get_territory_name``.
 
 Changes in v0.8
 ---------------

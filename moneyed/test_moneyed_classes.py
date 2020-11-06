@@ -32,33 +32,21 @@ class TestCurrency:
         self.default_curr = CURRENCIES[self.default_curr_code]
 
     def test_init(self):
-        usd_countries = CURRENCIES['USD'].countries
         US_dollars = Currency(
             code='USD',
             numeric='840',
             name='United States Dollar',  # NB deliberately not official name
-            countries=['AMERICAN SAMOA',
-                       'BRITISH INDIAN OCEAN TERRITORY',
-                       'ECUADOR',
-                       'GUAM',
-                       'MARSHALL ISLANDS',
-                       'MICRONESIA',
-                       'NORTHERN MARIANA ISLANDS',
-                       'PALAU',
-                       'PUERTO RICO',
-                       'TIMOR-LESTE',
-                       'TURKS AND CAICOS ISLANDS',
-                       'UNITED STATES',
-                       'UNITED STATES MINOR OUTLYING ISLANDS',
-                       'VIRGIN ISLANDS (BRITISH)',
-                       'VIRGIN ISLANDS (U.S.)'])
+            countries=['UNITED STATES'])
         assert US_dollars.code == 'USD'
-        assert US_dollars.countries == usd_countries
+        assert US_dollars.countries == ['UNITED STATES']
         assert US_dollars.name == 'United States Dollar'
         assert US_dollars.numeric == '840'
 
     def test_name(self):
         assert USD.name == "US Dollar"
+
+    def test_countries(self):
+        assert CURRENCIES['AED'].countries == ['UNITED ARAB EMIRATES']
 
     def test_get_name(self):
         assert USD.get_name('es') == 'dólar estadounidense'
