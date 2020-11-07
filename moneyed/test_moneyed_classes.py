@@ -10,8 +10,8 @@ import pytest  # Works with less code, more consistency than unittest.
 from babel.core import get_global
 
 from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
-                             Currency, Money, MoneyComparisonError, CountryNameDoesNotExist,
-                             force_decimal, get_currency, get_currency_of_country)
+                             Currency, Money, MoneyComparisonError, CountryDoesNotExist,
+                             force_decimal, get_currency, get_currencies_of_country)
 from moneyed.localization import format_money
 
 if not PYTHON2:
@@ -74,13 +74,12 @@ class TestCurrency:
         assert get_currency(iso='840') == USD
         assert get_currency(iso=840) == USD
 
-    def test_get_currency_of_country(self):
-        assert str(get_currency_of_country("INDIA")[0].code) == "INR"
-        assert str(get_currency_of_country("iNdIA")[0].code) == "INR"
-        assert len(get_currency_of_country("Tuvalu")) == 2
-        assert str(get_currency_of_country("Greenland")[0].code) == "DKK"
-        with pytest.raises(CountryNameDoesNotExist, match="No country with name OOMPALAND is defined"):
-            get_currency_of_country("Oompaland")
+    def test_get_currencies_of_country(self):
+        assert get_currencies_of_country("IN")[0] == Currency('INR')
+        assert get_currencies_of_country("iN")[0] == Currency('INR')
+        assert get_currencies_of_country("BT") == [Currency('BTN'), Currency('INR')]
+        with pytest.raises(CountryDoesNotExist, match="No country with code XX is defined."):
+            get_currencies_of_country("XX")
 
 
 class TestMoney:

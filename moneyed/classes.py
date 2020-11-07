@@ -117,11 +117,11 @@ class CurrencyDoesNotExist(Exception):
             "No currency with code %s is defined." % code)
 
 
-class CountryNameDoesNotExist(Exception):
+class CountryDoesNotExist(Exception):
 
-    def __init__(self, country):
-        super(CountryNameDoesNotExist, self).__init__(
-            "No country with name %s is defined." % country)
+    def __init__(self, country_code):
+        super(CountryDoesNotExist, self).__init__(
+            "No country with code %s is defined." % country_code)
 
 
 class Money(object):
@@ -323,23 +323,23 @@ def get_currency(code=None, iso=None):
         raise CurrencyDoesNotExist(code)
 
 
-def get_currency_of_country(country):
+def get_currencies_of_country(country_code):
     """
-    Returns list with currency object(s) given the country's name.
-    Raises a CountryNameDoesNotExist exception if the country is not found.
+    Returns list with currency object(s) given the country's ISO-2 code.
+    Raises a CountryDoesNotExist exception if the country is not found.
 
     country : str
     The full name of the country to be searched for.
     """
-    country_name = country.upper()
+    country_code = country_code.upper()
     currencies_of_country = []
     for currency in CURRENCIES.values():
-        if country_name in currency.countries:
+        if country_code in currency.country_codes:
             currencies_of_country.append(currency)
     if currencies_of_country:
         return currencies_of_country
     else:
-        raise CountryNameDoesNotExist(country)
+        raise CountryDoesNotExist(country_code)
 
 
 DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 'Default currency.', [])
