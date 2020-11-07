@@ -136,27 +136,26 @@ unsupported operand error.
     >>> price / 2
     <Money: 25 USD>
 
-Search by Country Name
+Search by Country Code
 ----------------------
 
 In order to find the ISO code associated with a country, the global
-method `get_currency_of_country` can be used. The function takes
-the country name (case insensitive) as the argument and returns the
+method `get_currencies_of_country` can be used. The function takes
+the ISO country code (case insensitive) as the argument and returns the
 associated currency object(s) in a list. If a country with the given
-name is not found the function raises a `CountryNameDoesNotExist` exception.
+name is not found the function returns an empty list.
 The code below demonstrates this:
 
 .. sourcecode:: python
 
-    >>> from moneyed.classes import get_currency_of_country
-    >>> get_currency_of_country("India")
+    >>> from moneyed import get_currencies_of_country
+    >>> get_currencies_of_country("IN")
     [Currency(INR)]
-    >>> get_currency_of_country("Tuvalu")
+    >>> get_currencies_of_country("TV")
     [Currency(AUD), Currency(TVD)]
-    >>> get_currency_of_country("Oompaland")
-    Traceback (most recent call last):
-        ...
-    CountryNameDoesNotExist: No country with name OOMPALAND is defined.
+    >>> get_currencies_of_country("XX")
+    []
+
 
 Testing
 -------
