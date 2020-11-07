@@ -10,7 +10,7 @@ import pytest  # Works with less code, more consistency than unittest.
 from babel.core import get_global
 
 from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
-                             Currency, Money, MoneyComparisonError, CountryDoesNotExist,
+                             Currency, Money, MoneyComparisonError,
                              force_decimal, get_currency, get_currencies_of_country)
 from moneyed.localization import format_money
 
@@ -78,8 +78,7 @@ class TestCurrency:
         assert get_currencies_of_country("IN")[0] == Currency('INR')
         assert get_currencies_of_country("iN")[0] == Currency('INR')
         assert get_currencies_of_country("BT") == [Currency('BTN'), Currency('INR')]
-        with pytest.raises(CountryDoesNotExist, match="No country with code XX is defined."):
-            get_currencies_of_country("XX")
+        assert get_currencies_of_country("XX") == []
 
 
 class TestMoney:
