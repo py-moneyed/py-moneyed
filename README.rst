@@ -156,6 +156,21 @@ The code below demonstrates this:
     >>> get_currencies_of_country("XX")
     []
 
+Get country names
+-----------------
+
+``Currency.country_codes`` returns a list of `ISO 3166 country codes
+<https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>`_. You can
+convert these to names using the function ``get_country_name``, which must be
+passed a ISO 2-letter code and a locale code:
+
+.. sourcecode:: python
+
+   >>> from moneyed import ZMW, get_country_name
+   >>> ZMW.country_codes
+   ['ZM']
+   >>> get_country_name('ZM', 'en')
+   'Zambia'
 
 Testing
 -------

@@ -63,7 +63,7 @@ Changes in development version (unreleased)
   * ``Currency.countries`` is deprecated, because it is not the most useful form
     for the data (e.g. upper cased strings, and names in US English only). It is
     recommended to use ``Currency.country_codes`` and convert to names using
-    ``get_territory_name``.
+    ``get_country_name``.
 
 Changes in v0.8
 ---------------

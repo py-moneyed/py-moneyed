@@ -78,12 +78,12 @@ class Currency(object):
         List of country names, uppercased and in US locale, where the currency is
         used at present.
 
-        DEPRECATED. Use `.country_codes` instead, and get_territory_name() to
+        DEPRECATED. Use `.country_codes` instead, and get_country_name() to
         convert these to a country name in your desired locale.
 
         """
-        return [get_territory_name(territory_code, 'en_US').upper()
-                for territory_code in self.country_codes]
+        return [get_country_name(country_code, 'en_US').upper()
+                for country_code in self.country_codes]
 
     @cached_property
     def country_codes(self):
@@ -98,8 +98,8 @@ class Currency(object):
         ]
 
 
-def get_territory_name(territory_code, locale):
-    return Locale.parse(locale).territories[territory_code]
+def get_country_name(country_code, locale):
+    return Locale.parse(locale).territories[country_code]
 
 
 class MoneyComparisonError(TypeError):
