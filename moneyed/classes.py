@@ -53,6 +53,12 @@ class Currency(object):
     def __repr__(self):
         return self.code
 
+    def __lt__(self, other):
+        return self.code < other.code
+
+    def __le__(self, other):
+        return self.code <= other.code
+
     @cached_property
     def name(self):
         """"
@@ -325,11 +331,11 @@ def get_currencies_of_country(country_code):
     The full name of the country to be searched for.
     """
     country_code = country_code.upper()
-    return [
+    return sorted([
         currency
         for currency in CURRENCIES.values()
         if country_code in currency.country_codes
-    ]
+    ])
 
 
 DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 'Default currency.', [])
