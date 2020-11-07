@@ -7,6 +7,7 @@ from copy import deepcopy
 from decimal import Decimal
 
 import pytest  # Works with less code, more consistency than unittest.
+from babel.core import get_global
 
 from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
                              Currency, Money, MoneyComparisonError,
@@ -387,3 +388,9 @@ class ExtendedMoney(Money):
 
     def do_my_behaviour(self):
         pass
+
+
+def test_all_babel_currencies():
+    missing = sorted(list(set(get_global('all_currencies').keys()) - set(CURRENCIES.keys())))
+    assert missing == [], \
+        'The following currencies defined in Babel are missing: ' + ', '.join(missing)
