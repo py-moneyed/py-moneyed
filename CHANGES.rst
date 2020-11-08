@@ -9,7 +9,9 @@ Changes in development version (unreleased)
 * Dropped official support for Python 2.6, 3.2, 3.3, 3.4 (mainly because
   our test tools don't support them any more).
 
-* Format ``Money`` instances using CLDR and Babel. This is a large change with lots of parts:
+* Format ``Money`` instances using CLDR and Babel. This is a large change with lots of parts.
+  Many thanks to @pooyamb for all the hard work that went into this and other
+  related changes.
 
   * Added new ``moneyed.l10n`` module, containing a new ``format_money``
     function. This is a very thin wrapper around `babel.numbers.format_currency
