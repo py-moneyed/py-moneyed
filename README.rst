@@ -17,15 +17,6 @@ Decimal class, or ($DEITY forbid) the float primitive.  The package is
 meant to be stand-alone and easy to either use directly, or subclass
 further.  py-moneyed is BSD-licensed.
 
-Some of the py-moneyed code was first derived from python-money
-available via this URL: http://code.google.com/p/python-money/ Because
-that Google Code version has been inactive since May 2008, I forked it
-and modified it for my needs in 2010. Compared to python-money, major
-changes here in py-moneyed include separating it from Django usage,
-tightening types handling in operators, a complete suite of unit
-tests, PEP8 adherence, providing a setup.py, and local currency
-formatting/display.
-
 Installation
 ------------
 You can install using pip::
@@ -199,6 +190,14 @@ and PyPy 2 and 3
 .. _tox: http://tox.testrun.org/latest/
 .. _pyenv: https://github.com/yyuu/pyenv
 .. _pyenv-implict: https://github.com/concordusapps/pyenv-implict
+
+History
+-------
+
+Some of the py-moneyed code was first derived from python-money
+available via this URL: http://code.google.com/p/python-money/
+Due to inactivity, it was forked to this project in 2010.
+
 
 Future
 ------
