@@ -6,8 +6,13 @@
 from __future__ import unicode_literals
 from decimal import Decimal, ROUND_HALF_EVEN
 import moneyed
+import warnings
 
 DEFAULT = "DEFAULT"
+
+
+warnings.warn('This module and all its contents is deprecated in favour of new moneyed.l10n.format_money.',
+              DeprecationWarning)
 
 
 class CurrencyFormatter(object):

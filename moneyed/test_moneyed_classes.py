@@ -7,11 +7,15 @@ from copy import deepcopy
 from decimal import Decimal
 
 import pytest  # Works with less code, more consistency than unittest.
+from babel.core import get_global
 
 from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
                              Currency, Money, MoneyComparisonError,
-                             force_decimal, get_currency)
+                             force_decimal, get_currency, get_currencies_of_country)
 from moneyed.localization import format_money
+
+if not PYTHON2:
+    unicode = str  # Avoid UndefinedName flake8 errors in Python3
 
 
 class CustomDecimal(Decimal):
@@ -29,30 +33,25 @@ class TestCurrency:
         self.default_curr = CURRENCIES[self.default_curr_code]
 
     def test_init(self):
-        usd_countries = CURRENCIES['USD'].countries
         US_dollars = Currency(
             code='USD',
             numeric='840',
-            name='US Dollar',
-            countries=['AMERICAN SAMOA',
-                       'BRITISH INDIAN OCEAN TERRITORY',
-                       'ECUADOR',
-                       'GUAM',
-                       'MARSHALL ISLANDS',
-                       'MICRONESIA',
-                       'NORTHERN MARIANA ISLANDS',
-                       'PALAU',
-                       'PUERTO RICO',
-                       'TIMOR-LESTE',
-                       'TURKS AND CAICOS ISLANDS',
-                       'UNITED STATES',
-                       'UNITED STATES MINOR OUTLYING ISLANDS',
-                       'VIRGIN ISLANDS (BRITISH)',
-                       'VIRGIN ISLANDS (U.S.)'])
+            name='United States Dollar',  # NB deliberately not official name
+            countries=['UNITED STATES'])
         assert US_dollars.code == 'USD'
-        assert US_dollars.countries == usd_countries
-        assert US_dollars.name == 'US Dollar'
+        assert US_dollars.countries == ['UNITED STATES']
+        assert US_dollars.name == 'United States Dollar'
         assert US_dollars.numeric == '840'
+
+    def test_name(self):
+        assert USD.name == "US Dollar"
+
+    def test_countries(self):
+        assert CURRENCIES['AED'].countries == ['UNITED ARAB EMIRATES']
+
+    def test_get_name(self):
+        assert USD.get_name('es') == 'dólar estadounidense'
+        assert USD.get_name('en_GB', count=10) == 'US dollars'
 
     def test_repr(self):
         assert str(self.default_curr) == self.default_curr_code
@@ -74,6 +73,12 @@ class TestCurrency:
         assert get_currency('USD') == USD
         assert get_currency(iso='840') == USD
         assert get_currency(iso=840) == USD
+
+    def test_get_currencies_of_country(self):
+        assert get_currencies_of_country("IN")[0] == Currency('INR')
+        assert get_currencies_of_country("iN")[0] == Currency('INR')
+        assert get_currencies_of_country("BT") == [Currency('BTN'), Currency('INR')]
+        assert get_currencies_of_country("XX") == []
 
 
 class TestMoney:
@@ -114,13 +119,16 @@ class TestMoney:
         assert repr(m_1) != repr(m_2)
 
     def test_str(self):
-        one_million_pln = Money('1000000', 'PLN')
         if PYTHON2:
-            assert str(one_million_pln) == 'PLN1,000,000.00'
-            assert str(self.one_million_bucks) == 'USD1,000,000.00'
+            # Bytestring uses a simpler fallback to avoid unicode chars
+            assert str(self.one_million_bucks) == 'USD1,000,000'
+
+        # Conversion to text use default locale, so results vary
+        # depending on system setup. Just assert that we don't crash.
+        if PYTHON2:
+            assert isinstance(unicode(self.one_million_bucks), unicode)
         else:
-            assert str(one_million_pln) == '1,000,000.00 zł'
-            assert str(self.one_million_bucks) == 'US$1,000,000.00'
+            assert isinstance(str(self.one_million_bucks), str)
 
     def test_hash(self):
         assert self.one_million_bucks in set([self.one_million_bucks])
@@ -386,3 +394,9 @@ class ExtendedMoney(Money):
 
     def do_my_behaviour(self):
         pass
+
+
+def test_all_babel_currencies():
+    missing = sorted(list(set(get_global('all_currencies').keys()) - set(CURRENCIES.keys())))
+    assert missing == [], \
+        'The following currencies defined in Babel are missing: ' + ', '.join(missing)

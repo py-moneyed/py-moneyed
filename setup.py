@@ -29,7 +29,9 @@ setup(
     download_url='',
     keywords="money currency class abstraction",
     license='BSD',
-    install_requires=[],
+    install_requires=[
+        'babel>=2.8.0',
+    ],
     classifiers=[
         'Programming Language :: Python',
         "Programming Language :: Python :: 2.7",
