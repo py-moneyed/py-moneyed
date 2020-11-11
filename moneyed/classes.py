@@ -306,7 +306,7 @@ CURRENCIES = {}
 CURRENCIES_BY_ISO = {}
 
 
-def add_currency(code, numeric, sub_unit=None, name=None, countries=None):
+def add_currency(code, numeric, sub_unit=1, name=None, countries=None):
     global CURRENCIES
     CURRENCIES[code] = Currency(
         code=code,
