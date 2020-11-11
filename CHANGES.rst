@@ -9,6 +9,8 @@ Changes in development version (unreleased)
 * Dropped official support for Python 2.6, 3.2, 3.3, 3.4 (mainly because
   our test tools don't support them any more).
 
+* Added support for getting amount in sub units (fixed point)
+
 * Format ``Money`` instances using CLDR and Babel. This is a large change with lots of parts.
   Many thanks to @pooyamb for all the hard work that went into this and other
   related changes.

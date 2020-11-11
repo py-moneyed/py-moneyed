@@ -80,6 +80,20 @@ So you can also write:
     'USD'
 
 
+If you want to get the amount in sub units (ISO 4127 compatible) you can do:
+
+.. sourcecode:: python
+
+    >>> from moneyed import Money, USD
+    >>> price = Money('19.50', USD)
+    >>> price.get_amount_in_sub_unit()
+    1950
+
+    >>> price = Money('123.456', USD)
+    >>> price.get_amount_in_sub_unit()
+    12345
+
+
 Formatting
 ----------
 
