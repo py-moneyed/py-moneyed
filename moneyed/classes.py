@@ -295,7 +295,7 @@ class Money(object):
         return self > other or self == other
 
     def get_amount_in_sub_unit(self):
-        return self.currency.sub_unit * self.amount
+        return int(self.currency.sub_unit * self.amount)
 
 
 # ____________________________________________________________________
