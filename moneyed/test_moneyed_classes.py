@@ -36,12 +36,14 @@ class TestCurrency:
         US_dollars = Currency(
             code='USD',
             numeric='840',
+            sub_unit=100,
             name='United States Dollar',  # NB deliberately not official name
             countries=['UNITED STATES'])
         assert US_dollars.code == 'USD'
         assert US_dollars.countries == ['UNITED STATES']
         assert US_dollars.name == 'United States Dollar'
         assert US_dollars.numeric == '840'
+        assert US_dollars.sub_unit == 100
 
     def test_name(self):
         assert USD.name == "US Dollar"
@@ -329,6 +331,10 @@ class TestMoney:
             assert x.round(0) == Money(amount=3, currency=self.USD)
             x = Money(amount='3.5', currency=self.USD)
             assert x.round(0) == Money(amount=4, currency=self.USD)
+
+    def test_get_sub_unit(self):
+        m = Money(amount=123, currency=self.USD)
+        assert m.get_amount_in_sub_unit() == 12300
 
     def test_arithmetic_operations_return_real_subclass_instance(self):
         """
