@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # IMPORTANT:
-# Please see https://github.com/limist/py-moneyed/issues/22#issuecomment-447059971 before making changes here.
+# Please see https://github.com/py-moneyed/py-moneyed/issues/22#issuecomment-447059971 before making changes here.
 
 from __future__ import unicode_literals
 from decimal import Decimal, ROUND_HALF_EVEN
@@ -214,7 +214,7 @@ _format("nn_NO", group_size=3, group_separator=" ", decimal_point=",",
 # from the norm.
 
 # READ ME FIRST:
-#  https://github.com/limist/py-moneyed/issues/22#issuecomment-447059971
+#  https://github.com/py-moneyed/py-moneyed/issues/22#issuecomment-447059971
 
 _sign(DEFAULT, moneyed.AED, prefix='د.إ')
 _sign(DEFAULT, moneyed.AFN, suffix='؋')

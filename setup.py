@@ -25,7 +25,7 @@ setup(
     description='Provides Currency and Money classes for use in your Python code.',
     author='Kai',
     author_email='k@limist.com',
-    url='http://github.com/limist/py-moneyed',
+    url='http://github.com/py-moneyed/py-moneyed',
     download_url='',
     keywords="money currency class abstraction",
     license='BSD',

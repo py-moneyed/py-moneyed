@@ -1,7 +1,7 @@
 Release process
 ===============
 
-* Check that all tests are passing on GitHub Actions: https://github.com/limist/py-moneyed/actions?query=workflow%3Abuild+branch%3Amaster
+* Check that all tests are passing on GitHub Actions: https://github.com/py-moneyed/py-moneyed/actions?query=workflow%3Abuild+branch%3Amaster
 
 * Remove "-dev" suffix in setup.py, change version number if required.
 

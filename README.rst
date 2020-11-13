@@ -1,5 +1,5 @@
-.. image:: https://github.com/limist/py-moneyed/workflows/build/badge.svg
-    :target: https://github.com/limist/py-moneyed/actions?query=workflow%3Abuild
+.. image:: https://github.com/py-moneyed/py-moneyed/workflows/build/badge.svg
+    :target: https://github.com/py-moneyed/py-moneyed/actions?query=workflow%3Abuild
     :alt: Build Status
 
 .. image:: https://badge.fury.io/py/py-moneyed.svg
@@ -210,7 +210,8 @@ History
 
 Some of the py-moneyed code was first derived from python-money
 available via this URL: http://code.google.com/p/python-money/
-Due to inactivity, it was forked to this project in 2010.
+Due to inactivity, it was forked by @limist in 2010 and later
+moved to the py-moneyed organization.
 
 
 Future
