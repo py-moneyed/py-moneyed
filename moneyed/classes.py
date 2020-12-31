@@ -142,7 +142,7 @@ class Money(object):
         self.currency = currency
 
     def __repr__(self):
-        return "<Money: %s %s>" % (self.amount, self.currency)
+        return "Money('%s', '%s')" % (self.amount, self.currency)
 
     def __unicode__(self):
         return format_money(self)
