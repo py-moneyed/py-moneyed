@@ -69,6 +69,13 @@ Changes in development version (unreleased)
     recommended to use ``Currency.country_codes`` and convert to names using
     ``get_country_name``.
 
+* Changed the repr of ``Money`` so that ``eval(repr(money_object) ==
+  money_object`` (at least in some environments, and most of the typical ones).
+  See `Python docs on __repr__
+  <https://docs.python.org/3/reference/datamodel.html?highlight=__repr__#object.__repr__>`_
+  for rationale. Thanks `@davidtvs <https://github.com/davidtvs>`_. This could
+  be backwards incompatible if you were relying on the old output of ``repr()``.
+
 Changes in v0.8
 ---------------
 
@@ -85,7 +92,7 @@ Changes in v0.8
 Changes in v0.7
 ---------------
 
-* Money.__str__ changed under Python 2 to use only ASCII characters.
+* ``Money.__str__`` changed under Python 2 to use only ASCII characters.
   This means that currency codes, rather than symbols, are used.
 
 * Lots of additional locales supported out of the box.
