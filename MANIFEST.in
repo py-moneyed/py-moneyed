@@ -1,7 +1,10 @@
-include README.rst
-include CHANGES.rst
+include *.rst
 include CONTRIBUTORS
 include LICENSE
-include RELEASE.rst
 include tox.ini
 include requirements*.txt
+include *.yml
+recursive-include docs *.bat
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include docs Makefile
