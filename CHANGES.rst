@@ -4,7 +4,7 @@
 
 Significant or incompatible changes listed here.
 
-1.0 (unreleased)
+1.0 (2020-01-09)
 ----------------
 * Dropped official support for Python 2.6, 3.2, 3.3, 3.4 (mainly because
   our test tools don't support them any more).
