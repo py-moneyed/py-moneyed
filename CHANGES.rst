@@ -76,6 +76,8 @@ Significant or incompatible changes listed here.
   for rationale. Thanks `@davidtvs <https://github.com/davidtvs>`_. This could
   be backwards incompatible if you were relying on the old output of ``repr()``.
 
+* Added ``list_all_currencies()`` utility function.
+
 0.8 (2018-11-19)
 ----------------
 

@@ -343,6 +343,10 @@ def get_currencies_of_country(country_code):
     ])
 
 
+def list_all_currencies():
+    return sorted(CURRENCIES.values(), key=lambda c: c.code)
+
+
 DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 1, 'Default currency.', [])
 
 

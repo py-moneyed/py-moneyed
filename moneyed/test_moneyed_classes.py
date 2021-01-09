@@ -11,7 +11,8 @@ from babel.core import get_global
 
 from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
                              Currency, Money, MoneyComparisonError,
-                             force_decimal, get_currency, get_currencies_of_country)
+                             force_decimal, get_currencies_of_country,
+                             get_currency, list_all_currencies)
 from moneyed.localization import format_money
 
 if not PYTHON2:
@@ -410,3 +411,10 @@ def test_all_babel_currencies():
     missing = sorted(list(set(get_global('all_currencies').keys()) - set(CURRENCIES.keys())))
     assert missing == [], \
         'The following currencies defined in Babel are missing: ' + ', '.join(missing)
+
+
+def test_list_all_currencies():
+    all_currencies = list_all_currencies()
+    assert len(all_currencies) > 100
+    assert [c.code for c in all_currencies[0:3]] == ['ADP', 'AED', 'AFA']
+    assert all(isinstance(c, Currency) for c in all_currencies)

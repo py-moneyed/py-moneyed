@@ -116,3 +116,15 @@ passed a ISO 2-letter code and a locale code:
    >>> get_country_name('ZM', 'en')
    'Zambia'
 
+List all currencies
+-------------------
+
+You can get all installed currencies as below:
+
+.. code-block:: python
+
+   >>> from moneyed import list_all_currencies
+   >>> list_all_currencies()
+   [ADP, AED, AFA,...]
+
+The result is a list of :class:`Currency` objects, sorted by ISO code.
