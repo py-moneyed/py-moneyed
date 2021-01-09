@@ -4,6 +4,7 @@ include LICENSE
 include tox.ini
 include requirements*.txt
 include *.yml
+include *.yaml
 recursive-include docs *.bat
 recursive-include docs *.py
 recursive-include docs *.rst

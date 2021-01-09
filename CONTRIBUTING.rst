@@ -15,14 +15,20 @@ If you would like to contribute to py-moneyed, the recommended workflow is:
 
      python setup.py develop
 
-4. Create a git branch for your changes, starting from ``master``
+4. Optional, but highly recommended to save time later - install `pre-commit
+   <https://pre-commit.com/>`_ hooks::
 
-5. Fix the bug or implement your changes, being sure to:
+     pip install pre-commit
+     pre-commit install
+
+5. Create a git branch for your changes, starting from ``master``
+
+6. Fix the bug or implement your changes, being sure to:
 
    1. Add tests and docs
    2. Run the test suite (below)
 
-6. Push your changes to your GitHub repo and submit a pull request.
+7. Push your changes to your GitHub repo and submit a pull request.
 
 Testing
 -------
