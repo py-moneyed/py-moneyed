@@ -4,9 +4,11 @@
 # Please see https://github.com/py-moneyed/py-moneyed/issues/22#issuecomment-447059971 before making changes here.
 
 from __future__ import unicode_literals
-from decimal import Decimal, ROUND_HALF_EVEN
-import moneyed
+
 import warnings
+from decimal import ROUND_HALF_EVEN, Decimal
+
+import moneyed
 
 DEFAULT = "DEFAULT"
 

@@ -9,6 +9,7 @@ check-manifest || exit 1
 isort || exit 1
 flake8 || exit 1
 py.test || exit 1
+isort -c . || exit 1
 
 umask 000
 rm -rf build dist

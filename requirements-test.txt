@@ -5,3 +5,4 @@ babel==2.8.0
 pytest  # not specifying version is easiest way to satisfy Python 2.7 and 3.x
 flake8==3.8.4
 check-manifest
+isort==5.7.0

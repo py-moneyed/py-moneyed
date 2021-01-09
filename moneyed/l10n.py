@@ -2,7 +2,8 @@
 
 from __future__ import unicode_literals
 
-from babel.numbers import format_currency as babel_format_currency, LC_NUMERIC
+from babel.numbers import LC_NUMERIC
+from babel.numbers import format_currency as babel_format_currency
 
 
 def format_money(money, format=None, locale=LC_NUMERIC, currency_digits=True,

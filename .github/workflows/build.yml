@@ -56,6 +56,29 @@ jobs:
       run: |
         flake8 .
 
+  isort:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.9"
+    - uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('requirements-test.txt') }}
+    - name: Install deps
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install -r requirements-test.txt
+    - name: Run isort
+      run: |
+        isort --version
+        isort -c .
+
   check-manifest:
     runs-on: ubuntu-latest
     strategy:
