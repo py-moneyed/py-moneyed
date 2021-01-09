@@ -4,8 +4,8 @@
 
 Significant or incompatible changes listed here.
 
-Changes in development version (unreleased)
--------------------------------------------
+1.0 (unreleased)
+----------------
 * Dropped official support for Python 2.6, 3.2, 3.3, 3.4 (mainly because
   our test tools don't support them any more).
 
@@ -76,8 +76,8 @@ Changes in development version (unreleased)
   for rationale. Thanks `@davidtvs <https://github.com/davidtvs>`_. This could
   be backwards incompatible if you were relying on the old output of ``repr()``.
 
-Changes in v0.8
----------------
+0.8 (2018-11-19)
+----------------
 
 * ``Money.round([ndigits])`` added.
   Uses ``decimal.ROUND_HALF_EVEN`` by default, but this can be overridden
@@ -89,8 +89,8 @@ Changes in v0.8
   the currency code.
 
 
-Changes in v0.7
----------------
+0.7 (2017-05-08)
+----------------
 
 * ``Money.__str__`` changed under Python 2 to use only ASCII characters.
   This means that currency codes, rather than symbols, are used.
@@ -105,7 +105,7 @@ Changes in v0.7
 * Various other bug fixes
 
 
-Changes in v0.6 and earlier
----------------------------
+0.6 and earlier
+---------------
 
 * See VCS logs.
