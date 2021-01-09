@@ -3,32 +3,27 @@ Release process
 
 * Check that all tests are passing on GitHub Actions: https://github.com/py-moneyed/py-moneyed/actions?query=workflow%3Abuild+branch%3Amaster
 
-* Remove "-dev" suffix in setup.py, change version number if required.
+* Change version number in:
 
-* Fix 'CHANGES.rst' so the top section says "Changes in [new version number]"
+  * setup.py
+  * docs/conf.py
+
+* Fix 'CHANGES.rst' so the top section says "[new version number] [date]"
 
 * Commit to VCS
 
-* Last checks::
-
-    git status
-    check-manifest
-    flake8
-
 * Release to PyPI::
 
-    $ ./setup.py sdist bdist_wheel
-    $ twine upload dist/*
+    $ ./release.sh
 
 * Tag the release e.g.::
 
     git tag v0.7
-
     git push upstream --tags
 
 Post release
 ~~~~~~~~~~~~
 
-* Add new section to CHANGES.rst - "Changes in development version"
+* Add new section to CHANGES.rst - "[next version number] (unreleased)"
 
-* Add next version number plus "-dev" suffix in setup.py
+* Add next version number plus "-dev" suffix in ``setup.py``, ``docs/conf.py``
