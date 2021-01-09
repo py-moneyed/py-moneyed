@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
+import sys
+
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
-import sys
 
 
 class Tox(TestCommand):
