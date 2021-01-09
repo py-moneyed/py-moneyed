@@ -20,4 +20,4 @@ find . -type d | xargs chmod ugo+rx
 
 VERSION=$(./setup.py --version) || exit 1
 
-# twine upload dist/py-moneyed-$VERSION.tar.gz dist/py_moneyed-$VERSION-py2.py3-none-any.whl || exit 1
+twine upload dist/py-moneyed-$VERSION.tar.gz dist/py_moneyed-$VERSION-py2.py3-none-any.whl || exit 1
