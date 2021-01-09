@@ -16,3 +16,4 @@ build/
 .settings
 .python-version
 .idea/
+docs/_build
