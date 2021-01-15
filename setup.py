@@ -50,6 +50,7 @@ setup(
         'Topic :: Office/Business :: Financial',
         'Topic :: Software Development :: Libraries :: Python Modules'],
     long_description=open('README.rst', 'r').read(),
+    long_description_content_type="text/x-rst",
     extras_require={
         'tests': [
             'pytest>=2.3.0',
