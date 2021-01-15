@@ -4,6 +4,11 @@
 
 Significant or incompatible changes listed here.
 
+Unreleased - TBA
+----------------
+
+* Changed the ``numeric`` attribute values to ``None`` for currencies that don't have assigned ISO numeric codes: ``IMP``, ``TVD``, ``XFO``, ``XFU``.
+
 1.0 (2020-01-09)
 ----------------
 * Dropped official support for Python 2.6, 3.2, 3.3, 3.4 (mainly because

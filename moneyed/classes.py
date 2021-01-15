@@ -33,7 +33,7 @@ class Currency(object):
     canonical name, and countries the currency is used in.
     """
 
-    def __init__(self, code='', numeric='999', sub_unit=1, name=None, countries=None):
+    def __init__(self, code='', numeric=None, sub_unit=1, name=None, countries=None):
         self.code = code
         self.numeric = numeric
         self.sub_unit = sub_unit
@@ -347,7 +347,7 @@ def list_all_currencies():
     return sorted(CURRENCIES.values(), key=lambda c: c.code)
 
 
-DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, '999', 1, 'Default currency.', [])
+DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, None, 1, 'Default currency.', [])
 
 
 AED = add_currency('AED', '784', 100)
@@ -416,7 +416,7 @@ HTG = add_currency('HTG', '332', 100)
 HUF = add_currency('HUF', '348', 100)
 IDR = add_currency('IDR', '360', 100)
 ILS = add_currency('ILS', '376', 100)
-IMP = add_currency('IMP', 'Nil', 100)
+IMP = add_currency('IMP', None, 100)
 INR = add_currency('INR', '356', 100)
 IQD = add_currency('IQD', '368', 1000)
 IRR = add_currency('IRR', '364', 100)
@@ -493,7 +493,7 @@ TND = add_currency('TND', '788', 1000)
 TOP = add_currency('TOP', '776', 100)
 TRY = add_currency('TRY', '949', 100)
 TTD = add_currency('TTD', '780', 100)
-TVD = add_currency('TVD', 'Nil', 100)
+TVD = add_currency('TVD', None, 100)
 TWD = add_currency('TWD', '901', 100)
 TZS = add_currency('TZS', '834', 100)
 UAH = add_currency('UAH', '980', 100)
@@ -515,8 +515,8 @@ XBC = add_currency('XBC', '957')
 XBD = add_currency('XBD', '958')
 XCD = add_currency('XCD', '951', 100)
 XDR = add_currency('XDR', '960')
-XFO = add_currency('XFO', 'Nil')
-XFU = add_currency('XFU', 'Nil')
+XFO = add_currency('XFO', None)
+XFU = add_currency('XFU', None)
 XOF = add_currency('XOF', '952')
 XPD = add_currency('XPD', '964')
 XPF = add_currency('XPF', '953')
