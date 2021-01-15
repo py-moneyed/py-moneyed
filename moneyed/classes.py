@@ -307,14 +307,10 @@ CURRENCIES_BY_ISO = {}
 
 
 def add_currency(code, numeric, sub_unit=1, name=None, countries=None):
-    CURRENCIES[code] = Currency(
-        code=code,
-        numeric=numeric,
-        sub_unit=sub_unit,
-        name=name,
-        countries=countries)
-    CURRENCIES_BY_ISO[numeric] = CURRENCIES[code]
-    return CURRENCIES[code]
+    currency = Currency(code=code, numeric=numeric, sub_unit=sub_unit, name=name, countries=countries)
+    CURRENCIES[code] = currency
+    CURRENCIES_BY_ISO[numeric] = currency
+    return currency
 
 
 def get_currency(code=None, iso=None):
