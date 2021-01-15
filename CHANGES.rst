@@ -7,6 +7,8 @@ Significant or incompatible changes listed here.
 Unreleased - TBA
 ----------------
 
+1.1 (2020-01-15)
+----------------
 * Changed the ``numeric`` attribute values to ``None`` for currencies that don't have assigned ISO numeric codes: ``IMP``, ``TVD``, ``XFO``, ``XFU``.
 * Restored the previous definition for the ``XXX`` currency, including its ``name`` and ``countries`` attributes.
 * Fixed ``get_currency`` returning obsolete currencies.
