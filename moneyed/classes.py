@@ -524,10 +524,9 @@ XXX = add_currency(
     '999',
     # For backwards compat we keep values here, instead of getting
     # Babel's data.
-    'The codes assigned for transactions where no currency is involved',
-    ['ZZ07_No_Currency'],
+    name='The codes assigned for transactions where no currency is involved',
+    countries=['ZZ07_No_Currency'],
 )
-XXX = add_currency('XXX', '999')
 YER = add_currency('YER', '886', 100)
 ZAR = add_currency('ZAR', '710', 100)
 ZMW = add_currency('ZMW', '967', 100)
