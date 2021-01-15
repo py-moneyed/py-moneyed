@@ -3,7 +3,7 @@
     :alt: Build Status
 
 .. image:: https://badge.fury.io/py/py-moneyed.svg
-    :target: https://badge.fury.io/py/py-moneyed
+    :target: https://pypi.org/project/py-moneyed/
     :alt: Latest PyPI version
 
 .. image:: https://readthedocs.org/projects/py-moneyed/badge/?version=latest
