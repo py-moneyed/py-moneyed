@@ -176,8 +176,7 @@ class Money(object):
             # just like list of Decimal.
             return self
         if not isinstance(other, Money):
-            raise TypeError('Cannot add or subtract a ' +
-                            'Money and non-Money instance.')
+            return NotImplemented
         if self.currency == other.currency:
             return self.__class__(
                 amount=self.amount + other.amount,
