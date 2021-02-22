@@ -27,6 +27,16 @@ class CustomDecimal(Decimal):
         return 'error'
 
 
+class CustomClassesAdd:
+    """Test class to ensure Money.__add__(other) work properly if __radd__ is
+    implemented for other"""
+    def __add__(self, other):
+        return "ok"
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+
 class TestCurrency:
 
     def setup_method(self, method):
@@ -178,6 +188,8 @@ class TestMoney:
     def test_add_non_money(self):
         with pytest.raises(TypeError):
             Money(1000) + 123
+        custom_class_add = CustomClassesAdd()
+        assert(Money(1000) + custom_class_add == "ok")
 
     def test_sub(self):
         zeroed_test = self.one_million_bucks - self.one_million_bucks
