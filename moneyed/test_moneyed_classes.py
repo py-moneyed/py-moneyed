@@ -27,7 +27,7 @@ class CustomDecimal(Decimal):
         return 'error'
 
 
-class CustomClassesAdd:
+class CustomClassAdd:
     """Test class to ensure Money.__add__(other) work properly if __radd__ is
     implemented for other"""
     def __add__(self, other):
@@ -188,7 +188,9 @@ class TestMoney:
     def test_add_non_money(self):
         with pytest.raises(TypeError):
             Money(1000) + 123
-        custom_class_add = CustomClassesAdd()
+
+    def test_add_with_custom_class_add(self):
+        custom_class_add = CustomClassAdd()
         assert(Money(1000) + custom_class_add == "ok")
 
     def test_sub(self):
