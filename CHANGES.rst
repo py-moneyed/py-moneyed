@@ -7,6 +7,8 @@ Significant or incompatible changes listed here.
 Unreleased - TBA
 ----------------
 
+* ``Money.__add__`` returns ``NotImplemented`` instead of raising an exception when another operand has unsupported type.
+
 1.1 (2020-01-15)
 ----------------
 * Changed the ``numeric`` attribute values to ``None`` for currencies that don't have assigned ISO numeric codes: ``IMP``, ``TVD``, ``XFO``, ``XFU``.
