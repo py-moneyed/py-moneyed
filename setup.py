@@ -26,6 +26,8 @@ setup(
     description='Provides Currency and Money classes for use in your Python code.',
     author='Kai',
     author_email='k@limist.com',
+    maintainer="Dmitry Dygalo",
+    maintainer_email="dadygalo@gmail.com",
     url='http://github.com/py-moneyed/py-moneyed',
     download_url='',
     keywords="money currency class abstraction",
