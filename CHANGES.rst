@@ -7,6 +7,8 @@ Significant or incompatible changes listed here.
 Unreleased - TBA
 ----------------
 
+1.2 (2020-02-23)
+----------------
 * ``Money.__add__`` returns ``NotImplemented`` instead of raising an exception when another operand has unsupported type.
 
 1.1 (2020-01-15)

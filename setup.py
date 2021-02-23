@@ -22,7 +22,7 @@ class Tox(TestCommand):
 setup(
     name='py-moneyed',
     packages=['moneyed'],
-    version='1.1',
+    version='1.2',
     description='Provides Currency and Money classes for use in your Python code.',
     author='Kai',
     author_email='k@limist.com',
