@@ -1,4 +1,4 @@
-class cached_property(object):
+class cached_property:
     """
     Decorator that creates converts a method with a single
     self argument into a property cached on the instance.

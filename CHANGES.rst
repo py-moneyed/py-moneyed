@@ -6,6 +6,8 @@ Significant or incompatible changes listed here.
 
 Unreleased - TBA
 ----------------
+* Dropped support for Python 2.7 and 3.5 and PyPy 2.
+* Added pyupgrade pre-commit hook.
 
 1.2 (2020-02-23)
 ----------------

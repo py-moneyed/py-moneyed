@@ -21,9 +21,9 @@ formatting of the number. By default, Babel will apply definitions of how to
 format currencies that have been derived from the large `CLDR database
 <http://cldr.unicode.org/>`_.
 
-If you do ``str()`` on a ``Money`` object (or ``unicode()`` in Python 2), you
-will get the same behaviour as ``format_money()``, but with no options supplied,
-so you will get the system default locale.
+If you do ``str()`` on a ``Money`` object, you will get the same behaviour as
+``format_money()``, but with no options supplied, so you will get the system
+default locale.
 
 There is also a deprecated ``format_money`` function in
 ``moneyed.localization``, which has a different signature, and relied on our own

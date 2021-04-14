@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import absolute_import, division, unicode_literals
-
-import sys
 import warnings
 from decimal import Decimal
 
@@ -15,8 +10,6 @@ from .utils import cached_property
 # Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'XYZ'
 
-PYTHON2 = sys.version_info[0] == 2
-
 
 def force_decimal(amount):
     """Given an amount of unknown type, type cast it to be a Decimal."""
@@ -25,7 +18,7 @@ def force_decimal(amount):
     return amount
 
 
-class Currency(object):
+class Currency:
     """
     A Currency represents a form of money issued by governments, and
     used in one or more states/countries.  A Currency instance
@@ -112,7 +105,6 @@ class MoneyComparisonError(TypeError):
         self.other = other
 
     def __str__(self):
-        # Note: at least w/ Python 2.x, use __str__, not __unicode__.
         return "Cannot compare instances of Money and %s" \
                % self.other.__class__.__name__
 
@@ -120,11 +112,10 @@ class MoneyComparisonError(TypeError):
 class CurrencyDoesNotExist(Exception):
 
     def __init__(self, code):
-        super(CurrencyDoesNotExist, self).__init__(
-            "No currency with code %s is defined." % code)
+        super().__init__(f"No currency with code {code} is defined.")
 
 
-class Money(object):
+class Money:
     """
     A Money instance is a combination of data - an amount and a
     currency - along with operators that handle the semantics of money
@@ -142,20 +133,10 @@ class Money(object):
         self.currency = currency
 
     def __repr__(self):
-        return "Money('%s', '%s')" % (self.amount, self.currency)
+        return f"Money('{self.amount}', '{self.currency}')"
 
-    def __unicode__(self):
+    def __str__(self):
         return format_money(self)
-
-    if PYTHON2:
-        def __str__(self):
-            # On Python 2, `__str__` returns byte strings, so we can't include unicode symbols.
-            # Use a simpler fallback that avoids format_money
-            return '{0}{1:,}'.format(self.currency.code, self.amount)
-
-    else:
-        def __str__(self):
-            return format_money(self)
 
     def __hash__(self):
         return hash((self.amount, self.currency))
@@ -233,9 +214,6 @@ class Money(object):
 
     def __bool__(self):
         return bool(self.amount)
-
-    if PYTHON2:
-        __nonzero__ = __bool__
 
     def __rmod__(self, other):
         """
