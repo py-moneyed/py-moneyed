@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from moneyed import Money
 from moneyed.l10n import format_money
 

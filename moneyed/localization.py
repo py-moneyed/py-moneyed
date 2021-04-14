@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 #
 # IMPORTANT:
 # Please see https://github.com/py-moneyed/py-moneyed/issues/22#issuecomment-447059971 before making changes here.
 
-from __future__ import unicode_literals
 
 import warnings
 from decimal import ROUND_HALF_EVEN, Decimal
@@ -17,7 +15,7 @@ warnings.warn('This module and all its contents is deprecated in favour of new m
               DeprecationWarning)
 
 
-class CurrencyFormatter(object):
+class CurrencyFormatter:
 
     sign_definitions = {}
     formatting_definitions = {}

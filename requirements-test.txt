@@ -2,4 +2,4 @@
 babel==2.8.0
 
 # Test deps:
-pytest  # not specifying version is easiest way to satisfy Python 2.7 and 3.x
+pytest

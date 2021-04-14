@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-
 from babel.numbers import LC_NUMERIC
 from babel.numbers import format_currency as babel_format_currency
 

@@ -1,7 +1,3 @@
-# -*- encoding: utf-8 -*-
-
-from __future__ import division, unicode_literals
-
 import warnings
 from copy import deepcopy
 from decimal import Decimal
@@ -9,14 +5,11 @@ from decimal import Decimal
 import pytest  # Works with less code, more consistency than unittest.
 from babel.core import get_global
 
-from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, PYTHON2, USD,
-                             Currency, Money, MoneyComparisonError,
-                             force_decimal, get_currencies_of_country,
-                             get_currency, list_all_currencies)
+from moneyed.classes import (CURRENCIES, DEFAULT_CURRENCY, USD, Currency,
+                             Money, MoneyComparisonError, force_decimal,
+                             get_currencies_of_country, get_currency,
+                             list_all_currencies)
 from moneyed.localization import format_money
-
-if not PYTHON2:
-    unicode = str  # Avoid UndefinedName flake8 errors in Python3
 
 
 class CustomDecimal(Decimal):
@@ -70,7 +63,7 @@ class TestCurrency:
         assert str(self.default_curr) == self.default_curr_code
 
     def test_hash(self):
-        assert self.default_curr in set([self.default_curr])
+        assert self.default_curr in {self.default_curr}
 
     def test_compare(self):
         other = deepcopy(self.default_curr)
@@ -136,19 +129,12 @@ class TestMoney:
         assert m == eval(repr(m))
 
     def test_str(self):
-        if PYTHON2:
-            # Bytestring uses a simpler fallback to avoid unicode chars
-            assert str(self.one_million_bucks) == 'USD1,000,000'
-
         # Conversion to text use default locale, so results vary
         # depending on system setup. Just assert that we don't crash.
-        if PYTHON2:
-            assert isinstance(unicode(self.one_million_bucks), unicode)
-        else:
-            assert isinstance(str(self.one_million_bucks), str)
+        assert isinstance(str(self.one_million_bucks), str)
 
     def test_hash(self):
-        assert self.one_million_bucks in set([self.one_million_bucks])
+        assert self.one_million_bucks in {self.one_million_bucks}
 
     def test_format_money(self):
         # Two decimal places by default
