@@ -8,6 +8,10 @@ Unreleased - TBA
 ----------------
 * Dropped support for Python 2.7 and 3.5 and PyPy 2.
 * Added pyupgrade pre-commit hook.
+* Added black pre-commit hook and reformatted codebase.
+* Updated pre-commit hooks.
+* Replaced custom flake8, isort and check-manifest Github Action jobs with a generic
+  pre-commit job.
 
 1.2 (2020-02-23)
 ----------------
