@@ -12,6 +12,7 @@ Unreleased - TBA
 * Updated pre-commit hooks.
 * Replaced custom flake8, isort and check-manifest Github Action jobs with a generic
   pre-commit job.
+* Added type hints along with a mypy pre-commit hook.
 
 1.2 (2020-02-23)
 ----------------

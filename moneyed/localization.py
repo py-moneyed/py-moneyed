@@ -2,11 +2,15 @@
 # IMPORTANT:
 # Please see https://github.com/py-moneyed/py-moneyed/issues/22#issuecomment-447059971 before making changes here.
 
-
 import warnings
 from decimal import ROUND_HALF_EVEN, Decimal
+from typing import Dict, List, Optional, Tuple
+
+from typing_extensions import TypedDict
 
 import moneyed
+
+from . import Currency, Money
 
 DEFAULT = "DEFAULT"
 
@@ -17,12 +21,27 @@ warnings.warn(
 )
 
 
+SignDefinition = Tuple[str, str]
+
+
+class FormattingDefinition(TypedDict):
+    group_size: int
+    group_separator: str
+    decimal_point: str
+    positive_sign: str
+    trailing_positive_sign: str
+    negative_sign: str
+    trailing_negative_sign: str
+    rounding_method: str
+
+
 class CurrencyFormatter:
+    sign_definitions: Dict[str, Dict[str, SignDefinition]] = {}
+    formatting_definitions: Dict[str, FormattingDefinition] = {}
 
-    sign_definitions = {}
-    formatting_definitions = {}
-
-    def add_sign_definition(self, locale, currency, prefix="", suffix=""):
+    def add_sign_definition(
+        self, locale: str, currency: Currency, prefix: str = "", suffix: str = ""
+    ) -> None:
         locale = locale.upper()
         currency_code = currency.code.upper()
         if locale not in self.sign_definitions:
@@ -31,16 +50,16 @@ class CurrencyFormatter:
 
     def add_formatting_definition(
         self,
-        locale,
-        group_size,
-        group_separator,
-        decimal_point,
-        positive_sign,
-        trailing_positive_sign,
-        negative_sign,
-        trailing_negative_sign,
-        rounding_method,
-    ):
+        locale: str,
+        group_size: int,
+        group_separator: str,
+        decimal_point: str,
+        positive_sign: str,
+        trailing_positive_sign: str,
+        negative_sign: str,
+        trailing_negative_sign: str,
+        rounding_method: str,
+    ) -> None:
         locale = locale.upper()
         self.formatting_definitions[locale] = {
             "group_size": group_size,
@@ -53,33 +72,33 @@ class CurrencyFormatter:
             "rounding_method": rounding_method,
         }
 
-    def get_sign_definition(self, currency_code, locale):
+    def get_sign_definition(self, currency_code: str, locale: str) -> SignDefinition:
         currency_code = currency_code.upper()
 
         if locale.upper() not in self.sign_definitions:
             locale = DEFAULT
 
-        local_set = self.sign_definitions.get(locale.upper())
+        local_set = self.sign_definitions[locale.upper()]
 
         if currency_code in local_set:
-            return local_set.get(currency_code)
+            return local_set[currency_code]
         else:
-            ret = self.sign_definitions.get(DEFAULT).get(currency_code)
+            ret = self.sign_definitions[DEFAULT][currency_code]
             return ret if ret is not None else ("", f" {currency_code}")
 
-    def get_formatting_definition(self, locale):
+    def get_formatting_definition(self, locale: str) -> FormattingDefinition:
         if locale.upper() not in self.formatting_definitions:
             locale = DEFAULT
-        return self.formatting_definitions.get(locale.upper())
+        return self.formatting_definitions[locale.upper()]
 
     def format(
         self,
-        money,
-        include_symbol=True,
-        locale=DEFAULT,
-        decimal_places=None,
-        rounding_method=None,
-    ):
+        money: Money,
+        include_symbol: bool = True,
+        locale: str = DEFAULT,
+        decimal_places: Optional[int] = None,
+        rounding_method: Optional[str] = None,
+    ) -> str:
         locale = locale.upper()
         code = money.currency.code.upper()
         prefix, suffix = self.get_sign_definition(code, locale)
@@ -94,11 +113,11 @@ class CurrencyFormatter:
 
         q = Decimal(10) ** -decimal_places  # 2 places --> '0.01'
         quantized = money.amount.quantize(q, rounding_method)
-        negative, digits, e = quantized.as_tuple()
+        negative, digit_tuple, e = quantized.as_tuple()
 
-        result = []
+        result: List[str] = []
 
-        digits = list(map(str, digits))
+        digits = list(map(str, digit_tuple))
 
         build, next = result.append, digits.pop
 
