@@ -1,20 +1,10 @@
 import warnings
 from decimal import Decimal
-from typing import (
-    Any,
-    Dict,
-    List,
-    NoReturn,
-    Optional,
-    Protocol,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import Any, Dict, List, NoReturn, Optional, TypeVar, Union, overload
 
 from babel import Locale
 from babel.core import get_global
-from typing_extensions import Final
+from typing_extensions import Final, Protocol
 
 from .l10n import format_money
 from .utils import cached_property
