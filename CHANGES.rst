@@ -14,6 +14,7 @@ Unreleased - TBA
   pre-commit job.
 * Dropped the ``moneyed.localization`` module that was deprecated and announced for
   removal in 1.0.
+* Added type hints along with a mypy pre-commit hook.
 
 1.2 (2020-02-23)
 ----------------

@@ -1,8 +1,10 @@
 import warnings
 from decimal import Decimal
+from typing import Any, Dict, List, NoReturn, Optional, TypeVar, Union, overload
 
 from babel import Locale
 from babel.core import get_global
+from typing_extensions import Final, Protocol
 
 from .l10n import format_money
 from .utils import cached_property
@@ -11,7 +13,7 @@ from .utils import cached_property
 DEFAULT_CURRENCY_CODE = "XYZ"
 
 
-def force_decimal(amount):
+def force_decimal(amount: object) -> Decimal:
     """Given an amount of unknown type, type cast it to be a Decimal."""
     if not isinstance(amount, Decimal):
         return Decimal(str(amount))
@@ -26,49 +28,63 @@ class Currency:
     canonical name, and countries the currency is used in.
     """
 
-    def __init__(self, code="", numeric=None, sub_unit=1, name=None, countries=None):
-        self.code = code
-        self.numeric = numeric
-        self.sub_unit = sub_unit
-        if name is not None:
-            self.name = name
-        if countries is not None:
-            self.countries = countries
+    def __init__(
+        self,
+        code: str = "",
+        numeric: Optional[str] = None,
+        sub_unit: int = 1,
+        name: Optional[str] = None,
+        countries: Optional[List[str]] = None,
+    ) -> None:
+        self.code: Final = code
+        self.numeric: Final = numeric
+        self.sub_unit: Final = sub_unit
+        self._name: Final = name
+        self._countries: Final = countries
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.code)
 
-    def __eq__(self, other):
-        return type(self) is type(other) and self.code == other.code
+    def __eq__(self, other: object) -> bool:
+        return (
+            type(self) is type(other)
+            and self.code == other.code  # type: ignore[attr-defined]
+        )
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.code
 
-    def __lt__(self, other):
+    def __lt__(self, other: "Currency") -> bool:
         return self.code < other.code
 
-    def __le__(self, other):
+    def __le__(self, other: "Currency") -> bool:
         return self.code <= other.code
 
     @cached_property
-    def name(self):
+    def name(self) -> str:
         """
         Name of the currency in US locale. For backwards compat.
 
         Consider using get_name() instead, or babel.numbers.get_currency_name()
         """
+        if self._name is not None:
+            return self._name
         return self.get_name("en_US")
 
-    def get_name(self, locale, count=None):
+    def get_name(self, locale: str, count: Optional[int] = None) -> str:
         from babel.numbers import get_currency_name
 
-        return get_currency_name(self.code, locale=locale, count=count)
+        return get_currency_name(  # type: ignore[no-any-return]
+            self.code,
+            locale=locale,
+            count=count,
+        )
 
     @cached_property
-    def countries(self):
+    def countries(self) -> List[str]:
         """
         List of country names, uppercased and in US locale, where the currency is
         used at present.
@@ -77,13 +93,15 @@ class Currency:
         convert these to a country name in your desired locale.
 
         """
+        if self._countries is not None:
+            return self._countries
         return [
             get_country_name(country_code, "en_US").upper()
             for country_code in self.country_codes
         ]
 
     @cached_property
-    def country_codes(self):
+    def country_codes(self) -> List[str]:
         """
         List of current country codes for the currency.
         """
@@ -95,25 +113,35 @@ class Currency:
         ]
 
 
-def get_country_name(country_code, locale):
-    return Locale.parse(locale).territories[country_code]
+def get_country_name(country_code: str, locale: str) -> str:
+    return Locale.parse(locale).territories[country_code]  # type: ignore[no-any-return]
 
 
 class MoneyComparisonError(TypeError):
     # This exception was needed often enough to merit its own
     # Exception class.
 
-    def __init__(self, other):
+    def __init__(self, other: object) -> None:
         assert not isinstance(other, Money)
         self.other = other
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Cannot compare instances of Money and {self.other.__class__.__name__}"
 
 
 class CurrencyDoesNotExist(Exception):
-    def __init__(self, code):
+    def __init__(self, code: Optional[str]) -> None:
         super().__init__(f"No currency with code {code} is defined.")
+
+
+# This TypeVar is used for methods on Money that return self, so that subclasses become
+# accurately typed as returning instances of the subclass, not Money itself.
+M = TypeVar("M", bound="Money")
+
+
+class SupportsNeg(Protocol):
+    def __neg__(self) -> Any:
+        ...
 
 
 class Money:
@@ -124,37 +152,42 @@ class Money:
     ($DEITY forbid) floats.
     """
 
-    def __init__(self, amount=Decimal("0.0"), currency=DEFAULT_CURRENCY_CODE):
-        if not isinstance(amount, Decimal):
-            amount = Decimal(str(amount))
-        self.amount = amount
+    def __init__(
+        self,
+        amount: object = Decimal("0.0"),
+        currency: Union[str, Currency] = DEFAULT_CURRENCY_CODE,
+    ) -> None:
+        self.amount: Final = (
+            amount if isinstance(amount, Decimal) else Decimal(str(amount))
+        )
+        self.currency: Final = (
+            currency
+            if isinstance(currency, Currency)
+            else get_currency(str(currency).upper())
+        )
 
-        if not isinstance(currency, Currency):
-            currency = get_currency(str(currency).upper())
-        self.currency = currency
-
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Money('{self.amount}', '{self.currency}')"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return format_money(self)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((self.amount, self.currency))
 
-    def __pos__(self):
+    def __pos__(self: M) -> M:
         return self.__class__(
             amount=self.amount,
             currency=self.currency,
         )
 
-    def __neg__(self):
+    def __neg__(self: M) -> M:
         return self.__class__(
             amount=-self.amount,
             currency=self.currency,
         )
 
-    def __add__(self, other):
+    def __add__(self: M, other: object) -> M:
         if other == 0:
             # This allows things like 'sum' to work on list of Money instances,
             # just like list of Decimal.
@@ -171,13 +204,13 @@ class Money:
             "Cannot add or subtract two Money instances with different currencies."
         )
 
-    def __sub__(self, other):
+    def __sub__(self: M, other: SupportsNeg) -> M:
         return self.__add__(-other)
 
-    def __rsub__(self, other):
+    def __rsub__(self: M, other: object) -> M:
         return (-self).__add__(other)
 
-    def __mul__(self, other):
+    def __mul__(self: M, other: object) -> M:
         if isinstance(other, Money):
             raise TypeError("Cannot multiply two Money instances.")
         else:
@@ -191,7 +224,7 @@ class Money:
                 currency=self.currency,
             )
 
-    def __truediv__(self, other):
+    def __truediv__(self: M, other: object) -> Union[M, Decimal]:
         if isinstance(other, Money):
             if self.currency != other.currency:
                 raise TypeError("Cannot divide two different currencies.")
@@ -207,10 +240,10 @@ class Money:
                 currency=self.currency,
             )
 
-    def __rtruediv__(self, other):
+    def __rtruediv__(self, other: object) -> NoReturn:
         raise TypeError("Cannot divide non-Money by a Money instance.")
 
-    def round(self, ndigits=0):
+    def round(self: M, ndigits: Optional[int] = 0) -> M:
         """
         Rounds the amount using the current ``Decimal`` rounding algorithm.
         """
@@ -221,16 +254,16 @@ class Money:
             currency=self.currency,
         )
 
-    def __abs__(self):
+    def __abs__(self: M) -> M:
         return self.__class__(
             amount=abs(self.amount),
             currency=self.currency,
         )
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.amount)
 
-    def __rmod__(self, other):
+    def __rmod__(self: M, other: object) -> M:
         """
         Calculate percentage of an amount.  The left-hand side of the
         operator must be a numeric value.
@@ -258,18 +291,18 @@ class Money:
 
     # _______________________________________
     # Override comparison operators
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, Money)
-            and (self.amount == other.amount)
-            and (self.currency == other.currency)
+            and self.amount == other.amount
+            and self.currency == other.currency
         )
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         result = self.__eq__(other)
         return not result
 
-    def __lt__(self, other):
+    def __lt__(self, other: object) -> bool:
         if not isinstance(other, Money):
             raise MoneyComparisonError(other)
         if self.currency == other.currency:
@@ -277,7 +310,7 @@ class Money:
         else:
             raise TypeError("Cannot compare Money with different currencies.")
 
-    def __gt__(self, other):
+    def __gt__(self, other: object) -> bool:
         if not isinstance(other, Money):
             raise MoneyComparisonError(other)
         if self.currency == other.currency:
@@ -285,13 +318,13 @@ class Money:
         else:
             raise TypeError("Cannot compare Money with different currencies.")
 
-    def __le__(self, other):
+    def __le__(self, other: object) -> bool:
         return self < other or self == other
 
-    def __ge__(self, other):
+    def __ge__(self, other: object) -> bool:
         return self > other or self == other
 
-    def get_amount_in_sub_unit(self):
+    def get_amount_in_sub_unit(self) -> int:
         return int(self.currency.sub_unit * self.amount)
 
 
@@ -299,11 +332,17 @@ class Money:
 # Definitions of ISO 4217 Currencies
 # Source: http://www.iso.org/iso/support/faqs/faqs_widely_used_standards/widely_used_standards_other/currency_codes/currency_codes_list-1.htm  # noqa
 
-CURRENCIES = {}
-CURRENCIES_BY_ISO = {}
+CURRENCIES: Dict[str, Currency] = {}
+CURRENCIES_BY_ISO: Dict[str, Currency] = {}
 
 
-def add_currency(code, numeric, sub_unit=1, name=None, countries=None):
+def add_currency(
+    code: str,
+    numeric: Optional[str],
+    sub_unit: int = 1,
+    name: Optional[str] = None,
+    countries: Optional[List[str]] = None,
+) -> Currency:
     currency = Currency(
         code=code, numeric=numeric, sub_unit=sub_unit, name=name, countries=countries
     )
@@ -314,16 +353,28 @@ def add_currency(code, numeric, sub_unit=1, name=None, countries=None):
     return currency
 
 
-def get_currency(code=None, iso=None):
+@overload
+def get_currency(code: str) -> Currency:
+    ...
+
+
+@overload
+def get_currency(*, iso: Union[int, str]) -> Currency:
+    ...
+
+
+def get_currency(
+    code: Optional[str] = None, iso: Union[int, str, None] = None
+) -> Currency:
     try:
         if iso:
             return CURRENCIES_BY_ISO[str(iso)]
-        return CURRENCIES[code]
+        return CURRENCIES[code]  # type: ignore[index]
     except KeyError:
         raise CurrencyDoesNotExist(code)
 
 
-def get_currencies_of_country(country_code):
+def get_currencies_of_country(country_code: str) -> List[Currency]:
     """
     Returns list with currency object(s) given the country's ISO-2 code.
     Raises a CountryDoesNotExist exception if the country is not found.
@@ -341,7 +392,7 @@ def get_currencies_of_country(country_code):
     )
 
 
-def list_all_currencies():
+def list_all_currencies() -> List[Currency]:
     return sorted(CURRENCIES.values(), key=lambda c: c.code)
 
 

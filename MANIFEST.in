@@ -6,6 +6,7 @@ include requirements*.txt
 include *.yml
 include *.yaml
 include *.sh
+include moneyed/py.typed
 recursive-include docs *.bat
 recursive-include docs *.py
 recursive-include docs *.rst

@@ -35,6 +35,7 @@ setup(
     license="BSD",
     install_requires=[
         "babel>=2.8.0",
+        "typing-extensions>=3.7.4.3",
     ],
     classifiers=[
         "Programming Language :: Python",
