@@ -5,13 +5,14 @@
     Money(amount=10)
   out: |
     main:2: error: No overload variant of "Money" matches argument type "int"  [call-overload]
-    main:2: note:     def Money(self, amount: object = ..., *, currency: Union[str, Currency]) -> Money
-    main:2: note:     def Money(self, amount: object, currency: Union[str, Currency]) -> Money
+    main:2: note:     def __init__(self, amount: object = ..., *, currency: Union[str, Currency]) -> Money
+    main:2: note:     def __init__(self, amount: object, currency: Union[str, Currency]) -> Money
     main:2: note: Possible overload variants:
     main:3: error: No overload variant of "Money" matches argument type "int"  [call-overload]
-    main:3: note:     def Money(self, amount: object = ..., *, currency: Union[str, Currency]) -> Money
-    main:3: note:     def Money(self, amount: object, currency: Union[str, Currency]) -> Money
+    main:3: note:     def __init__(self, amount: object = ..., *, currency: Union[str, Currency]) -> Money
+    main:3: note:     def __init__(self, amount: object, currency: Union[str, Currency]) -> Money
     main:3: note: Possible overload variants:
+  disable_cache: true
 
 - case: can_instantiate_money
   main: |
