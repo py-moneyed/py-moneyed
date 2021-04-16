@@ -24,7 +24,3 @@ format currencies that have been derived from the large `CLDR database
 If you do ``str()`` on a ``Money`` object, you will get the same behaviour as
 ``format_money()``, but with no options supplied, so you will get the system
 default locale.
-
-There is also a deprecated ``format_money`` function in
-``moneyed.localization``, which has a different signature, and relied on our own
-very incomplete lists of formats.
