@@ -17,7 +17,6 @@ from moneyed.classes import (
     get_currency,
     list_all_currencies,
 )
-from moneyed.localization import format_money
 
 
 class CustomDecimal(Decimal):
@@ -143,45 +142,6 @@ class TestMoney:
 
     def test_hash(self):
         assert self.one_million_bucks in {self.one_million_bucks}
-
-    def test_format_money(self):
-        # Two decimal places by default
-        assert format_money(self.one_million_bucks) == "US$1,000,000.00"
-        # No decimal point without fractional part
-        assert format_money(self.one_million_bucks, decimal_places=0) == "US$1,000,000"
-        # Locale format not included, should fallback to DEFAULT
-        assert format_money(self.one_million_bucks, locale="es_ES") == "US$1,000,000.00"
-        # locale == pl_PL
-        one_million_pln = Money("1000000", "PLN")
-        # Two decimal places by default
-        assert format_money(one_million_pln, locale="pl_PL") == "1 000 000,00 zł"
-        assert format_money(self.one_million_bucks, locale="pl_PL") == "US$1 000 000,00"
-        # No decimal point without fractional part
-        assert (
-            format_money(one_million_pln, locale="pl_PL", decimal_places=0)
-            == "1 000 000 zł"
-        )
-
-    def test_format_money_fr(self):
-        # locale == fr_FR
-        one_million_eur = Money("1000000", "EUR")
-        one_million_cad = Money("1000000", "CAD")
-        assert format_money(one_million_eur, locale="fr_FR") == "1 000 000,00 €"
-        assert (
-            format_money(self.one_million_bucks, locale="fr_FR") == "1 000 000,00 $ US"
-        )
-        assert format_money(one_million_cad, locale="fr_FR") == "1 000 000,00 $ CA"
-        # No decimal point without fractional part
-        assert (
-            format_money(one_million_eur, locale="fr_FR", decimal_places=0)
-            == "1 000 000 €"
-        )
-        # locale == fr_CA
-        assert format_money(one_million_cad, locale="fr_CA") == "1 000 000,00 $"
-        assert (
-            format_money(self.one_million_bucks, locale="fr_CA") == "1 000 000,00 $ US"
-        )
-        assert format_money(one_million_eur, locale="fr_CA") == "1 000 000,00 €"
 
     def test_add(self):
         assert self.one_million_bucks + self.one_million_bucks == Money(
