@@ -70,7 +70,9 @@ class Currency:
 
         Consider using get_name() instead, or babel.numbers.get_currency_name()
         """
-        return self._name if self._name is not None else self.get_name("en_US")
+        if self._name is not None:
+            return self._name
+        return self.get_name("en_US")
 
     def get_name(self, locale: str, count: Optional[int] = None) -> str:
         from babel.numbers import get_currency_name
@@ -91,14 +93,12 @@ class Currency:
         convert these to a country name in your desired locale.
 
         """
-        return (
-            self._countries
-            if self._countries is not None
-            else [
-                get_country_name(country_code, "en_US").upper()
-                for country_code in self.country_codes
-            ]
-        )
+        if self._countries is not None:
+            return self._countries
+        return [
+            get_country_name(country_code, "en_US").upper()
+            for country_code in self.country_codes
+        ]
 
     @cached_property
     def country_codes(self) -> List[str]:
