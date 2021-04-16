@@ -1,5 +1,6 @@
 import warnings
 from decimal import Decimal
+from numbers import Number
 
 from babel import Locale
 from babel.core import get_global
@@ -186,6 +187,8 @@ class Money:
                     "Multiplying Money instances with floats is deprecated",
                     DeprecationWarning,
                 )
+            if not isinstance(other, Number):
+                return NotImplemented
             return self.__class__(
                 amount=(self.amount * force_decimal(other)),
                 currency=self.currency,
@@ -202,13 +205,15 @@ class Money:
                     "Dividing Money instances by floats is deprecated",
                     DeprecationWarning,
                 )
+            if not isinstance(other, Number):
+                return NotImplemented
             return self.__class__(
                 amount=(self.amount / force_decimal(other)),
                 currency=self.currency,
             )
 
     def __rtruediv__(self, other):
-        raise TypeError("Cannot divide non-Money by a Money instance.")
+        return NotImplemented
 
     def round(self, ndigits=0):
         """

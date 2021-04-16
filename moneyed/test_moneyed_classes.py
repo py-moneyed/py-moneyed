@@ -234,6 +234,23 @@ class TestMoney:
         with pytest.raises(TypeError):
             self.one_million_bucks * self.one_million_bucks
 
+    def test_mul_non_standard_numeric_type(self):
+        # See #153
+
+        class Double:
+            def __mul__(self, other):
+                return other * 2
+
+            def __rmul__(self, other):
+                return other * 2
+
+        assert Money(amount=10, currency="EUR") * Double() == Money(
+            amount=20, currency="EUR"
+        )
+        assert Double() * Money(amount=10, currency="EUR") == Money(
+            amount=20, currency="EUR"
+        )
+
     def test_div(self):
         x = Money(amount=50, currency=self.USD)
         y = Money(amount=2, currency=self.USD)
@@ -255,6 +272,24 @@ class TestMoney:
         y = Money(amount=50, currency=self.USD)
         with pytest.raises(TypeError):
             assert x / y == Money(amount=25, currency=self.USD)
+
+    def test_div_non_standard_numeric_type(self):
+        # See #153
+
+        class Half:
+            def __truediv__(self, other):
+                return other / 2
+
+            def __rtruediv__(self, other):
+                # x / (1 / 2) == x * 2
+                return other * 2
+
+        assert Half() / Money(amount=10, currency="EUR") == Money(
+            amount=5, currency="EUR"
+        )
+        assert Money(amount=10, currency="EUR") / Half() == Money(
+            amount=20, currency="EUR"
+        )
 
     def test_div_float_warning(self):
         # This should be changed to TypeError exception after deprecation period is over.

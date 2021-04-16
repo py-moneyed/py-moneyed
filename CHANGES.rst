@@ -12,6 +12,8 @@ Unreleased - TBA
 * Updated pre-commit hooks.
 * Replaced custom flake8, isort and check-manifest Github Action jobs with a generic
   pre-commit job.
+* Do not cast non-Money instances to ``Decimal`` in ``Money.__mul__``, ``Money.__truediv__`` and ``Money.__rtruediv__``.
+  It allows ``Money`` to work with non-standard numeric types that implement their own respective arithmetic operations.
 
 1.2 (2020-02-23)
 ----------------
