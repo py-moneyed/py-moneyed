@@ -7,7 +7,6 @@ from babel.core import get_global
 
 from moneyed.classes import (
     CURRENCIES,
-    DEFAULT_CURRENCY,
     USD,
     Currency,
     Money,
@@ -41,8 +40,8 @@ class CustomClassAdd:
 
 class TestCurrency:
     def setup_method(self, method):
-        self.default_curr_code = "XYZ"
-        self.default_curr = CURRENCIES[self.default_curr_code]
+        self.code = "CHF"
+        self.instance = CURRENCIES[self.code]
 
     def test_init(self):
         US_dollars = Currency(
@@ -69,20 +68,20 @@ class TestCurrency:
         assert USD.get_name("en_GB", count=10) == "US dollars"
 
     def test_repr(self):
-        assert str(self.default_curr) == self.default_curr_code
+        assert str(self.instance) == self.code
 
     def test_hash(self):
-        assert self.default_curr in {self.default_curr}
+        assert self.instance in {self.instance}
 
     def test_compare(self):
-        other = deepcopy(self.default_curr)
+        other = deepcopy(self.instance)
         # equality
-        assert self.default_curr == CURRENCIES["XYZ"]
-        assert self.default_curr == other
+        assert self.instance == CURRENCIES["CHF"]
+        assert self.instance == other
         # non-equality
         other.code = "USD"
-        assert self.default_curr != other
-        assert self.default_curr != CURRENCIES["USD"]
+        assert self.instance != other
+        assert self.instance != CURRENCIES["USD"]
 
     def test_fetching_currency_by_iso_code(self):
         assert get_currency("USD") == USD
@@ -114,14 +113,15 @@ class TestMoney:
         assert one_million_dollars.amount == self.one_million_decimal
         assert one_million_dollars.currency == self.USD
 
-    def test_init_default_currency(self):
-        one_million = self.one_million_decimal
-        one_million_dollars = Money(amount=one_million)  # No currency given!
-        assert one_million_dollars.amount == one_million
-        assert one_million_dollars.currency == DEFAULT_CURRENCY
+    def test_init_omit_currency(self):
+        with pytest.raises(
+            TypeError,
+            match=r"__init__\(\) missing 1 required positional argument: 'currency'",
+        ):
+            Money(amount=self.one_million_decimal)
 
     def test_init_float(self):
-        one_million_dollars = Money(amount=1000000.0)
+        one_million_dollars = Money(amount=1000000.0, currency="PEN")
         assert one_million_dollars.amount == self.one_million_decimal
 
     def test_repr(self):
@@ -154,7 +154,7 @@ class TestMoney:
 
     def test_add_with_custom_class_add(self):
         custom_class_add = CustomClassAdd()
-        assert Money(1000) + custom_class_add == "ok"
+        assert Money(1000, "SOS") + custom_class_add == "ok"
 
     def test_sub(self):
         zeroed_test = self.one_million_bucks - self.one_million_bucks
@@ -178,14 +178,14 @@ class TestMoney:
         # This should be changed to TypeError exception after deprecation period is over.
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
-            Money(amount="10") * 1.2
+            Money("10", currency="ZMW") * 1.2
             assert "Multiplying Money instances with floats is deprecated" in [
                 w.message.args[0] for w in warning_list
             ]
 
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
-            1.2 * Money(amount="10")
+            1.2 * Money(amount="10", currency="XAG")
             assert "Multiplying Money instances with floats is deprecated" in [
                 w.message.args[0] for w in warning_list
             ]
@@ -220,7 +220,7 @@ class TestMoney:
         # This should be changed to TypeError exception after deprecation period is over.
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
-            Money(amount="10") / 1.2
+            Money(amount="10", currency=USD) / 1.2
             assert "Dividing Money instances by floats is deprecated" in [
                 w.message.args[0] for w in warning_list
             ]
@@ -236,7 +236,7 @@ class TestMoney:
         # This should be changed to TypeError exception after deprecation period is over.
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
-            2.0 % Money(amount="10")
+            2.0 % Money("10", USD)
             assert (
                 "Calculating percentages of Money instances using floats is deprecated"
                 in [w.message.args[0] for w in warning_list]

@@ -9,9 +9,6 @@ from typing_extensions import Final, Protocol
 from .l10n import format_money
 from .utils import cached_property
 
-# Default, non-existent, currency
-DEFAULT_CURRENCY_CODE = "XYZ"
-
 
 def force_decimal(amount: object) -> Decimal:
     """Given an amount of unknown type, type cast it to be a Decimal."""
@@ -152,11 +149,30 @@ class Money:
     ($DEITY forbid) floats.
     """
 
+    # Overload __init__ to make omitting currency an error that is discoverable through
+    # static type checking. To explain the two signatures: the first one allows omitting
+    # the amount if currency is given as a key-word argument. The second signature
+    # allows calls where both values are given, either as key-word or positional
+    # arguments. As an argument with a default value cannot be followed by one without,
+    # the implementation defines `None` as default for currency, but raises a TypeError
+    # for that case.
+    @overload
+    def __init__(self, amount: object = ..., *, currency: Union[str, Currency]) -> None:
+        ...
+
+    @overload
+    def __init__(self, amount: object, currency: Union[str, Currency]) -> None:
+        ...
+
     def __init__(
         self,
         amount: object = Decimal("0.0"),
-        currency: Union[str, Currency] = DEFAULT_CURRENCY_CODE,
+        currency: Union[str, Currency, None] = None,
     ) -> None:
+        if currency is None:
+            raise TypeError(
+                "__init__() missing 1 required positional argument: 'currency'"
+            )
         self.amount: Final = (
             amount if isinstance(amount, Decimal) else Decimal(str(amount))
         )
@@ -395,8 +411,6 @@ def get_currencies_of_country(country_code: str) -> List[Currency]:
 def list_all_currencies() -> List[Currency]:
     return sorted(CURRENCIES.values(), key=lambda c: c.code)
 
-
-DEFAULT_CURRENCY = add_currency(DEFAULT_CURRENCY_CODE, None, 1, "Default currency.", [])
 
 # The order of registration is important because we want active currencies to be available via `get_currency`.
 # For this reason, we have obsolete currencies first, and then they may be overridden by active ones

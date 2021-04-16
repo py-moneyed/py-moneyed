@@ -15,6 +15,10 @@ Unreleased - TBA
 * Dropped the ``moneyed.localization`` module that was deprecated and announced for
   removal in 1.0.
 * Added type hints along with a mypy pre-commit hook.
+* Removed undocumented ``DEFAULT_CURRENCY`` and ``DEFAULT_CURRENCY_CODE`` constants, and
+  change to make instantiating ``Money`` without providing a currency a type error. This
+  used to result in an object with a made-up ``"XYZ"`` currency, which could lead to
+  surprising behaviors and bugs.
 
 1.2 (2020-02-23)
 ----------------

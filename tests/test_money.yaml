@@ -1,0 +1,21 @@
+- case: instantiating_money_without_currency_gives_error
+  main: |
+    from moneyed import Money
+    Money(10)
+    Money(amount=10)
+  out: |
+    main:2: error: No overload variant of "Money" matches argument type "int"  [call-overload]
+    main:2: note:     def Money(self, amount: object = ..., *, currency: Union[str, Currency]) -> Money
+    main:2: note:     def Money(self, amount: object, currency: Union[str, Currency]) -> Money
+    main:2: note: Possible overload variants:
+    main:3: error: No overload variant of "Money" matches argument type "int"  [call-overload]
+    main:3: note:     def Money(self, amount: object = ..., *, currency: Union[str, Currency]) -> Money
+    main:3: note:     def Money(self, amount: object, currency: Union[str, Currency]) -> Money
+    main:3: note: Possible overload variants:
+
+- case: can_instantiate_money
+  main: |
+    from moneyed import Money, USD, get_currency
+    Money(10, "SEK")
+    Money(amount=10, currency=get_currency("DKK"))
+    Money(10, currency=USD)
