@@ -21,18 +21,15 @@ jobs:
     - uses: actions/cache@v2
       with:
           path: ~/.cache/pip
-          key: >-
-            ${{ runner.os }}
-            -pip
-            -${{ matrix.python-version }}
-            -${{ hashFiles('requirements*.txt') }}
-            -${{ hashFiles('setup.py') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('requirements*.txt') }}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install tox tox-gh-actions
-    - name: Run tests
-      run: tox
+        pip install -e .
+        pip install -r requirements-test.txt
+    - name: Test with pytest
+      run: |
+        pytest --mypy-ini-file=setup.cfg
 
   lint:
     name: Lint
