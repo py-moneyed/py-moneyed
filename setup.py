@@ -2,7 +2,7 @@
 
 import sys
 
-from setuptools import setup
+from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
 
 
@@ -22,7 +22,7 @@ class Tox(TestCommand):
 
 setup(
     name="py-moneyed",
-    packages=["moneyed"],
+    packages=find_packages(where="src"),
     version="1.2",
     description="Provides Currency and Money classes for use in your Python code.",
     author="Kai",
@@ -59,4 +59,5 @@ setup(
     tests_require=["tox>=1.6.0", "pytest>=2.3.0"],
     cmdclass={"test": Tox},
     include_package_data=True,
+    package_dir={"": "src"},
 )

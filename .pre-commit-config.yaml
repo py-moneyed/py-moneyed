@@ -37,3 +37,5 @@ repos:
     -   id: mypy
         args: []
         exclude: ^(docs/|setup.py$)
+        additional_dependencies:
+            - pytest

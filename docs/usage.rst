@@ -39,7 +39,7 @@ you can also write:
     >>> from moneyed import Money, USD
     >>> price = Money('19.50', USD)
     >>> price
-    <Money: 19.50 USD>
+    Money('19.50', 'USD')
 
     >>> price.amount
     Decimal('19.50')
@@ -78,9 +78,9 @@ function returns an empty list. The code below demonstrates this:
 
     >>> from moneyed import get_currencies_of_country
     >>> get_currencies_of_country("IN")
-    [Currency(INR)]
-    >>> get_currencies_of_country("TV")
-    [Currency(AUD), Currency(TVD)]
+    [INR]
+    >>> get_currencies_of_country("BO")
+    [BOB, BOV]
     >>> get_currencies_of_country("XX")
     []
 
@@ -109,6 +109,6 @@ You can get all installed currencies as below:
 
    >>> from moneyed import list_all_currencies
    >>> list_all_currencies()
-   [ADP, AED, AFA,...]
+   [ADP, AED, AFA, ...]
 
 The result is a list of :class:`Currency` objects, sorted by ISO code.

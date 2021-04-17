@@ -1,15 +1,13 @@
 include *.rst
 include CONTRIBUTORS
 include LICENSE
-include tox.ini
-include requirements*.txt
-include *.yml
-include *.yaml
-include *.sh
-include moneyed/py.typed
+include src/**/py.typed
 recursive-include docs *.bat
 recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include docs Makefile
-recursive-exclude tests *.py
-recursive-exclude tests *.yaml
+recursive-exclude tests *
+exclude *.yaml
+exclude *.yml
+exclude requirements-*.txt
+exclude tox.ini

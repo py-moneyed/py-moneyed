@@ -287,7 +287,7 @@ class Money:
         Example:
         >>> money = Money(200, 'USD')
         >>> 5 % money
-        USD 10.00
+        Money('10', 'USD')
         """
         if isinstance(other, Money):
             raise TypeError("Invalid __rmod__ operation")
