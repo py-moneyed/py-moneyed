@@ -12,10 +12,6 @@ Release process
 
 * Commit to VCS
 
-* Release to PyPI::
-
-    $ ./release.sh
-
 * Tag the release e.g.::
 
     git tag v0.7
