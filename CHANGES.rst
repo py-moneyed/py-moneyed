@@ -15,6 +15,8 @@ Unreleased - TBA
 * Dropped the ``moneyed.localization`` module that was deprecated and announced for
   removal in 1.0.
 * Added type hints along with a mypy pre-commit hook.
+* Added action for building and publishing releases, along with the
+  check-github-workflows pre-commit hook for validating Github Action workflow files.
 
 1.2 (2020-02-23)
 ----------------
