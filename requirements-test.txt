@@ -1,5 +1,4 @@
-# Normal deps, pinned:
-babel==2.8.0
+-e .
 
 # Test deps:
 pytest

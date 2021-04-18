@@ -33,13 +33,13 @@ If you would like to contribute to py-moneyed, the recommended workflow is:
 Testing
 -------
 
-To run the test suite, first install the deps (into your virtualenv)::
+To run the test suite, first install tox (into your virtualenv)::
 
-  pip install -r requirements-test.txt
+  pip install tox
 
-Run the tests using py.test::
+Run the tests using tox::
 
-  py.test
+  tox -e py39
 
 You can run the test suite on all supported environments using tox_
 (recommended). If you do not have all versions of Python that are used in

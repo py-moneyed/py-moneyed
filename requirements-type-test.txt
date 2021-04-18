@@ -1,0 +1,4 @@
+-r requirements-test.txt
+
+pytest-mypy-plugins
+mypy>=0.812

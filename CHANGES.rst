@@ -17,6 +17,10 @@ Unreleased - TBA
 * Added type hints along with a mypy pre-commit hook.
 * Added action for building and publishing releases, along with the
   check-github-workflows pre-commit hook for validating Github Action workflow files.
+* Removed undocumented ``DEFAULT_CURRENCY`` and ``DEFAULT_CURRENCY_CODE`` constants, and
+  change to make instantiating ``Money`` without providing a currency a type error. This
+  used to result in an object with a made-up ``"XYZ"`` currency, which could lead to
+  surprising behaviors and bugs.
 
 1.2 (2020-02-23)
 ----------------
