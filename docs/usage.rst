@@ -65,6 +65,23 @@ If you want to get the amount in sub units (ISO 4127 compatible) you can do:
     12345
 
 
+Currency instances have a ``zero`` property for convenience. It returns a cached
+``Money`` instance of the currency. This can be helpful for instance when summing up a
+list of money instances using the builtin ``sum()``.
+
+.. code-block:: python
+
+    >>> from moneyed import Money, USD
+    >>> currency = USD
+    >>> items = (Money('19.99', currency), Money('25.00', currency))
+
+    >>> sum(items, currency.zero)
+    Money('44.99', 'USD')
+
+    >>> sum((), currency.zero)
+    Money('0', 'USD')
+
+
 Search by Country Code
 ----------------------
 
