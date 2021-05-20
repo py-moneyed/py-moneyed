@@ -94,6 +94,11 @@ class TestCurrency:
         assert get_currencies_of_country("BT") == [Currency("BTN"), Currency("INR")]
         assert get_currencies_of_country("XX") == []
 
+    def test_zero_property(self):
+        assert USD.zero == Money(0, "USD")
+        assert USD.zero is USD.zero
+        assert CURRENCIES["SEK"].zero == Money(0, "SEK")
+
 
 class TestMoney:
     def setup_method(self, method):

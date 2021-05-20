@@ -81,6 +81,10 @@ class Currency:
         )
 
     @cached_property
+    def zero(self) -> "Money":
+        return Money(0, self)
+
+    @cached_property
     def countries(self) -> List[str]:
         """
         List of country names, uppercased and in US locale, where the currency is
