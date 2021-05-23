@@ -9,5 +9,4 @@ recursive-include docs Makefile
 recursive-exclude tests *
 exclude *.yaml
 exclude *.yml
-exclude requirements-*.txt
 exclude tox.ini

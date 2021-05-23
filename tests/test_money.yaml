@@ -23,3 +23,4 @@
     Money(10, "SEK")
     Money(amount=10, currency=get_currency("DKK"))
     Money(10, currency=USD)
+  disable_cache: true

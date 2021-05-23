@@ -23,6 +23,8 @@ Unreleased - TBA
   surprising behaviors and bugs.
 * Added ``zero`` property to ``Currency`` to conveniently access the zero value of a
   given currency.
+* Moved to use setuptool's declarative packaging config and PEP 517 isolated builds.
+* Removed requirements files and instead specified test requirements using extras.
 
 1.2 (2020-02-23)
 ----------------
