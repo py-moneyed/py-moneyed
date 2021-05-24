@@ -21,6 +21,8 @@ Unreleased - TBA
   change to make instantiating ``Money`` without providing a currency a type error. This
   used to result in an object with a made-up ``"XYZ"`` currency, which could lead to
   surprising behaviors and bugs.
+* Added ``zero`` property to ``Currency`` to conveniently access the zero value of a
+  given currency.
 
 1.2 (2020-02-23)
 ----------------
