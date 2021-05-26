@@ -26,17 +26,17 @@ Unreleased - TBA
 * Moved to use setuptool's declarative packaging config and PEP 517 isolated builds.
 * Removed requirements files and instead specified test requirements using extras.
 
-1.2 (2020-02-23)
+1.2 (2021-02-23)
 ----------------
 * ``Money.__add__`` returns ``NotImplemented`` instead of raising an exception when another operand has unsupported type.
 
-1.1 (2020-01-15)
+1.1 (2021-01-15)
 ----------------
 * Changed the ``numeric`` attribute values to ``None`` for currencies that don't have assigned ISO numeric codes: ``IMP``, ``TVD``, ``XFO``, ``XFU``.
 * Restored the previous definition for the ``XXX`` currency, including its ``name`` and ``countries`` attributes.
 * Fixed ``get_currency`` returning obsolete currencies.
 
-1.0 (2020-01-09)
+1.0 (2021-01-09)
 ----------------
 * Dropped official support for Python 2.6, 3.2, 3.3, 3.4 (mainly because
   our test tools don't support them any more).
