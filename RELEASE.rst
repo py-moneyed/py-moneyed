@@ -5,7 +5,7 @@ Release process
 
 * Change version number in:
 
-  * setup.py
+  * setup.cfg
   * docs/conf.py
 
 * Fix 'CHANGES.rst' so the top section says "[new version number] [date]"
