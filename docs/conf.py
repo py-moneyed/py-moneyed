@@ -22,7 +22,7 @@ copyright = "2021, Kai Wu"
 author = "Kai Wu"
 
 # The full version, including alpha/beta/rc tags
-release = "1.2"
+release = "2.0"
 
 
 # -- General configuration ---------------------------------------------------

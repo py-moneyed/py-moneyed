@@ -6,6 +6,9 @@ Significant or incompatible changes listed here.
 
 Unreleased - TBA
 ----------------
+
+2.0 (2021-05-26)
+----------------
 * Dropped support for Python 2.7 and 3.5 and PyPy 2.
 * Added pyupgrade pre-commit hook.
 * Added black pre-commit hook and reformatted codebase.
