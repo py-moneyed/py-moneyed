@@ -13,7 +13,7 @@ from .utils import cached_property
 def force_decimal(amount: object) -> Decimal:
     """Given an amount of unknown type, type cast it to be a Decimal."""
     if not isinstance(amount, Decimal):
-        return Decimal(str(amount))
+        return Decimal(str(amount).replace(",", "."))
     return amount
 
 
