@@ -404,11 +404,9 @@ def get_currencies_of_country(country_code: str) -> List[Currency]:
     """
     country_code = country_code.upper()
     return sorted(
-        [
-            currency
-            for currency in CURRENCIES.values()
-            if country_code in currency.country_codes
-        ]
+        currency
+        for currency in CURRENCIES.values()
+        if country_code in currency.country_codes
     )
 
 

@@ -39,14 +39,14 @@ To run the test suite, first install tox (into your virtualenv)::
 
 Run the tests using tox::
 
-  tox -e py39
+  tox -e py310
 
 You can run the test suite on all supported environments using tox_
 (recommended). If you do not have all versions of Python that are used in
 testing, you can use pyenv_ to install them, and you may benefit from the
 additional plugin pyenv-implict_.
 
-The py-moneyed package is tested against Python 3.6 - 3.9 and PyPy 3.
+The py-moneyed package is tested against Python 3.7 - 3.10 and PyPy 3.
 
 .. _tox: https://tox.readthedocs.io/en/latest/
 .. _pyenv: https://github.com/pyenv/pyenv
