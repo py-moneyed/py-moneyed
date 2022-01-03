@@ -400,9 +400,7 @@ class ExtendedMoney(Money):
 
 
 def test_all_babel_currencies():
-    missing = sorted(
-        list(set(get_global("all_currencies").keys()) - set(CURRENCIES.keys()))
-    )
+    missing = sorted(set(get_global("all_currencies").keys()) - set(CURRENCIES.keys()))
     assert (
         missing == []
     ), "The following currencies defined in Babel are missing: " + ", ".join(missing)
