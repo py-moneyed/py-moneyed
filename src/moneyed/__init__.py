@@ -1,1 +1,1 @@
-from .classes import *  # NOQA
+from .classes import *
