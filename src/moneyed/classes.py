@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import warnings
 from decimal import Decimal
-from typing import Any, NoReturn, Optional, TypeVar, Union, overload
+from typing import Any, NoReturn, TypeVar, overload
 
 from babel import Locale
 from babel.core import get_global
@@ -30,10 +30,10 @@ class Currency:
     def __init__(
         self,
         code: str = "",
-        numeric: Optional[str] = None,
+        numeric: str | None = None,
         sub_unit: int = 1,
-        name: Optional[str] = None,
-        countries: Optional[list[str]] = None,
+        name: str | None = None,
+        countries: list[str] | None = None,
     ) -> None:
         self.code: Final = code
         self.numeric: Final = numeric
@@ -73,7 +73,7 @@ class Currency:
             return self._name
         return self.get_name("en_US")
 
-    def get_name(self, locale: str, count: Optional[int] = None) -> str:
+    def get_name(self, locale: str, count: int | None = None) -> str:
         from babel.numbers import get_currency_name
 
         return get_currency_name(  # type: ignore[no-any-return]
@@ -133,7 +133,7 @@ class MoneyComparisonError(TypeError):
 
 
 class CurrencyDoesNotExist(Exception):
-    def __init__(self, code: Optional[str]) -> None:
+    def __init__(self, code: str | None) -> None:
         super().__init__(f"No currency with code {code} is defined.")
 
 
@@ -163,17 +163,17 @@ class Money:
     # the implementation defines `None` as default for currency, but raises a TypeError
     # for that case.
     @overload
-    def __init__(self, amount: object = ..., *, currency: Union[str, Currency]) -> None:
+    def __init__(self, amount: object = ..., *, currency: str | Currency) -> None:
         ...
 
     @overload
-    def __init__(self, amount: object, currency: Union[str, Currency]) -> None:
+    def __init__(self, amount: object, currency: str | Currency) -> None:
         ...
 
     def __init__(
         self,
         amount: object = Decimal("0.0"),
-        currency: Union[str, Currency, None] = None,
+        currency: str | Currency | None = None,
     ) -> None:
         if currency is None:
             raise TypeError(
@@ -246,7 +246,7 @@ class Money:
                 currency=self.currency,
             )
 
-    def __truediv__(self: M, other: object) -> Union[M, Decimal]:
+    def __truediv__(self: M, other: object) -> M | Decimal:
         if isinstance(other, Money):
             if self.currency != other.currency:
                 raise TypeError("Cannot divide two different currencies.")
@@ -265,7 +265,7 @@ class Money:
     def __rtruediv__(self, other: object) -> NoReturn:
         raise TypeError("Cannot divide non-Money by a Money instance.")
 
-    def round(self: M, ndigits: Optional[int] = 0) -> M:
+    def round(self: M, ndigits: int | None = 0) -> M:
         """
         Rounds the amount using the current ``Decimal`` rounding algorithm.
         """
@@ -360,10 +360,10 @@ CURRENCIES_BY_ISO: dict[str, Currency] = {}
 
 def add_currency(
     code: str,
-    numeric: Optional[str],
+    numeric: str | None,
     sub_unit: int = 1,
-    name: Optional[str] = None,
-    countries: Optional[list[str]] = None,
+    name: str | None = None,
+    countries: list[str] | None = None,
 ) -> Currency:
     currency = Currency(
         code=code, numeric=numeric, sub_unit=sub_unit, name=name, countries=countries
@@ -381,13 +381,11 @@ def get_currency(code: str) -> Currency:
 
 
 @overload
-def get_currency(*, iso: Union[int, str]) -> Currency:
+def get_currency(*, iso: int | str) -> Currency:
     ...
 
 
-def get_currency(
-    code: Optional[str] = None, iso: Union[int, str, None] = None
-) -> Currency:
+def get_currency(code: str | None = None, iso: int | str | None = None) -> Currency:
     try:
         if iso:
             return CURRENCIES_BY_ISO[str(iso)]
