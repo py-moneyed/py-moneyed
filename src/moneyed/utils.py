@@ -1,4 +1,7 @@
-from typing import Callable, Generic, TypeVar
+from __future__ import annotations
+
+from collections.abc import Callable
+from typing import Generic, TypeVar
 
 A = TypeVar("A")
 R = TypeVar("R")

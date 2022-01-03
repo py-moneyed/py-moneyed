@@ -1,14 +1,16 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 from babel.numbers import LC_NUMERIC
 from babel.numbers import format_currency as babel_format_currency
 
 if TYPE_CHECKING:
-    from . import Money
+    from .classes import Money
 
 
 def format_money(
-    money: "Money",
+    money: Money,
     format: Optional[str] = None,
     locale: str = LC_NUMERIC,
     currency_digits: bool = True,

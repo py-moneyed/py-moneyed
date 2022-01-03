@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import warnings
 from decimal import Decimal
-from typing import Any, Dict, List, NoReturn, Optional, TypeVar, Union, overload
+from typing import Any, NoReturn, Optional, TypeVar, Union, overload
 
 from babel import Locale
 from babel.core import get_global
@@ -31,7 +33,7 @@ class Currency:
         numeric: Optional[str] = None,
         sub_unit: int = 1,
         name: Optional[str] = None,
-        countries: Optional[List[str]] = None,
+        countries: Optional[list[str]] = None,
     ) -> None:
         self.code: Final = code
         self.numeric: Final = numeric
@@ -54,10 +56,10 @@ class Currency:
     def __repr__(self) -> str:
         return self.code
 
-    def __lt__(self, other: "Currency") -> bool:
+    def __lt__(self, other: Currency) -> bool:
         return self.code < other.code
 
-    def __le__(self, other: "Currency") -> bool:
+    def __le__(self, other: Currency) -> bool:
         return self.code <= other.code
 
     @cached_property
@@ -81,11 +83,11 @@ class Currency:
         )
 
     @cached_property
-    def zero(self) -> "Money":
+    def zero(self) -> Money:
         return Money(0, self)
 
     @cached_property
-    def countries(self) -> List[str]:
+    def countries(self) -> list[str]:
         """
         List of country names, uppercased and in US locale, where the currency is
         used at present.
@@ -102,7 +104,7 @@ class Currency:
         ]
 
     @cached_property
-    def country_codes(self) -> List[str]:
+    def country_codes(self) -> list[str]:
         """
         List of current country codes for the currency.
         """
@@ -352,8 +354,8 @@ class Money:
 # Definitions of ISO 4217 Currencies
 # Source: http://www.iso.org/iso/support/faqs/faqs_widely_used_standards/widely_used_standards_other/currency_codes/currency_codes_list-1.htm  # noqa
 
-CURRENCIES: Dict[str, Currency] = {}
-CURRENCIES_BY_ISO: Dict[str, Currency] = {}
+CURRENCIES: dict[str, Currency] = {}
+CURRENCIES_BY_ISO: dict[str, Currency] = {}
 
 
 def add_currency(
@@ -361,7 +363,7 @@ def add_currency(
     numeric: Optional[str],
     sub_unit: int = 1,
     name: Optional[str] = None,
-    countries: Optional[List[str]] = None,
+    countries: Optional[list[str]] = None,
 ) -> Currency:
     currency = Currency(
         code=code, numeric=numeric, sub_unit=sub_unit, name=name, countries=countries
@@ -394,7 +396,7 @@ def get_currency(
         raise CurrencyDoesNotExist(code)
 
 
-def get_currencies_of_country(country_code: str) -> List[Currency]:
+def get_currencies_of_country(country_code: str) -> list[Currency]:
     """
     Returns list with currency object(s) given the country's ISO-2 code.
     Raises a CountryDoesNotExist exception if the country is not found.
@@ -410,7 +412,7 @@ def get_currencies_of_country(country_code: str) -> List[Currency]:
     )
 
 
-def list_all_currencies() -> List[Currency]:
+def list_all_currencies() -> list[Currency]:
     return sorted(CURRENCIES.values(), key=lambda c: c.code)
 
 
