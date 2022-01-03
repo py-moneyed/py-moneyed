@@ -17,7 +17,7 @@ class cached_property(Generic[A, R]):
 
     def __init__(self, func: Callable[[A], R]) -> None:
         self.func = func
-        self.__doc__ = getattr(func, "__doc__")
+        self.__doc__ = func.__doc__
 
     def __get__(self, instance: A, type: type) -> R:
         res = instance.__dict__[self.func.__name__] = self.func(instance)
