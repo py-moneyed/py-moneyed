@@ -411,5 +411,5 @@ def test_all_babel_currencies():
 def test_list_all_currencies():
     all_currencies = list_all_currencies()
     assert len(all_currencies) > 100
-    assert [c.code for c in all_currencies[0:3]] == ["ADP", "AED", "AFA"]
+    assert [c.code for c in all_currencies[:3]] == ["ADP", "AED", "AFA"]
     assert all(isinstance(c, Currency) for c in all_currencies)
