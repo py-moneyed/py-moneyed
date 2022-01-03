@@ -152,6 +152,9 @@ class SupportsNeg(Protocol):
         ...
 
 
+zero = Decimal("0.0")
+
+
 class Money:
     """
     A Money instance is a combination of data - an amount and a
@@ -177,7 +180,7 @@ class Money:
 
     def __init__(
         self,
-        amount: object = Decimal("0.0"),
+        amount: object = zero,
         currency: str | Currency | None = None,
     ) -> None:
         if currency is None:
