@@ -2,14 +2,19 @@ from __future__ import annotations
 
 import warnings
 from decimal import Decimal
-from typing import Any, NoReturn, TypeVar, overload
+from typing import TYPE_CHECKING, TypeVar, overload
 
 from babel import Locale
 from babel.core import get_global
-from typing_extensions import Final, Protocol
+from typing_extensions import Protocol
 
 from .l10n import format_money
 from .utils import cached_property
+
+if TYPE_CHECKING:
+    from typing import Any, NoReturn
+
+    from typing_extensions import Final
 
 
 def force_decimal(amount: object) -> Decimal:
