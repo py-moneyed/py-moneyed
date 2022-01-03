@@ -37,7 +37,6 @@ repos:
     rev: "v0.930"
     hooks:
       - id: mypy
-        args: [ ]
         exclude: ^(docs/|setup.py$)
         additional_dependencies:
           - pytest
