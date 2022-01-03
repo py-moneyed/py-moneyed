@@ -4,7 +4,7 @@ from moneyed import USD, Money
 
 
 @pytest.fixture(autouse=True)
-def add_entities(doctest_namespace: dict[str, object]) -> None:
+def _add_entities(doctest_namespace: dict[str, object]) -> None:
     """
     Inserts entities into doctest namespaces so that imports don't have to be added to
     all examples.
