@@ -13,19 +13,14 @@ jobs:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "pypy-3.8"]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: actions/cache@v2
-      with:
-          path: ~/.cache/pip
-          key: >-
-            ${{ runner.os }}
-            -pip
-            -${{ matrix.python-version }}
-            -${{ hashFiles('setup.cfg') }}
+        cache: pip
+        cache-dependency-path: setup.cfg
+        check-latest: true
     - name: Install dependencies
       run: python -m pip install --upgrade pip tox tox-gh-actions
     - name: Run tests
