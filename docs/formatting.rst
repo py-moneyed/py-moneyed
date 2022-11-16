@@ -6,7 +6,7 @@ You can print :class:`Money` object as follows:
 .. code-block:: python
 
    >>> from moneyed.l10n import format_money
-   >>> format_money(Money(10, USD), locale='en_US')
+   >>> format_money(Money(10, 'USD'), locale='en_US')
    '$10.00'
 
 Note that you need to specify ``locale`` or you will get the system default,
