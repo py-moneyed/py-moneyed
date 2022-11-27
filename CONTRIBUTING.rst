@@ -46,7 +46,7 @@ You can run the test suite on all supported environments using tox_
 testing, you can use pyenv_ to install them, and you may benefit from the
 additional plugin pyenv-implict_.
 
-The py-moneyed package is tested against Python 3.7 - 3.10 and PyPy 3.
+The py-moneyed package is tested against Python 3.7 - 3.11 and PyPy 3.
 
 .. _tox: https://tox.readthedocs.io/en/latest/
 .. _pyenv: https://github.com/pyenv/pyenv
