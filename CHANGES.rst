@@ -6,6 +6,9 @@ Significant or incompatible changes listed here.
 
 Unreleased - TBA
 ----------------
+
+3.0 (2022-11-27)
+----------------
 * Added ``SLE`` & ``VED`` currencies.
 * Removed support for Python 3.6.
 * Added support for Python 3.10 & 3.11.
