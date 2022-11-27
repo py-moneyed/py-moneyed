@@ -7,6 +7,8 @@ Significant or incompatible changes listed here.
 Unreleased - TBA
 ----------------
 
+* Added support for Python 3.11
+
 2.0 (2021-05-26)
 ----------------
 * Dropped support for Python 2.7 and 3.5 and PyPy 2.
