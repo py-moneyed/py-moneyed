@@ -170,19 +170,18 @@ class Money(Decimal):
     # arguments. As an argument with a default value cannot be followed by one without,
     # the implementation defines `None` as default for currency, but raises a TypeError
     # for that case.
-    @overload
-    def __init__(self, amount: object = ..., *, currency: str | Currency) -> None:
-        ...
 
     @overload
-    def __init__(self, amount: object, currency: str | Currency) -> None:
+    def __new__(cls, amount: object = ...,
+                *,
+                currency: str | Currency) -> Money:
         ...
 
-    def __init__(
-        self,
-        amount: object = zero,
-        currency: str | Currency | None = None,
-    ) -> None:
+    def __new__(cls,
+                amount: object,
+                currency: str | Currency | None = None
+                ) -> Money:
+
         if currency is None:
             raise TypeError(
                 "__init__() missing 1 required positional argument: 'currency'"
@@ -190,13 +189,12 @@ class Money(Decimal):
         __amount: Final = (
             amount if isinstance(amount, Decimal) else Decimal(str(amount))
         )
-        super().__init__(__amount)
-
-        self.currency: Final = (
+        cls.currency: Final = (
             currency
             if isinstance(currency, Currency)
             else get_currency(str(currency).upper())
         )
+        return super(Money, cls).__new__(cls, __amount)
 
     @property
     def amount(self):
