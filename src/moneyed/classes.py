@@ -155,7 +155,7 @@ class SupportsNeg(Protocol):
 zero = Decimal("0.0")
 
 
-class Money:
+class Money(Decimal):
     """
     A Money instance is a combination of data - an amount and a
     currency - along with operators that handle the semantics of money
@@ -187,17 +187,23 @@ class Money:
             raise TypeError(
                 "__init__() missing 1 required positional argument: 'currency'"
             )
-        self.amount: Final = (
+        __amount: Final = (
             amount if isinstance(amount, Decimal) else Decimal(str(amount))
         )
+        super().__init__(__amount)
+
         self.currency: Final = (
             currency
             if isinstance(currency, Currency)
             else get_currency(str(currency).upper())
         )
 
+    @property
+    def amount(self):
+        return Decimal(self)
+
     def __repr__(self) -> str:
-        return f"Money('{self.amount}', '{self.currency}')"
+        return f"Money('{self}', '{self.currency}')"
 
     def __str__(self) -> str:
         return format_money(self)
