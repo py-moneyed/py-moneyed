@@ -155,7 +155,7 @@ class SupportsNeg(Protocol):
 zero = Decimal("0.0")
 
 
-class Money:
+class Money(Decimal):
     """
     A Money instance is a combination of data - an amount and a
     currency - along with operators that handle the semantics of money
@@ -170,34 +170,38 @@ class Money:
     # arguments. As an argument with a default value cannot be followed by one without,
     # the implementation defines `None` as default for currency, but raises a TypeError
     # for that case.
-    @overload
-    def __init__(self, amount: object = ..., *, currency: str | Currency) -> None:
-        ...
 
     @overload
-    def __init__(self, amount: object, currency: str | Currency) -> None:
+    def __new__(cls, amount: object = ...,
+                *,
+                currency: str | Currency) -> Money:
         ...
 
-    def __init__(
-        self,
-        amount: object = zero,
-        currency: str | Currency | None = None,
-    ) -> None:
+    def __new__(cls,
+                amount: object,
+                currency: str | Currency | None = None
+                ) -> Money:
+
         if currency is None:
             raise TypeError(
                 "__init__() missing 1 required positional argument: 'currency'"
             )
-        self.amount: Final = (
+        __amount: Final = (
             amount if isinstance(amount, Decimal) else Decimal(str(amount))
         )
-        self.currency: Final = (
+        cls.currency: Final = (
             currency
             if isinstance(currency, Currency)
             else get_currency(str(currency).upper())
         )
+        return super(Money, cls).__new__(cls, __amount)
+
+    @property
+    def amount(self):
+        return Decimal(self)
 
     def __repr__(self) -> str:
-        return f"Money('{self.amount}', '{self.currency}')"
+        return f"Money('{self}', '{self.currency}')"
 
     def __str__(self) -> str:
         return format_money(self)
