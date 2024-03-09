@@ -8,7 +8,7 @@ from babel import Locale
 from babel.core import get_global
 from typing_extensions import Protocol
 
-from .l10n import format_money
+from .l10n import format_money, format_money_range
 from .utils import cached_property
 
 if TYPE_CHECKING:
@@ -135,6 +135,19 @@ class MoneyComparisonError(TypeError):
 
     def __str__(self) -> str:
         return f"Cannot compare instances of Money and {self.other.__class__.__name__}"
+
+
+class MoneyRangeComparisonError(TypeError):
+    # This exception was needed often enough to merit its own
+    # Exception class.
+
+    def __init__(self, other: object) -> None:
+        assert not isinstance(other, MoneyRange)
+        self.other = other
+
+    def __str__(self) -> str:
+        return f"Cannot compare instances of MoneyRange and {self.other.__class__.__name__}"
+
 
 
 class CurrencyDoesNotExist(Exception):
@@ -356,6 +369,233 @@ class Money:
 
     def get_amount_in_sub_unit(self) -> int:
         return int(self.currency.sub_unit * self.amount)
+
+
+class MoneyRange:
+    """
+    A MoneyRange instance is a combination of data - an amount in range and a
+    currency - along with operators that handle the semantics of money
+    operations in a better way than just dealing with raw Decimal or
+    ($DEITY forbid) floats.
+    """
+
+    # Overload __init__ to make omitting currency an error that is discoverable through
+    # static type checking. To explain the two signatures: the first one allows omitting
+    # the amount if currency is given as a key-word argument. The second signature
+    # allows calls where both values are given, either as key-word or positional
+    # arguments. As an argument with a default value cannot be followed by one without,
+    # the implementation defines `None` as default for currency, but raises a TypeError
+    # for that case.
+    @overload
+    def __init__(self, amount: list = ..., *, currency: str | Currency) -> None:
+        ...
+
+    @overload
+    def __init__(self, amount: list, currency: str | Currency) -> None:
+        ...
+
+    def __init__(
+        self,
+        amount: list = zero,
+        currency: str | Currency | None = None,
+    ) -> None:
+        if currency is None:
+            raise TypeError(
+                "__init__() missing 1 required positional argument: 'currency'"
+            )
+        self.amount: Final = list(
+            map(
+                lambda x: x if isinstance(x, Decimal) else Decimal(str(x)),
+                amount
+            )
+        )
+        self.currency: Final = (
+            currency
+            if isinstance(currency, Currency)
+            else get_currency(str(currency).upper())
+        )
+
+    def __repr__(self) -> str:
+        amount = list(map(lambda x: str(x), self.amount))
+        return f"MoneyRange({amount}, '{self.currency}')"
+
+    def __str__(self) -> str:
+        return format_money_range(self)
+
+    def __hash__(self) -> int:
+        return hash((tuple(self.amount), self.currency))
+
+    def __pos__(self: M) -> M:
+        return self.__class__(
+            amount=self.amount,
+            currency=self.currency,
+        )
+
+    def __neg__(self: M) -> M:
+        return self.__class__(
+            amount=list(map(lambda x: -x ,self.amount)),
+            currency=self.currency,
+        )
+
+    def __add__(self: M, other: object) -> M:
+        if other == 0:
+            # This allows things like 'sum' to work on list of MoneyRange instances,
+            # just like list of Decimal.
+            return self
+        if not isinstance(other, MoneyRange):
+            return NotImplemented
+        if self.currency == other.currency:
+            if len(self.amount) == len(other.amount):
+                return self.__class__(
+                    amount=[self.amount[0] + other.amount[0], self.amount[1] + other.amount[1]],
+                    currency=self.currency,
+                )
+            raise TypeError(
+                "Both should have the same amount length."
+            )
+
+        raise TypeError(
+            "Cannot add or subtract two MoneyRange instances with different currencies."
+        )
+
+    def __sub__(self: M, other: SupportsNeg) -> M:
+        return self.__add__(-other)
+
+    def __rsub__(self: M, other: object) -> M:
+        return (-self).__add__(other)
+
+    def __mul__(self: M, other: object) -> M:
+        if isinstance(other, MoneyRange):
+            raise TypeError("Cannot multiply two MoneyRange instances.")
+        else:
+            if isinstance(other, float):
+                warnings.warn(
+                    "Multiplying MoneyRange instances with floats is deprecated",
+                    DeprecationWarning,
+                )
+            return self.__class__(
+                amount=list(
+                    map(
+                        lambda x: x * force_decimal(other), self.amount
+                    )
+                ),
+                currency=self.currency,
+            )
+
+    def __truediv__(self: M, other: object) -> M | Decimal:
+        if isinstance(other, MoneyRange):
+            raise TypeError("Use integers, floats or decimal to divide on range list")
+        else:
+            if isinstance(other, float):
+                warnings.warn(
+                    "Dividing MoneyRange instances by floats is deprecated",
+                    DeprecationWarning,
+                )
+            return self.__class__(
+                amount=list(map(lambda x: force_decimal(x) / force_decimal(other), self.amount)),
+                currency=self.currency,
+            )
+
+    def __rtruediv__(self, other: object) -> NoReturn:
+        raise TypeError("Cannot divide non-MoneyRange by a MoneyRange instance.")
+
+    def round(self: M, ndigits: int | None = 0) -> M:
+        """
+        Rounds the amount using the current ``Decimal`` rounding algorithm.
+        """
+        if ndigits is None:
+            ndigits = 0
+        return self.__class__(
+            amount=list(
+                map(
+                    lambda x: x.quantize(Decimal("1e" + str(-ndigits))),
+                    self.amount
+                )
+            ),
+            currency=self.currency,
+        )
+
+    def __abs__(self: M) -> M:
+        return self.__class__(
+            amount=list(map(lambda x: abs(x), self.amount)),
+            currency=self.currency,
+        )
+
+    def __bool__(self) -> bool:
+        if len(self.amount) == 1 and self.amount[0] == 0:
+            return False
+        return bool(self.amount)
+
+    def __rmod__(self: M, other: object) -> M:
+        """
+        Calculate percentage of an amount.  The left-hand side of the
+        operator must be a numeric value.
+
+        Example:
+        >>> money_range = MoneyRange([200, 300], 'USD')
+        >>> 5 % money_range
+        MoneyRange([Decimal('10'), Decimal('14.95')], 'USD')
+        """
+        if isinstance(other, MoneyRange):
+            raise TypeError("Invalid __rmod__ operation")
+        else:
+            if isinstance(other, float):
+                warnings.warn(
+                    "Calculating percentages of MoneyRange instances using floats is deprecated",
+                    DeprecationWarning,
+                )
+            return self.__class__(
+                amount=list(
+                    map(
+                        lambda x: Decimal(other) * x / 100,
+                        self.amount
+                    )
+                ),
+                currency=self.currency,
+            )
+
+    __radd__ = __add__
+    __rmul__ = __mul__
+
+    # _______________________________________
+    # Override comparison operators
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, MoneyRange)
+            and self.amount == other.amount
+            and self.currency == other.currency
+        )
+
+    def __ne__(self, other: object) -> bool:
+        result = self.__eq__(other)
+        return not result
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, MoneyRange):
+            raise MoneyRangeComparisonError(other)
+        if self.currency == other.currency:
+            return self.amount < other.amount
+        else:
+            raise TypeError("Cannot compare MoneyRange with different currencies.")
+
+    def __gt__(self, other: object) -> bool:
+        if not isinstance(other, MoneyRange):
+            raise MoneyRangeComparisonError(other)
+        if self.currency == other.currency:
+            return self.amount > other.amount
+        else:
+            raise TypeError("Cannot compare MoneyRange with different currencies.")
+
+    def __le__(self, other: object) -> bool:
+        if self.currency == other.currency:
+            return self.amount < other.amount or self.amount == other.amount
+
+    def __ge__(self, other: object) -> bool:
+        if self.currency == other.currency:
+            return self.amount > other.amount or self.amount == other.amount
+
+    def get_amount_in_sub_unit(self) -> int:
+        return list(map(lambda x: x * self.currency.sub_unit, self.amount))
 
 
 # ____________________________________________________________________
