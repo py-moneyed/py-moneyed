@@ -79,7 +79,7 @@ class TestCurrency:
         assert self.instance == CURRENCIES["CHF"]
         assert self.instance == other
         # non-equality
-        other.code = "USD" # type: ignore
+        other.code = "USD"  # type: ignore
         assert self.instance != other
         assert self.instance != CURRENCIES["USD"]
 
@@ -123,7 +123,7 @@ class TestMoney:
             TypeError,
             match=r"__init__\(\) missing 1 required positional argument: 'currency'",
         ):
-            Money(amount=self.one_million_decimal) # type: ignore
+            Money(amount=self.one_million_decimal)  # type: ignore
 
     def test_init_float(self) -> None:
         one_million_dollars = Money(amount=1000000.0, currency="PEN")
@@ -185,14 +185,16 @@ class TestMoney:
             warnings.simplefilter("always")
             Money("10", currency="ZMW") * 1.2
             assert "Multiplying Money instances with floats is deprecated" in [
-                w.message.args[0] if isinstance(w.message, Warning) else w.message  for w in warning_list
+                w.message.args[0] if isinstance(w.message, Warning) else w.message
+                for w in warning_list
             ]
 
         with warnings.catch_warnings(record=True) as warning_list:
             warnings.simplefilter("always")
             1.2 * Money(amount="10", currency="XAG")
             assert "Multiplying Money instances with floats is deprecated" in [
-                w.message.args[0] if isinstance(w.message, Warning) else w.message  for w in warning_list
+                w.message.args[0] if isinstance(w.message, Warning) else w.message
+                for w in warning_list
             ]
 
     def test_mul_bad(self) -> None:
@@ -245,8 +247,10 @@ class TestMoney:
             2.0 % Money("10", USD)
             assert (
                 "Calculating percentages of Money instances using floats is deprecated"
-                in [w.message.args[0] if isinstance(w.message, Warning) else w.message
-                    for w in warning_list]
+                in [
+                    w.message.args[0] if isinstance(w.message, Warning) else w.message
+                    for w in warning_list
+                ]
             )
 
     def test_convert_to_default(self) -> None:
@@ -341,25 +345,25 @@ class TestMoney:
         extended_money = ExtendedMoney(amount=2, currency=self.USD)
 
         operated_money = +extended_money
-        assert type(extended_money) == type(operated_money)
+        assert isinstance(operated_money, ExtendedMoney)
         operated_money = -extended_money
-        assert type(extended_money) == type(operated_money)
+        assert isinstance(operated_money, ExtendedMoney)
         operated_money = ExtendedMoney(amount=1, currency=self.USD) + ExtendedMoney(
             amount=1, currency=self.USD
         )
-        assert type(extended_money) == type(operated_money)
+        assert isinstance(operated_money, ExtendedMoney)
         operated_money = ExtendedMoney(amount=3, currency=self.USD) - Money(
             amount=1, currency=self.USD
         )
-        assert type(extended_money) == type(operated_money)
+        assert isinstance(operated_money, ExtendedMoney)
         operated_money = 1 * extended_money
-        assert type(extended_money) == type(operated_money)
+        assert isinstance(operated_money, ExtendedMoney)
         operated_money = extended_money / 1
-        assert type(extended_money) == type(operated_money)
+        assert isinstance(operated_money, ExtendedMoney)
         operated_money = abs(ExtendedMoney(amount=-2, currency=self.USD))
-        assert type(extended_money) == type(operated_money)
+        assert isinstance(operated_money, ExtendedMoney)
         operated_money = 50 % ExtendedMoney(amount=4, currency=self.USD)
-        assert type(extended_money) == type(operated_money)
+        assert isinstance(operated_money, ExtendedMoney)
 
     def test_can_call_subclass_method_after_arithmetic_operations(self) -> None:
         """
