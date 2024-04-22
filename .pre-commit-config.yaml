@@ -1,18 +1,18 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: "22.10.0"
+    rev: "24.4.0"
     hooks:
       - id: black
         args:
           - --quiet
 
   - repo: https://github.com/pycqa/isort
-    rev: "5.10.1"
+    rev: "5.13.2"
     hooks:
       - id: isort
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: "v3.2.2"
+    rev: "v3.15.2"
     hooks:
       - id: pyupgrade
         args:
@@ -22,7 +22,7 @@ repos:
           - --py38-plus
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.4.0"
+    rev: "v4.6.0"
     hooks:
       - id: check-ast
       - id: trailing-whitespace
@@ -30,13 +30,13 @@ repos:
       - id: mixed-line-ending
 
   - repo: https://github.com/sirosen/check-jsonschema
-    rev: "0.19.2"
+    rev: "0.28.2"
     hooks:
       - id: check-github-workflows
         require_serial: true
 
   - repo: https://github.com/pycqa/flake8
-    rev: "6.0.0"
+    rev: "7.0.0"
     hooks:
       - id: flake8
         additional_dependencies:
@@ -58,6 +58,6 @@ repos:
           - pytest
 
   - repo: https://github.com/mgedmin/check-manifest
-    rev: "0.48"
+    rev: "0.49"
     hooks:
       - id: check-manifest
