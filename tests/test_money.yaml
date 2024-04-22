@@ -12,6 +12,7 @@
     main:3: note: Possible overload variants:
     main:3: note:     def __init__(self, amount: object = ..., *, currency: Union[str, Currency]) -> Money
     main:3: note:     def __init__(self, amount: object, currency: Union[str, Currency]) -> Money
+
   # A bug in mypy seems to make it so that on non-cached runs the output uses __init__
   # and on cached runs it uses Money. Disabling the cache seems to make the output
   # stable.
