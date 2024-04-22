@@ -81,7 +81,7 @@ class Currency:
     def get_name(self, locale: str, count: int | None = None) -> str:
         from babel.numbers import get_currency_name
 
-        return get_currency_name(  # type: ignore[no-any-return]
+        return get_currency_name(
             self.code,
             locale=locale,
             count=count,
@@ -254,6 +254,13 @@ class Money:
                 currency=self.currency,
             )
 
+
+    @overload
+    def __truediv__(self: M, other: int|float|Decimal) -> M:
+        ...
+    @overload
+    def __truediv__(self: M, other: Money) -> Decimal:
+        ...
     def __truediv__(self: M, other: object) -> M | Decimal:
         if isinstance(other, Money):
             if self.currency != other.currency:
