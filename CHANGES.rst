@@ -6,6 +6,8 @@ Significant or incompatible changes listed here.
 
 Unreleased - TBA
 ----------------
+* Added support for Python 3.12
+* Removed support for Python 3.7
 
 3.0 (2022-11-27)
 ----------------
