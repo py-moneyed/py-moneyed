@@ -748,4 +748,5 @@ XXX = add_currency(
 YER = add_currency("YER", "886", 100)
 ZAR = add_currency("ZAR", "710", 100)
 ZMW = add_currency("ZMW", "967", 100)
+ZWG = add_currency("ZWG", "924", 100)
 ZWN = add_currency("ZWN", "942", 100)
