@@ -82,6 +82,19 @@ list of money instances using the builtin ``sum()``.
     Money('0', 'USD')
 
 
+Look up a numeric currency code
+------------------------------
+
+``get_currency(iso=...)`` accepts a three-digit ISO 4217 string or its integer
+equivalent, including codes whose string form starts with zero:
+
+.. code-block:: python
+
+    >>> from moneyed import get_currency
+    >>> get_currency(iso=36) is get_currency(iso="036")
+    True
+
+
 Search by Country Code
 ----------------------
 

@@ -400,7 +400,8 @@ def get_currency(*, iso: int | str) -> Currency: ...
 def get_currency(code: str | None = None, iso: int | str | None = None) -> Currency:
     try:
         if iso:
-            return CURRENCIES_BY_ISO[str(iso)]
+            numeric = str(iso).zfill(3) if isinstance(iso, int) else iso
+            return CURRENCIES_BY_ISO[numeric]
         return CURRENCIES[code]  # type: ignore[index]
     except KeyError:
         raise CurrencyDoesNotExist(code)
