@@ -64,6 +64,9 @@ If you want to get the amount in sub units (ISO 4127 compatible) you can do:
     >>> price.get_amount_in_sub_unit()
     12345
 
+This conversion is independent of the active decimal precision and truncates
+fractional sub units toward zero, including for negative amounts.
+
 
 Currency instances have a ``zero`` property for convenience. It returns a cached
 ``Money`` instance of the currency. This can be helpful for instance when summing up a

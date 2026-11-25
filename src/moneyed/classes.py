@@ -361,7 +361,12 @@ class Money:
         return self > other or self == other
 
     def get_amount_in_sub_unit(self) -> int:
-        return int(self.currency.sub_unit * self.amount)
+        numerator, denominator = self.amount.as_integer_ratio()
+        numerator *= self.currency.sub_unit
+        # Truncate toward zero without rounding through the Decimal context.
+        return (
+            numerator // denominator if numerator >= 0 else -(-numerator // denominator)
+        )
 
 
 # ____________________________________________________________________
